@@ -1493,47 +1493,317 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
           }
       }
   },
-  {
-    id: 7,
-    slug: "sarah-everard",
-    name: "Sarah Everard",
-    country: "United Kingdom",
-    countryFlag: "🇬🇧",
-    category: "safety-and-justice",
-    categoryLabel: "Public Trust & Women's Street Safety",
-    eraOrYear: "1987–2021",
-    roleAndField: "Marketing Executive · London",
-    avatarUrl: "https://images.openai.com/static-rsc-4/DOKUtCp9ZqEvNj1GLduBA7jfysPzHED7DEIAEsC-qQGHhQFViaIhxBl676LvDAOlkd1eTXPtDHPBoO11qaPeNR5AooAOGRYXbpCgQomQnsd9-cz7QhcBg1O5AepJAP1MEBTiLqxS-MICJ6A7NEyPT57awmEYGVtlMX8PEdYluKA?purpose=inline",
-    whoWasThisPerson:
-      "A 33-year-old marketing executive living in Brixton, London. Known for her creative talent, bright demeanor, and caring friendships, she was a Durham University geography graduate who loved city life.",
-    contributions:
-      "She led successful creative and branding campaigns in the private sector and was widely cherished across her community for her warmth, humor, and civic engagement.",
-    factualContext:
-      "In March 2021, while walking home from a friend's house in Clapham, she was abducted under the false pretext of a police stop by a serving Metropolitan Police officer and murdered. The perpetrator was sentenced to a whole-life tariff.",
-    societalImpact:
-      "Her story unleashed an international reckoning on women's street safety and institutional power abuses. It directly prompted the independent Baroness Casey Review (published March 2023) into the standards and culture of the Metropolitan Police Service, which found the force institutionally racist, misogynistic and homophobic — and the statutory Angiolini Inquiry Part 1 Report (February 2024) into Couzens' police career.",
-    verificationStatus: "Verified",
-    lastVerifiedAt: "2026-11-06",
-    verifiedFacts: [
-      "33-year-old marketing executive, abducted in Clapham on 3 March 2021 by serving Met Police officer Wayne Couzens",
-      "Couzens sentenced to a whole-life order on 30 September 2021 by Lord Justice Fulford at the Old Bailey",
-      "Baroness Casey Review commissioned autumn 2021; published March 2023 — found Met Police institutionally misogynistic and racist",
-      "Angiolini Inquiry Part 1 Report published February 2024 examining Couzens' police service record",
-    ],
-    actionableLesson:
-      "Police forces must enforce rigorous background vetting, remove officers flagged for misconduct, and guarantee citizens clear channels to verify plainclothes stops.",
-    coreMessage:
-      "Public safety must be designed into everyday civic infrastructure, and institutions charged with protecting citizens must hold themselves to the highest ethical accountability.",
-    memorialPublication: {
-      title: "Urban Safety Audits & Institutional Power Accountability Guide",
-      focus: "Civic Infrastructure & Public Trust in Policing",
-      deliverable: "A comprehensive civic guide on neighborhood night lighting, safe pedestrian corridors, and institutional reporting rights.",
-    },
-    references: [
-      { title: "Sentencing Remarks of Lord Justice Fulford (R v. Wayne Couzens, 30 September 2021)", url: "https://www.judiciary.uk/wp-content/uploads/2022/07/R-v-Couzens-Sentencing-Remarks.pdf", publisher: "Judiciary of England and Wales", isPrimary: true },
-      { title: "Baroness Casey Review into Standards and Culture of the Metropolitan Police (March 2023)", url: "https://www.met.police.uk/SysSiteAssets/media/downloads/met/about-us/baroness-casey-review/baroness-casey-review-march-2023.pdf", publisher: "Metropolitan Police / UK Home Office", isPrimary: true },
-      { title: "The Angiolini Inquiry: Part 1 Report (February 2024)", url: "https://www.gov.uk/government/publications/the-angiolini-inquiry-part-1-report", publisher: "UK Home Office", isPrimary: true },
-    ],
+    {
+      "id": 7,
+      "slug": "sarah-everard",
+      "name": "Sarah Everard",
+      "country": "United Kingdom",
+      "countryFlag": "🇬🇧",
+      "category": "safety-and-justice",
+      "categoryLabel": "Public Trust & Women's Street Safety",
+      "eraOrYear": "2021",
+      "roleAndField": "Marketing Executive · London, England",
+      "avatarUrl": "https://images.openai.com/static-rsc-4/DOKUtCp9ZqEvNj1GLduBA7jfysPzHED7DEIAEsC-qQGHhQFViaIhxBl676LvDAOlkd1eTXPtDHPBoO11qaPeNR5AooAOGRYXbpCgQomQnsd9-cz7QhcBg1O5AepJAP1MEBTiLqxS-MICJ6A7NEyPT57awmEYGVtlMX8PEdYluKA?purpose=inline",
+      "verificationStatus": "Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "coreMessage": "Public safety must be built into everyday civic infrastructure, and institutions entrusted with protecting citizens must remain accountable for the authority they exercise. Women should be able to walk through public spaces without fear, and no individual should be able to exploit institutional power to commit violence.",
+      "whoWasThisPerson": "Sarah Everard was a 33-year-old marketing executive who lived in Brixton, South London.\nShe grew up in York and attended Fulford School before studying Human Geography at St Cuthbert's Society, Durham University, from 2005 to 2008.\nAfter graduating, she moved to London and built her professional career in marketing.\nFriends and family remembered her as intelligent, kind, thoughtful, and independent. She enjoyed spending time with friends and was described as someone with a bright personality and a strong interest in the world around her.\nSarah was living an ordinary independent life in London: working, maintaining friendships, and travelling around the city.\nHer story is important not because her life should be reduced to the circumstances of her death, but because she was an individual with her own relationships, ambitions, and future.",
+      "contributions": "Sarah worked as a marketing professional and was a Durham University graduate.\nUnlike a public figure or a person whose contribution can be measured through a major institutional achievement, her life was primarily that of a private individual building her career and maintaining relationships with the people around her.\nThere is insufficient reliable evidence to attribute specific major branding campaigns, public initiatives, or formal civic leadership activities to her.\n\nHer story nevertheless became significant in the wider public discussion about:\n• Women's freedom to move independently through cities.\n• The right to feel safe while travelling home.\n• Public trust in police officers and other authority figures.\n• Institutional responsibility when individuals entrusted with public power abuse that authority.\n• The importance of taking violence against women seriously before it becomes fatal.\n\nEditorial principle: A person's worth does not depend on having an extraordinary public achievement. Sarah's life deserves recognition as a person in its own right, not merely as a symbol of a social issue.",
+      "factualContext": "On the evening of 3 March 2021, Sarah Everard was walking home after visiting a friend in Clapham, South London.\nShe was approached by Wayne Couzens, who was then a serving Metropolitan Police officer.\nCouzens used his position as a police officer to falsely detain her. He handcuffed her under the pretext that she had breached COVID-19 restrictions and placed her in a hired vehicle.\nThe judicial record established that this was not a legitimate police stop. Couzens had planned the abduction and used the authority associated with his position to carry it out.\nHe abducted, raped, and murdered Sarah.\nHer remains were subsequently discovered in woodland in Kent.\nThe investigation and subsequent court proceedings exposed the extraordinary abuse of public authority involved in the crime.\nThe case shocked the United Kingdom and prompted widespread public discussion about women's safety, police accountability, institutional vetting, and the misuse of authority.\n\nJudicial Proceedings and Accountability:\nWayne Couzens pleaded guilty to the kidnapping, rape, and murder of Sarah Everard.\nOn 30 September 2021, Lord Justice Fulford sentenced him at the Central Criminal Court, commonly known as the Old Bailey.\nHe received a whole-life order, meaning that he must spend the remainder of his life in prison, subject only to the exceptional legal provisions applicable to such sentences.\nIn his sentencing remarks, the judge emphasised the seriousness of the abuse of police authority and the damage the crime had caused to public confidence.\nThe judgment recognised that members of the public must be able to trust police officers when they encounter them and submit to their authority.\nThe case therefore involved not only the murder of an individual but also a profound breach of the public trust attached to policing.",
+      "editorialNotes": "Publication note: The judicial account is grounded in sentencing and appellate records. The Baroness Casey Review and Angiolini Inquiry are distinct investigations with different scopes. The Angiolini Part 2 First Report, published in December 2025, is included because it materially updates the public-safety discussion. The proposed UltimateHealth guide is a new educational initiative, not an existing government programme.",
+      "verifiedFacts": [
+          "33-year-old marketing executive living in Brixton, South London; grew up in York (Fulford School) and studied Human Geography at St Cuthbert's Society, Durham University (2005–2008).",
+          "Abducted on the evening of 3 March 2021 while walking home from Clapham by serving Metropolitan Police officer Wayne Couzens under the false pretext of a COVID-19 police stop.",
+          "On 30 September 2021, Lord Justice Fulford sentenced Couzens at the Old Bailey to a whole-life order for kidnapping, rape, and murder.",
+          "Baroness Casey Review (appointed October 2021, final report published 21 March 2023) concluded the Metropolitan Police was institutionally racist, misogynistic, and homophobic.",
+          "Independent Angiolini Inquiry published its Part 1 Report on 29 February 2024 (16 recommendations on police vetting and misconduct) and its Part 2 First Report on 2 December 2025 (13 recommendations on preventing sexually motivated crimes against women in public spaces)."
+      ],
+      "societalImpact": "Sarah Everard's murder prompted significant public scrutiny of the Metropolitan Police Service and the wider systems responsible for policing standards, misconduct, and women's safety.\nThree developments deserve particular attention.\n\nA. Baroness Casey Review — Standards and Culture of the Metropolitan Police\nFollowing the murder and other serious concerns about policing standards, the Metropolitan Police appointed Baroness Louise Casey in October 2021 to lead an independent review of the force's culture and standards of behaviour. The review began in February 2022, and its final report was published on 21 March 2023.\nIt examined leadership and organisational accountability, recruitment and vetting, police misconduct and disciplinary systems, internal workplace culture, the treatment of women and minority communities, and the Metropolitan Police's ability to maintain public trust.\nThe review concluded that the Metropolitan Police was institutionally racist, misogynistic, and homophobic. It also identified serious failures in the handling of complaints and misconduct.\nWhy it matters: Sarah's murder became a central catalyst for examining whether a police force was adequately identifying and addressing misconduct among the people entrusted with its authority.\n\nB. Angiolini Inquiry — Part 1 Report, 2024\nThe independent Angiolini Inquiry was established to investigate how Wayne Couzens was able to abduct, rape, and murder Sarah Everard while serving as a Metropolitan Police officer.\nPart 1 of the inquiry examined his police career, previous conduct, behaviour, and the institutional opportunities that had been missed. The report was published on 29 February 2024.\nIt identified serious warning signs and missed opportunities in the handling of Couzens' conduct and police service record, and made 16 recommendations intended to strengthen safeguards against the abuse of police authority.\nThe inquiry highlighted that the authority of a police officer must never become a means of intimidating, coercing, or exploiting members of the public.\n\nC. Angiolini Inquiry — Part 2 First Report, 2025\nOn 2 December 2025, the inquiry published its Part 2 First Report, examining the prevention of sexually motivated crimes against women in public spaces, making a further 13 recommendations.\nThe report highlighted the need for a more coordinated approach to prevention, including a stronger focus on perpetrators and the institutions responsible for identifying and disrupting their behaviour.\nIt also warned against placing the burden of safety primarily on women through advice to avoid certain streets, change travel routes, or limit their activities. Safer streets and better lighting matter, but they cannot substitute for effective action against those who commit or threaten violence.\nWhy it matters: This development moves the discussion beyond individual precautions towards a society-wide responsibility to prevent violence against women.",
+      "actionableLesson": "Urban Safety Audits and Institutional Power Accountability\nSarah Everard's case highlights two connected responsibilities: designing public spaces and transport environments that support safety, and ensuring that institutions entrusted with public authority cannot operate without effective oversight.\n\nThe following measures are proposed for public authorities, police forces, transport operators, and urban planners:\n1. Accountable police recruitment and vetting:\n• Conduct thorough background checks before recruitment and review relevant misconduct and disciplinary information.\n• Establish clear procedures for reassessing officers when credible concerns emerge.\n• Ensure that vetting decisions are documented and independently reviewable, removing disqualified individuals following appropriate procedures.\n\n2. Verification of plainclothes police encounters:\n• Provide clear ways for members of the public to verify an officer's identity and confirm the legitimacy of an encounter through official police channels.\n• Improve public awareness of police identification and verification processes.\n\n3. Accessible misconduct reporting:\n• Provide confidential and accessible channels for reporting inappropriate behaviour by police personnel.\n• Protect complainants and witnesses from intimidation or retaliation, and publish meaningful information about disciplinary outcomes.\n\n4. Safer public infrastructure:\n• Audit pedestrian routes, parks, transport connections, and poorly lit streets.\n• Improve lighting, visibility, and accessible emergency communication systems.\n\n5. Institutional transparency:\n• Publish clear information about police accountability processes, maintain independent oversight, and track implementation of public inquiry recommendations using measurable indicators.\n\n6. Perpetrator-focused prevention:\n• Improve the identification and investigation of stalking, harassment, sexual offences, and threatening behaviour.\n• Use evidence-based interventions to disrupt patterns of offending rather than placing the burden of prevention primarily on potential victims.\n\nThese are proposed measures and areas for institutional improvement. They should not be presented as a complete description of current UK law or as reforms already implemented by every police force.",
+      "memorialPublication": {
+          "title": "Urban Safety Audits & Institutional Power Accountability Guide",
+          "focus": "Civic Infrastructure · Women's Safety · Public Trust in Policing · Institutional Accountability",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "Purpose:\nDevelop an open-source civic education and safety-audit resource that helps communities, academic institutions, local authorities, and public-service organisations evaluate the safety of public spaces and understand how to report institutional misconduct.\n\nProposed toolkit components:\nA. Neighbourhood and Pedestrian Safety Audit: Practical checklist for evaluating street lighting and visibility, pedestrian routes and transport connections, public access to emergency assistance, isolated areas, and accessibility of public safety information.\nB. Public Authority Verification Guide: Educational resources explaining how police identification works, how to seek official confirmation of a police encounter, how to document and report suspected abuse of authority, and where to seek independent advice.\nC. Institutional Accountability Framework: Structured guide for examining recruitment and vetting processes, misconduct reporting systems, whistleblower protection, independent oversight, and implementation of public inquiry recommendations.\nD. Community Safety and Bystander Education: Educational material on recognising threatening behaviour, reporting dangerous situations, supporting people experiencing harassment, and safe bystander intervention.\nE. Evidence-Based Urban Safety Reporting: Framework for recording infrastructure gaps, lighting and accessibility issues, institutional reporting barriers, and corrective actions.\n\nThe UltimateHealth Perspective:\nSarah Everard's story raises a difficult but essential question: What happens when the person entrusted with protecting the public becomes the person who harms it?\nHer murder exposed the consequences of an individual abusing institutional authority. The subsequent Baroness Casey Review and Angiolini Inquiry brought wider organisational failures and prevention responsibilities into public scrutiny. The 2025 Angiolini report further reinforced that women's safety cannot depend primarily on individual precautions.\nSarah was a daughter, friend, university graduate, and marketing professional with a life and future of her own. Remembering Sarah Everard means defending the right of every person to move freely, questioning the misuse of public authority, and demanding institutions that earn the trust placed in them."
+      },
+      "references": [
+          {
+              "title": "Judiciary of England and Wales — R v Wayne Couzens: Sentencing Remarks, 30 September 2021",
+              "url": "https://www.judiciary.uk/wp-content/uploads/2021/09/Wayne-Couzens-Sentencing-Remarks.pdf",
+              "publisher": "Judiciary of England and Wales",
+              "isPrimary": true
+          },
+          {
+              "title": "Court of Appeal (Criminal Division) — R v Monaghan and Others, 2022 EWCA Crim 1063",
+              "url": "https://www.judiciary.uk/wp-content/uploads/2022/10/R-v-Monaghan-and-others-2022-EWCA-Crim-1063.pdf",
+              "publisher": "Judiciary of England and Wales",
+              "isPrimary": true
+          },
+          {
+              "title": "Metropolitan Police — The Baroness Casey Review (Official Collection)",
+              "url": "https://www.met.police.uk/police-forces/metropolitan-police/areas/about-us/about-the-met/bcr/baroness-casey-review/",
+              "publisher": "Metropolitan Police",
+              "isPrimary": true
+          },
+          {
+              "title": "Baroness Casey Review — Final Report into the Standards of Behaviour and Internal Culture of the Metropolitan Police Service, March 2023",
+              "url": "https://www.met.police.uk/SysSiteAssets/media/downloads/met/about-us/baroness-casey-review/update-march-2023/baroness-casey-review-march-2023a.pdf",
+              "publisher": "Baroness Casey Review / Metropolitan Police",
+              "isPrimary": true
+          },
+          {
+              "title": "UK Home Office — The Angiolini Inquiry Part 1 Report, 29 February 2024",
+              "url": "https://www.gov.uk/government/publications/angiolini-inquiry-part-1-report",
+              "publisher": "UK Home Office",
+              "isPrimary": true
+          },
+          {
+              "title": "The Angiolini Inquiry — Part 1 Report and Recommendations",
+              "url": "https://www.angiolini.independent-inquiry.uk/reports/",
+              "publisher": "The Angiolini Inquiry",
+              "isPrimary": true
+          },
+          {
+              "title": "UK Home Office — The Angiolini Inquiry Part 2 First Report, 2 December 2025",
+              "url": "https://www.gov.uk/government/publications/angiolini-inquiry-part-2-first-report",
+              "publisher": "UK Home Office",
+              "isPrimary": true
+          },
+          {
+              "title": "The Angiolini Inquiry — Part 2 First Report: Prevention of Sexually Motivated Crimes Against Women in Public (December 2025)",
+              "url": "https://www.angiolini.independent-inquiry.uk/reports-2/the-angiolini-inquiry-part-2-first-report-prevention-of-sexually-motivated-crimes-against-women-in-public/",
+              "publisher": "The Angiolini Inquiry",
+              "isPrimary": true
+          },
+          {
+              "title": "College of Policing — Sarah Everard murder sentencing: statement from the Chief Executive, 30 September 2021",
+              "url": "https://www.college.police.uk/article/sarah-everard-murder-verdict-statement",
+              "publisher": "College of Policing"
+          },
+          {
+              "title": "London Assembly — Baroness Casey Review: One Year On",
+              "url": "https://www.london.gov.uk/who-we-are/what-london-assembly-does/london-assembly-press-releases/baroness-casey-review-one-year",
+              "publisher": "London Assembly"
+          },
+          {
+              "title": "HMICFRS — Inspection of the Metropolitan Police Service's policing of the Sarah Everard vigil at Clapham Common",
+              "url": "https://assets-hmicfrs.justiceinspectorates.gov.uk/uploads/inspection-of-mps-policing-vigil-commemoration-sarah-everard-clapham-common.pdf",
+              "publisher": "HMICFRS",
+              "isPrimary": true
+          },
+          {
+              "title": "ITV News — Timeline of Sarah Everard's disappearance in South London, March 2021",
+              "url": "https://www.itv.com/news/london/2021-03-10/timeline-of-sarah-everards-disappearance-in-south-london",
+              "publisher": "ITV News"
+          },
+          {
+              "title": "The Evening Standard — Who was Sarah Everard?",
+              "url": "https://app.standard.co.uk/news/london/who-missing-sarah-everard-what-do-we-know-b923327.html",
+              "publisher": "The Evening Standard"
+          }
+      ],
+      "translations": {
+          "hi": {
+              "name": "सारा एवरार्ड",
+              "roleAndField": "मार्केटिंग एग्जीक्यूटिव · लंदन, इंग्लैंड",
+              "categoryLabel": "सार्वजनिक विश्वास एवं महिला सड़क सुरक्षा",
+              "coreMessage": "सार्वजनिक सुरक्षा को रोजमर्रा के नागरिक बुनियादी ढांचे में निर्मित किया जाना चाहिए, और नागरिकों की रक्षा का दायित्व संभालने वाले संस्थानों को अपने द्वारा प्रयोग किए जाने वाले अधिकार के लिए जवाबदेह रहना चाहिए। महिलाओं को बिना किसी डर के सार्वजनिक स्थानों पर चलने में सक्षम होना चाहिए, और किसी भी व्यक्ति को हिंसा करने के लिए संस्थागत शक्ति का दुरुपयोग करने में सक्षम नहीं होना चाहिए।",
+              "whoWasThisPerson": "सारा एवरार्ड 33 वर्षीय मार्केटिंग एग्जीक्यूटिव थीं जो ब्रिक्सटन, साउथ लंदन में रहती थीं।\nवे यॉर्क में पली-बढ़ीं और 2005 से 2008 तक डरहम विश्वविद्यालय के सेंट कथबर्ट सोसाइटी में मानव भूगोल (Human Geography) का अध्ययन करने से पहले फुलफोर्ड स्कूल में पढ़ीं।\nस्नातक होने के बाद, वे लंदन चली गईं और मार्केटिंग में अपना पेशेवर करियर बनाया।\nमित्रों और परिवार ने उन्हें बुद्धिमान, दयालु, विचारशील और स्वतंत्र के रूप में याद किया। सारा लंदन में एक सामान्य स्वतंत्र जीवन जी रही थीं। उनकी कहानी इसलिए महत्वपूर्ण है क्योंकि वे अपने स्वयं के संबंधों, महत्वाकांक्षाओं और भविष्य वाली एक व्यक्ति थीं।",
+              "contributions": "सारा एक मार्केटिंग पेशेवर के रूप में काम करती थीं और डरहम विश्वविद्यालय से स्नातक थीं।\nकिसी सार्वजनिक हस्ती के विपरीत, उनका जीवन मुख्य रूप से एक निजी व्यक्ति का था जो अपना करियर बना रही थीं। उन्हें विशिष्ट बड़े ब्रांडिंग अभियानों या औपचारिक नागरिक नेतृत्व गतिविधियों का श्रेय देने के लिए पर्याप्त विश्वसनीय साक्ष्य नहीं हैं।\nफिर भी उनकी कहानी निम्नलिखित विषयों पर व्यापक सार्वजनिक चर्चा में महत्वपूर्ण बन गई:\n• शहरों में स्वतंत्र रूप से आने-जाने की महिलाओं की स्वतंत्रता।\n• घर लौटते समय सुरक्षित महसूस करने का अधिकार।\n• पुलिस अधिकारियों और अन्य प्राधिकारियों में जनता का विश्वास।\n• जब सार्वजनिक शक्ति से लैस व्यक्ति उस अधिकार का दुरुपयोग करते हैं तो संस्थागत जिम्मेदारी।\n\nसंपादकीय सिद्धांत: किसी व्यक्ति का मूल्य किसी असाधारण सार्वजनिक उपलब्धि होने पर निर्भर नहीं करता है। सारा का जीवन केवल एक सामाजिक मुद्दे के प्रतीक के रूप में नहीं, बल्कि अपने आप में एक व्यक्ति के रूप में सम्मान का पात्र है।",
+              "factualContext": "3 मार्च 2021 की शाम को, सारा एवरार्ड क्लैपहम, साउथ लंदन में एक मित्र से मिलने के बाद पैदल घर लौट रही थीं।\nतत्कालीन कार्यरत मेट्रोपॉलिटन पुलिस अधिकारी वेन कूज़ेंस (Wayne Couzens) ने उन्हें रोका।\nकूज़ेंस ने उन्हें गलत तरीके से हिरासत में लेने के लिए पुलिस अधिकारी के रूप में अपने पद का दुरुपयोग किया। उसने इस बहाने से उन्हें हथकड़ी लगाई कि उन्होंने कोविड-19 प्रतिबंधों का उल्लंघन किया है और उन्हें किराए के वाहन में बैठा लिया।\nन्यायिक रिकॉर्ड ने स्थापित किया कि यह कोई वैध पुलिस स्टॉप नहीं था। कूज़ेंस ने उनका अपहरण, बलात्कार और हत्या की। बाद में उनके अवशेष केंट के जंगल में मिले।\n\nन्यायिक कार्यवाही और जवाबदेही:\nवेन कूज़ेंस ने सारा एवरार्ड के अपहरण, बलात्कार और हत्या का अपराध स्वीकार किया।\n30 सितंबर 2021 को, लॉर्ड जस्टिस फुलफोर्ड ने ओल्ड बेली (Central Criminal Court) में उसे 'होल-लाइफ ऑर्डर' (आजीवन कारावास बिना पैरोल) की सजा सुनाई और पुलिस अधिकार के दुरुपयोग तथा सार्वजनिक विश्वास को पहुंची क्षति को रेखांकित किया।",
+              "editorialNotes": "प्रकाशन नोट: न्यायिक विवरण सजा और अपीलीय रिकॉर्ड पर आधारित है। बैरोनेस केसी रिव्यू और एंजियोलिनी इंक्वायरी अलग-अलग जांच हैं। दिसंबर 2025 में प्रकाशित एंजियोलिनी पार्ट 2 की पहली रिपोर्ट को इसलिए शामिल किया गया है क्योंकि यह सार्वजनिक-सुरक्षा चर्चा को अद्यतन करती है। प्रस्तावित UltimateHealth मार्गदर्शिका एक नई शैक्षिक पहल है।",
+              "verifiedFacts": [
+                  "ब्रिक्सटन, साउथ लंदन में रहने वाली 33 वर्षीय मार्केटिंग एग्जीक्यूटिव; यॉर्क में पली-बढ़ीं और डरहम विश्वविद्यालय (2005–2008) से मानव भूगोल में स्नातक।",
+                  "3 मार्च 2021 की शाम को क्लैपहम से घर लौटते समय कार्यरत मेट्रोपॉलिटन पुलिस अधिकारी वेन कूज़ेंस द्वारा कोविड-19 नियम उल्लंघन के झूठे बहाने से अपहरण और हत्या।",
+                  "30 सितंबर 2021 को ओल्ड बेली में लॉर्ड जस्टिस फुलफोर्ड द्वारा कूज़ेंस को 'होल-लाइफ ऑर्डर' की सजा सुनाई गई।",
+                  "बैरोनेस केसी रिव्यू (अंतिम रिपोर्ट 21 मार्च 2023) ने पाया कि मेट्रोपॉलिटन पुलिस संस्थागत रूप से नस्लवादी, महिला-विरोधी (misogynistic) और होमोफोबिक थी।",
+                  "स्वतंत्र एंजियोलिनी इंक्वायरी ने 29 फरवरी 2024 को पार्ट 1 रिपोर्ट (16 सिफारिशें) और 2 दिसंबर 2025 को पार्ट 2 की पहली रिपोर्ट (सार्वजनिक स्थानों पर महिलाओं के खिलाफ यौन अपराधों की रोकथाम पर 13 सिफारिशें) प्रकाशित की।"
+              ],
+              "societalImpact": "सारा एवरार्ड की हत्या ने मेट्रोपॉलिटन पुलिस सर्विस और पुलिसिंग मानकों की गहन सार्वजनिक जांच को प्रेरित किया:\n\nA. बैरोनेस केसी रिव्यू (मार्च 2023):\nअक्टूबर 2021 में नियुक्त बैरोनेस लुईस केसी की स्वतंत्र समीक्षा (21 मार्च 2023 को प्रकाशित) ने निष्कर्ष निकाला कि मेट्रोपॉलिटन पुलिस संस्थागत रूप से नस्लवादी, महिला-विरोधी और होमोफोबिक थी तथा कदाचार की शिकायतों से निपटने में गंभीर विफलताएं थीं।\n\nB. एंजियोलिनी इंक्वायरी — पार्ट 1 रिपोर्ट (29 फरवरी 2024):\nइस स्वतंत्र जांच ने कूज़ेंस के पुलिस करियर में अनदेखे किए गए गंभीर चेतावनी संकेतों की पहचान की और पुलिस अधिकार के दुरुपयोग को रोकने के लिए 16 सिफारिशें कीं।\n\nC. एंजियोलिनी इंक्वायरी — पार्ट 2 पहली रिपोर्ट (2 दिसंबर 2025):\nसार्वजनिक स्थानों पर महिलाओं के खिलाफ यौन प्रेरित अपराधों की रोकथाम की जांच करते हुए 13 और सिफारिशें कीं। इसने चेतावनी दी कि सुरक्षा का बोझ मुख्य रूप से महिलाओं पर (रास्ते बदलने या गतिविधियों को सीमित करने की सलाह देकर) नहीं डाला जाना चाहिए, बल्कि अपराधियों की पहचान और रोकथाम पर ध्यान केंद्रित किया जाना चाहिए।",
+              "actionableLesson": "शहरी सुरक्षा ऑडिट और संस्थागत शक्ति जवाबदेही:\n1. जवाबदेह पुलिस भर्ती और पृष्ठभूमि सत्यापन (Vetting)।\n2. सादे कपड़ों में पुलिस मुठभेड़ों के सत्यापन के लिए स्पष्ट और आधिकारिक चैनल।\n3. पुलिस कर्मियों द्वारा अनुचित व्यवहार की गोपनीय और सुलभ रिपोर्टिंग।\n4. सुरक्षित सार्वजनिक बुनियादी ढांचा (पैदल मार्ग, पार्क और स्ट्रीट लाइटिंग का ऑडिट)।\n5. संस्थागत पारदर्शिता और स्वतंत्र निगरानी।\n6. अपराधी-केंद्रित रोकथाम (पीड़ितों पर जिम्मेदारी डालने के बजाय अपराध के पैटर्न को बाधित करना)।",
+              "memorialPublication": {
+                  "title": "शहरी सुरक्षा ऑडिट और संस्थागत शक्ति जवाबदेही मार्गदर्शिका",
+                  "focus": "नागरिक बुनियादी ढांचा · महिला सुरक्षा · पुलिसिंग में सार्वजनिक विश्वास · संस्थागत जवाबदेही",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "उद्देश्य: समुदायों, शैक्षणिक संस्थानों और स्थानीय प्राधिकरणों के लिए सार्वजनिक स्थानों की सुरक्षा का मूल्यांकन करने और संस्थागत कदाचार की रिपोर्ट करने के तरीके को समझने हेतु एक ओपन-सोर्स संसाधन विकसित करना।\n\nUltimateHealth दृष्टिकोण:\nसारा एवरार्ड को याद करने का अर्थ है प्रत्येक व्यक्ति के स्वतंत्र रूप से चलने के अधिकार की रक्षा करना, सार्वजनिक अधिकार के दुरुपयोग पर सवाल उठाना और ऐसे संस्थानों की मांग करना जो उन पर रखे गए विश्वास के योग्य हों।"
+              }
+          },
+          "bn": {
+              "name": "সারা এভারার্ড",
+              "roleAndField": "মার্কেটিং এক্সিকিউটিভ · লন্ডন, ইংল্যান্ড",
+              "categoryLabel": "জনআস্থা ও নারীদের পথচলার নিরাপত্তা",
+              "coreMessage": "জননিরাপত্তা প্রতিদিনের নাগরিক অবকাঠামোর অংশ হতে হবে এবং নাগরিকদের সুরক্ষায় নিয়োজিত প্রতিষ্ঠানগুলোকে তাদের ক্ষমতার ব্যবহারের জন্য জবাবদিহি করতে হবে। নারীদের নির্ভয়ে জনসমাগমস্থলে চলাফেরা করার অধিকার থাকতে হবে এবং কোনো ব্যক্তিই যেন প্রাতিষ্ঠানিক ক্ষমতার অপব্যবহার করে সহিংসতা চালাতে না পারে।",
+              "whoWasThisPerson": "সারা এভারার্ড ছিলেন দক্ষিণ লন্ডনের ব্রিক্সটনে বসবাসকারী ৩৩ বছর বয়সী একজন মার্কেটিং এক্সিকিউটিভ। তিনি ইয়র্কে বেড়ে ওঠেন এবং ২০০৫ থেকে ২০০৮ সাল পর্যন্ত ডারহাম ইউনিভার্সিটির সেন্ট কাথবার্টস সোসাইটিতে হিউম্যান জিওগ্রাফি নিয়ে পড়াশোনা করেন।\nস্নাতক শেষ করে তিনি লন্ডনে চলে আসেন এবং মার্কেটিংয়ে পেশাগত জীবন গড়ে তোলেন।",
+              "contributions": "সারা একজন মার্কেটিং পেশাজীবী এবং ডারহাম ইউনিভার্সিটির স্নাতক ছিলেন। কোনো সুনির্দিষ্ট বড় ব্র্যান্ডিং ক্যাম্পেইনের অপ্রমাণিত দাবি না করেও তাঁর জীবন একজন স্বাধীনচেতা মানুষ হিসেবে স্বীকৃতি পাওয়ার যোগ্য।\nতাঁর ঘটনা শহরে নারীদের স্বাধীন চলাচল, পুলিশের প্রতি জনআস্থা এবং প্রাতিষ্ঠানিক ক্ষমতার অপব্যবহার রোধের আলোচনায় গভীর প্রভাব ফেলে।",
+              "factualContext": "৩ মার্চ ২০২১ সন্ধ্যায় দক্ষিণ লন্ডনের ক্ল্যাপহামে এক বন্ধুর বাসা থেকে পায়ে হেঁটে বাড়ি ফেরার পথে কর্মরত মেট্রোপলিটন পুলিশ অফিসার ওয়েন কুজেন্স (Wayne Couzens) কোভিড-১৯ বিধি ভঙ্গের মিথ্যা অজুহাতে তাঁকে হাতকড়া পরিয়ে অপহরণ, ধর্ষণ ও হত্যা করে।\n\nবিচারিক প্রক্রিয়া:\n৩০ সেপ্টেম্বর ২০২১ তারিখে ওল্ড বেইলি আদালতে লর্ড জাস্টিস ফুলফোর্ড কুজেন্সকে 'হোল-লাইফ অর্ডার' (আমৃত্যু কারাদণ্ড) প্রদান করেন।",
+              "editorialNotes": "প্রকাশনা নোট: বিচারিক বিবরণটি আদালতের রায়ের নথির ওপর ভিত্তি করে রচিত। ব্যারোনেস কেসি রিভিউ (২০২৩) এবং অ্যাঞ্জিওলিনি ইনকোয়ারি পার্ট ১ (২০২৪) ও পার্ট ২ প্রথম প্রতিবেদন (ডিসেম্বর ২০২৫) পৃথক তদন্ত হিসেবে অন্তর্ভুক্ত করা হয়েছে।",
+              "verifiedFacts": [
+                  "দক্ষিণ লন্ডনের ব্রিক্সটনে বসবাসকারী ৩৩ বছর বয়সী মার্কেটিং এক্সিকিউটিভ; ডারহাম ইউনিভার্সিটির (২০০৫–২০০৮) স্নাতক।",
+                  "৩ মার্চ ২০২১ সন্ধ্যায় ক্ল্যাপহাম থেকে ফেরার পথে কর্মরত মেট পুলিশ অফিসার ওয়েন কুজেন্স কর্তৃক মিথ্যা পুলিশি তল্লাশির অজুহাতে অপহৃত ও নিহত।",
+                  "৩০ সেপ্টেম্বর ২০২১-এ ওল্ড বেইলিতে লর্ড জাস্টিস ফুলফোর্ড কুজেন্সকে আমৃত্যু কারাদণ্ড (whole-life order) প্রদান করেন।",
+                  "ব্যারোনেস কেসি রিভিউ (২১ মার্চ ২০২৩) মেট্রোপলিটন পুলিশকে প্রাতিষ্ঠানিকভাবে বর্ণবাদী, নারীবিদ্বেষী ও সমকামীভীতিপূর্ণ বলে চিহ্নিত করে।",
+                  "অ্যাঞ্জিওলিনি ইনকোয়ারি ২৯ ফেব্রুয়ারি ২০২৪-এ পার্ট ১ রিপোর্ট (১৬টি সুপারিশ) এবং ২ ডিসেম্বর ২০২৫-এ পার্ট ২ প্রথম রিপোর্ট (১৩টি সুপারিশ) প্রকাশ করে।"
+              ],
+              "societalImpact": "A. ব্যারোনেস কেসি রিভিউ (মার্চ ২০২৩): মেট্রোপলিটন পুলিশের অভ্যন্তরীণ সংস্কৃতি ও আচরণগত মানের ওপর স্বাধীন তদন্ত।\nB. অ্যাঞ্জিওলিনি ইনকোয়ারি — পার্ট ১ রিপোর্ট (ফেব্রুয়ারি ২০২৪): কুজেন্সের পুলিশ কর্মজীবনে উপেক্ষিত সতর্কবার্তাগুলো চিহ্নিত করে ১৬টি সুপারিশ পেশ করে।\nC. অ্যাঞ্জিওলিনি ইনকোয়ারি — পার্ট ২ প্রথম রিপোর্ট (ডিসেম্বর ২০২৫): জনসমাগমস্থলে নারীদের বিরুদ্ধে যৌন উদ্দেশ্যপ্রণোদিত অপরাধ প্রতিরোধে ১৩টি সুপারিশ করে এবং নিরাপত্তার দায় কেবল নারীদের ওপর চাপিয়ে দেওয়ার বিরুদ্ধে সতর্ক করে।",
+              "actionableLesson": "নগর নিরাপত্তা অডিট ও প্রাতিষ্ঠানিক ক্ষমতার জবাবদিহিতা:\n১. পুলিশের নিয়োগ ও ব্যাকগ্রাউন্ড যাচাই (Vetting) কঠোর করা\n২. সাদা পোশাকের পুলিশের পরিচয় যাচাইয়ের সুস্পষ্ট ব্যবস্থা\n৩. অসদাচরণের গোপনীয় ও সহজলভ্য অভিযোগ ব্যবস্থা\n৪. নিরাপদ নাগরিক অবকাঠামো ও পর্যাপ্ত স্ট্রিট লাইটিং\n৫. প্রাতিষ্ঠানিক স্বচ্ছতা ও স্বাধীন নজরদারি\n৬. অপরাধী-কেন্দ্রিক প্রতিরোধ ব্যবস্থা।",
+              "memorialPublication": {
+                  "title": "নগর নিরাপত্তা অডিট ও প্রাতিষ্ঠানিক ক্ষমতার জবাবদিহিতা নির্দেশিকা",
+                  "focus": "নাগরিক অবকাঠামো · নারীর নিরাপত্তা · পুলিশিংয়ে জনআস্থা · প্রাতিষ্ঠানিক জবাবদিহিতা",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "সারা এভারার্ডকে স্মরণ করার অর্থ হলো প্রতিটি মানুষের নির্ভয়ে চলাফেরার অধিকার রক্ষা করা, সরকারি ক্ষমতার অপব্যবহারের বিরুদ্ধে প্রশ্ন তোলা এবং জনআস্থার যোগ্য প্রতিষ্ঠান দাবি করা।"
+              }
+          },
+          "ta": {
+              "name": "சாரா எவரார்ட்",
+              "roleAndField": "மார்க்கெட்டிங் அதிகாரி · லண்டன், இங்கிலாந்து",
+              "categoryLabel": "பொது நம்பிக்கை மற்றும் பெண்களின் தெருப் பாதுகாப்பு",
+              "coreMessage": "பொதுப் பாதுகாப்பு என்பது அன்றாட குடிமை உள்கட்டமைப்பில் இணைக்கப்பட வேண்டும், மேலும் குடிமக்களைப் பாதுகாக்கும் நிறுவனங்கள் தங்கள் அதிகாரத்திற்குப் பொறுப்புக்கூற வேண்டும்.",
+              "whoWasThisPerson": "சாரா எவரார்ட் தெற்கு லண்டனின் பிரிக்ஸ்டனில் வசித்து வந்த 33 வயது மார்க்கெட்டிங் அதிகாரி. யார்க்கில் வளர்ந்த அவர், 2005 முதல் 2008 வரை டர்ஹாம் பல்கலைக்கழகத்தில் மனித புவியியல் பயின்றார்.",
+              "contributions": "மார்க்கெட்டிங் துறையில் பணியாற்றிய இளம் தொழில்முறை வல்லுநரான அவரது வாழ்க்கை, நகரங்களில் பெண்களின் சுதந்திரமான நடமாட்டம் மற்றும் காவல்துறை அதிகாரத்தின் பொறுப்புக்கூறல் குறித்த முக்கிய விவாதத்தைத் தூண்டியது.",
+              "factualContext": "மார்ச் 3, 2021 மாலை, தெற்கு லண்டனின் கிளாபமில் இருந்து வீடு திரும்பிக்கொண்டிருந்த சாராவை, பணியில் இருந்த மெட்ரோபாலிட்டன் காவல்துறை அதிகாரி வெய்ன் கௌசன்ஸ் (Wayne Couzens) கோவிட்-19 விதிகளை மீறியதாகப் பொய்க் கூறி கடத்திச் சென்று கொலை செய்தார்.\n\nநீதித்துறை நடவடிக்கைகள்:\nசெப்டம்பர் 30, 2021 அன்று ஓல்ட் பெய்லி நீதிமன்றத்தில் நீதிபதி ஃபுல்ஃபோர்ட் கௌசன்ஸுக்கு ஆயுள் முழுவதும் சிறையில் இருக்கும் தண்டனையை (whole-life order) விதித்தார்.",
+              "editorialNotes": "வெளியீட்டுக் குறிப்பு: பரோனஸ் கேசி ஆய்வு (2023) மற்றும் அஞ்சியோலினி விசாரணை அறிக்கை (பாகம் 1 - 2024 மற்றும் பாகம் 2 முதல் அறிக்கை - டிசம்பர் 2025) ஆகியவை அதிகாரப்பூர்வ ஆவணங்களின் அடிப்படையில் சேர்க்கப்பட்டுள்ளன.",
+              "verifiedFacts": [
+                  "தெற்கு லண்டனின் பிரிக்ஸ்டனில் வசித்த 33 வயது மார்க்கெட்டிங் அதிகாரி; டர்ஹாம் பல்கலைக்கழக (2005–2008) பட்டதாரி.",
+                  "மார்ச் 3, 2021 அன்று காவல்துறை அதிகாரி வெய்ன் கௌசன்ஸால் பொய்யான காரணங்களுக்காகக் கைது செய்யப்பட்டுக் கடத்திக் கொல்லப்பட்டார்.",
+                  "செப்டம்பர் 30, 2021 அன்று கௌசன்ஸுக்கு முழு ஆயுள் தண்டனை (whole-life order) விதிக்கப்பட்டது.",
+                  "பரோனஸ் கேசி அறிக்கை (மார்ச் 2023) மெட்ரோபாலிட்டன் காவல்துறையின் நிறுவனக் குறைபாடுகளை வெளிப்படுத்தியது.",
+                  "அஞ்சியோலினி விசாரணை பாகம் 1 அறிக்கை (பிப்ரவரி 2024, 16 பரிந்துரைகள்) மற்றும் பாகம் 2 முதல் அறிக்கை (டிசம்பர் 2025, 13 பரிந்துரைகள்) வெளியிடப்பட்டன."
+              ],
+              "societalImpact": "A. பரோனஸ் கேசி ஆய்வு (மார்ச் 2023): மெட்ரோபாலிட்டன் காவல்துறையின் கலாச்சாரம் மற்றும் நடத்தைத் தரங்களை ஆய்வு செய்தது.\nB. அஞ்சியோலினி விசாரணை பாகம் 1 (பிப்ரவரி 2024): காவல்துறை ஆட்சேர்ப்பு மற்றும் நடத்தை கண்காணிப்பு குறித்து 16 பரிந்துரைகளை வழங்கியது.\nC. அஞ்சியோலினி விசாரணை பாகம் 2 முதல் அறிக்கை (டிசம்பர் 2025): பொது இடங்களில் பெண்களுக்கு எதிரான பாலியல் குற்றங்களைத் தடுக்க 13 பரிந்துரைகளை வழங்கியது.",
+              "actionableLesson": "நகர்ப்புறப் பாதுகாப்பு மற்றும் நிறுவனப் பொறுப்புக்கூறல்:\n1. கடுமையான காவல்துறை ஆட்சேர்ப்பு மற்றும் பின்னணிச் சரிபார்ப்பு\n2. சாதாரண உடையில் இருக்கும் காவல்துறையினரைச் சரிபார்க்கும் முறை\n3. அதிகார துஷ்பிரயோகப் புகார் முறை\n4. பாதுகாப்பான பொது உள்கட்டமைப்பு மற்றும் தெரு விளக்குகள்\n5. நிறுவன வெளிப்படைத்தன்மை\n6. குற்றவாளிகளை மையமாகக் கொண்ட தடுப்பு நடவடிக்கைகள்.",
+              "memorialPublication": {
+                  "title": "நகர்ப்புறப் பாதுகாப்புத் தணிக்கை மற்றும் நிறுவனப் பொறுப்புக்கூறல் வழிகாட்டி",
+                  "focus": "குடிமை உள்கட்டமைப்பு · பெண்களின் பாதுகாப்பு · காவல்துறை மீதான பொது நம்பிக்கை",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "சாரா எவரார்டை நினைவுகூர்வது என்பது ஒவ்வொருவரின் சுதந்திரமான நடமாடும் உரிமையைப் பாதுகாப்பதும், பொது அதிகாரத்தின் தவறான பயன்பாட்டைத் தடுப்பதும் ஆகும்."
+              }
+          },
+          "or": {
+              "name": "ସାରା ଏଭରାର୍ଡ",
+              "roleAndField": "ମାର୍କେଟିଂ ଏକ୍‌ଜିକ୍ୟୁଟିଭ୍ · ଲଣ୍ଡନ, ଇଂଲଣ୍ଡ",
+              "categoryLabel": "ଜନବିଶ୍ୱାସ ଓ ମହିଳାଙ୍କ ସଡ଼କ ସୁରକ୍ଷା",
+              "coreMessage": "ଜନସୁରକ୍ଷା ଦୈନନ୍ଦିନ ନାଗରିକ ଭିତ୍ତିଭୂମିର ଅଂଶ ହେବା ଉଚିତ ଏବଂ ନାଗରିକଙ୍କ ସୁରକ୍ଷା ଦାୟିତ୍ୱରେ ଥିବା ଅନୁଷ୍ଠାନଗୁଡ଼ିକ ସେମାନଙ୍କ କ୍ଷମତାର ବ୍ୟବହାର ପାଇଁ ଉତ୍ତରଦାୟୀ ରହିବା ଆବଶ୍ୟକ।",
+              "whoWasThisPerson": "ସାରା ଏଭରାର୍ଡ ଦକ୍ଷିଣ ଲଣ୍ଡନର ବ୍ରିକ୍ସଟନରେ ରହୁଥିବା ଜଣେ ୩୩ ବର୍ଷୀୟା ମାର୍କେଟିଂ ଏକ୍‌ଜିକ୍ୟୁଟିଭ୍ ଥିଲେ। ସେ ୟର୍କରେ ବଢ଼ିଥିଲେ ଏବଂ ୨୦୦୫ରୁ ୨୦୦୮ ପର୍ଯ୍ୟନ୍ତ ଡରହାম ୟୁନିଭର୍ସିଟିରେ ମାନବ ଭୂଗୋଳ অধ্যয়ন କରିଥିଲେ।",
+              "contributions": "ଜଣେ ମାର୍କେଟିଂ ପେଶାଦାର ଭାବେ ତାଙ୍କର ସ୍ୱାଧୀନ ଜୀବନ ଏବଂ ତାଙ୍କର କାହାଣୀ ସହରରେ ମହିଳାଙ୍କ ସୁରକ୍ଷিত ଯାତାୟାତ ଓ ପୋଲିସ କ୍ଷମତାର ଉତ୍ତରଦାୟିତ୍ୱ ଉପରେ ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ଆଲୋଚନା ସୃଷ୍ଟି କରିଥିଲା।",
+              "factualContext": "୩ ମାର୍ଚ୍ଚ ୨୦୨୧ ସନ୍ଧ୍ୟାରେ ଦକ୍ଷିଣ ଲଣ୍ଡନର କ୍ଲାপହାମରୁ ଚାଲି ଚାଲି ଘରକୁ ଫେରୁଥିବା ସମୟରେ କାର୍ଯ୍ୟରତ ମେଟ୍ରୋପলিଟାନ ପୋଲିସ ଅଫିସର ୱେନ୍ କୁଜେନ୍ସ (Wayne Couzens) କୋଭିଡ୍-୧୯ ନିୟମ ଉଲ୍ଲଂଘନର ମିଥ୍ୟା ବାହାନାରେ ତାଙ୍କୁ ଅପହରଣ ও ହତ୍ୟା କରିଥିଲା।\n\nନ୍ୟାୟିକ ପ୍ରକ୍ରିୟା:\n୩୦ ସେପ୍ଟେମ୍ବର ୨୦୨୧ରେ ଓଲ୍ଡ ବେলি କୋର୍ଟରେ ଲର୍ଡ ଜଷ୍ଟିସ୍ ଫୁଲଫୋର୍ଡ କୁଜେନ୍ସକୁ ଆମୃତ୍ୟୁ କାରାଦଣ୍ଡ (whole-life order) ଶୁଣାଇଥିଲେ।",
+              "editorialNotes": "ପ୍ରକାଶନ ଟିପ୍ପଣୀ: ବారୋନେସ୍ କେସି ରିଭ୍ୟୁ (୨୦୨୩) ଏବଂ ଆଞ୍ଜିଓଲିନି ତଦନ୍ତ ପାର୍ଟ ୧ (୨୦୨୪) ଓ ପାର୍ଟ ୨ ପ୍ରଥମ ରିପୋର୍ଟ (ଡିସେମ୍ବର ୨୦୨୫) ସରକାରୀ ରେକର୍ଡ ଅନୁଯାୟୀ ଅନ୍ତର୍ଭୁକ୍ତ କରାଯାଇଛି।",
+              "verifiedFacts": [
+                  "ଦକ୍ଷିଣ ଲଣ୍ଡନର ବ୍ରିକ୍ସଟନରେ ରହୁଥିବା ୩୩ ବର୍ଷୀୟା ମାର୍କେଟିଂ ଏକ୍‌ଜିକ୍ୟୁଟିଭ୍; ଡରହାମ ୟୁନିଭର୍ସିଟି (୨୦୦୫–୨୦୦୮) ସ୍ନାତକ।",
+                  "୩ ମାର୍ଚ୍ଚ ୨୦୨୧ରେ ପୋଲିସ ଅଫିସର ୱେନ୍ କୁଜେନ୍ସ ଦ୍ୱାରା ମିଥ୍ୟା ଗିରଫଦାରୀ ବାହାନାରେ ଅପହରଣ ଓ ହତ୍ୟା।",
+                  "୩୦ ସେପ୍ଟେମ୍ବର ୨୦୨୧ରେ କୁଜେନ୍ସକୁ ଆମୃତ୍ୟୁ କାରାଦଣ୍ଡ (whole-life order) ପ୍ରଦାନ।",
+                  "ବାରୋନେସ୍ କେସି ରିଭ୍ୟୁ (୨୧ ମାର୍ଚ୍ଚ ୨୦୨୩) ମେଟ୍ରୋପଲିଟାନ ପୋଲିସର ଆନୁଷ୍ଠାନିକ ତ୍ରୁଟି ପ୍ରକାଶ କରିଥିଲା।",
+                  "ଆଞ୍ଜିଓଲିନି ତଦନ୍ତ ୨୯ ଫେବୃଆରୀ ୨୦୨୪ରେ ପାର୍ଟ ୧ ରିପୋର୍ଟ (୧୬ଟି ସୁପାରିଶ) ଏବଂ ୨ ଡିସେମ୍ବର ୨୦୨୫ରେ ପାର୍ଟ ୨ ପ୍ରଥମ ରିପୋର୍ଟ (୧୩ଟି ସୁପାରିଶ) ପ୍ରକାଶ କରିଥିଲା।"
+              ],
+              "societalImpact": "A. ବାରୋନେସ୍ କେସି ରିଭ୍ୟୁ (ମାର୍ଚ୍ଚ ୨୦୨୩): ମେଟ୍ରୋପଲିଟାନ ପୋଲିସର ଆଭ୍ୟନ୍ତରୀଣ ସଂସ୍କୃତି ଓ ମାନদଣ୍ଡର ସମୀକ୍ଷା।\nB. ଆଞ୍ଜିଓଲିନି ତଦନ୍ତ ପାର୍ଟ ୧ (ଫେବୃଆରୀ ୨୦୨୪): ପୋଲିସ ଯାଞ୍ଚ ଓ ଅসଦାଚରଣ ରୋକିବାକୁ ୧୬ଟି ସୁପାରିଶ।\nC. ଆଞ୍ଜିଓଲିନି ତଦନ୍ତ ପାର୍ଟ ୨ ପ୍ରଥମ ରିପୋର୍ଟ (ଡିସେମ୍ବର ୨୦୨୫): ସାର୍ବଜନୀନ ସ୍ଥାନରେ ମହିଳାଙ୍କ ବିରୁଦ୍ଧରେ ଅପରାଧ ରୋକିବାକୁ ୧୩ଟି ସୁପାରିଶ।",
+              "actionableLesson": "ସହରୀ ସୁରକ୍ଷା ଅଡିଟ୍ ଓ ଆନୁଷ୍ଠାନିକ ଉତ୍ତରଦାୟିତ୍ୱ:\n୧. ପୋଲିସ ନିଯୁକ୍ତି ଓ ପୃଷ୍ଠଭୂମି ଯାଞ୍ଚ\n୨. ସାଦା ପୋଷାକধারୀ ପୋଲିସଙ୍କ ପରିଚୟ ଯାଞ୍ଚ ବ୍ୟବସ୍ଥା\n୩. ଅসଦାଚରଣ ରିପୋର୍ଟିଂ\n୪. ସୁରକ୍ଷିତ ସାର୍ବଜନୀନ ଭିତ୍ତିଭୂମି ଓ ଆଲୋକୀକରଣ\n୫. ଆନୁଷ୍ଠାନିକ ସ୍ୱଚ୍ଛତା\n୬. ଅପରାଧୀ-କେନ୍ଦ୍ରିକ ନିରୋଧ ବ୍ୟବସ୍ଥା।",
+              "memorialPublication": {
+                  "title": "ସହରୀ ସୁରକ୍ଷା ଅଡିଟ୍ ଓ ଆନୁଷ୍ଠାନିକ ଉତ୍ତରଦାୟିତ୍ୱ ମାର୍ଗଦର୍ଶିକା",
+                  "focus": "ନାଗରିକ ଭିତ୍ତିଭୂମି · ମହିଳା ସୁରକ୍ଷା · ପୋଲିସିଂରେ ଜନବିଶ୍ୱାସ",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ସାରା ଏଭରାର୍ଡଙ୍କୁ ସ୍ମରଣ କରିବାର ଅର୍ଥ ହେଉଛି ପ୍ରତ୍ୟେକ ବ୍ୟକ୍ତିଙ୍କ ମୁକ୍ତ ଯାତାୟାତ ଅଧିକାରର ସୁରକ୍ଷା ଏବଂ ଆନୁଷ୍ଠାନିକ କ୍ଷମତାର ଦुरुपयोग ରୋକିବା।"
+              }
+          },
+          "es": {
+              "name": "Sarah Everard",
+              "roleAndField": "Ejecutiva de Marketing · Londres, Inglaterra",
+              "categoryLabel": "Confianza Pública y Seguridad Vial de las Mujeres",
+              "coreMessage": "La seguridad pública debe integrarse en la infraestructura cívica cotidiana, y las instituciones encargadas de proteger a los ciudadanos deben rendir cuentas por la autoridad que ejercen. Las mujeres deben poder caminar por los espacios públicos sin miedo, y ningún individuo debe poder explotar el poder institucional para cometer actos de violencia.",
+              "whoWasThisPerson": "Sarah Everard era una ejecutiva de marketing de 33 años que vivía en Brixton, al sur de Londres.\nCreció en York y asistió a la Fulford School antes de estudiar Geografía Humana en la St Cuthbert's Society de la Universidad de Durham entre 2005 y 2008.\nDespués de graduarse, se mudó a Londres y desarrolló su carrera profesional en marketing. Amigos y familiares la recordaban como inteligente, amable, reflexiva e independiente.\nSu historia es importante no porque su vida deba reducirse a las circunstancias de su muerte, sino porque era una persona con sus propias relaciones, ambiciones y futuro.",
+              "contributions": "Sarah trabajaba como profesional del marketing y era graduada de la Universidad de Durham.\nA diferencia de una figura pública, su vida fue principalmente la de una ciudadana privada que construía su carrera y mantenía relaciones con las personas que la rodeaban. No existen pruebas fiables suficientes para atribuirle campañas específicas de grandes marcas o cargos formales de liderazgo cívico.\n\nNo obstante, su historia adquirió gran relevancia en el debate público sobre:\n• La libertad de las mujeres para desplazarse de forma independiente por las ciudades.\n• El derecho a sentirse seguras al regresar a casa.\n• La confianza pública en los agentes de policía y otras figuras de autoridad.\n• La responsabilidad institucional cuando personas investidas de poder público abusan de esa autoridad.\n\nPrincipio editorial: El valor de una persona no depende de haber logrado una hazaña pública extraordinaria. La vida de Sarah merece reconocimiento por derecho propio.",
+              "factualContext": "En la tarde del 3 de marzo de 2021, Sarah Everard caminaba hacia su casa después de visitar a una amiga en Clapham, al sur de Londres.\nFue abordada por Wayne Couzens, entonces agente en activo de la Policía Metropolitana de Londres, quien utilizó su condición policial para detenerla falsamente, esposándola bajo el pretexto de haber infringido las restricciones de la COVID-19 e introduciéndola en un vehículo alquilado.\nEl expediente judicial estableció que no fue una detención policial legítima. Couzens había planeado el secuestro y utilizó la autoridad asociada a su cargo para llevarlo a cabo. Secuestró, violó y asesinó a Sarah; sus restos fueron hallados posteriormente en una zona boscosa de Kent.\n\nProcedimientos judiciales y rendición de cuentas:\nWayne Couzens se declaró culpable del secuestro, violación y asesinato de Sarah Everard.\nEl 30 de septiembre de 2021, el juez Lord Justice Fulford lo condenó en el Tribunal Penal Central (Old Bailey) a cadena perpetua íntegra (whole-life order), subrayando la gravedad del abuso de autoridad policial y el grave quebrantamiento de la confianza pública.",
+              "editorialNotes": "Nota de publicación: El relato judicial se basa en las actas de sentencia y apelación. El Informe de la Baronesa Casey y la Investigación Angiolini son investigaciones distintas con alcances diferentes. El Primer Informe de la Parte 2 de la Investigación Angiolini, publicado en diciembre de 2025, se incluye porque actualiza sustancialmente el debate sobre seguridad pública. La guía propuesta por UltimateHealth es una iniciativa educativa nueva, no un programa gubernamental existente.",
+              "verifiedFacts": [
+                  "Ejecutiva de marketing de 33 años residente en Brixton, Londres; creció en York y estudió Geografía Humana en la Universidad de Durham (2005–2008).",
+                  "Secuestrada la tarde del 3 de marzo de 2021 mientras caminaba a casa desde Clapham por el agente en activo de la Policía Metropolitana Wayne Couzens bajo el falso pretexto de un control por COVID-19.",
+                  "El 30 de septiembre de 2021, Lord Justice Fulford condenó a Couzens en Old Bailey a cadena perpetua íntegra (whole-life order).",
+                  "El Informe de la Baronesa Casey (publicado el 21 de marzo de 2023) concluyó que la Policía Metropolitana era institucionalmente racista, misógina y homofóbica.",
+                  "La Investigación independiente Angiolini publicó su Informe de la Parte 1 el 29 de febrero de 2024 (16 recomendaciones) y el Primer Informe de la Parte 2 el 2 de diciembre de 2025 (13 recomendaciones sobre la prevención de delitos de motivación sexual contra las mujeres en espacios públicos)."
+              ],
+              "societalImpact": "A. Revisión de la Baronesa Casey (marzo de 2023):\nDesignada en octubre de 2021 y publicada el 21 de marzo de 2023, examinó el liderazgo, la selección de personal, el sistema disciplinario y la cultura interna de la Policía Metropolitana, concluyendo que existían racismo, misoginia y homofobia institucionales y graves fallos en la gestión de denuncias por mala conducta.\n\nB. Investigación Angiolini — Informe de la Parte 1 (29 de febrero de 2024):\nInvestigó la carrera policial de Couzens e identificó graves señales de advertencia y oportunidades perdidas, formulando 16 recomendaciones para reforzar las salvaguardias contra el abuso de la autoridad policial.\n\nC. Investigación Angiolini — Primer Informe de la Parte 2 (2 de diciembre de 2025):\nExaminó la prevención de delitos de motivación sexual contra las mujeres en espacios públicos, formulando 13 recomendaciones adicionales y advirtiendo contra hacer recaer la carga de la seguridad principalmente sobre las mujeres en lugar de actuar eficazmente contra los perpetradores.",
+              "actionableLesson": "Auditorías de seguridad urbana y rendición de cuentas del poder institucional:\n1. Selección y verificación de antecedentes policiales (vetting) rigurosas y auditables.\n2. Verificación clara de intervenciones policiales de agentes de paisano a través de canales oficiales.\n3. Canales confidenciales y accesibles para denunciar mala conducta policial.\n4. Infraestructura pública más segura (auditorías de rutas peatonales, parques e iluminación).\n5. Transparencia institucional y supervisión independiente con indicadores medibles.\n6. Prevención centrada en los perpetradores (identificación e interrupción de patrones de acoso y delitos sexuales).",
+              "memorialPublication": {
+                  "title": "Guía de Auditorías de Seguridad Urbana y Rendición de Cuentas del Poder Institucional",
+                  "focus": "Infraestructura Cívica · Seguridad de las Mujeres · Confianza Pública en la Policía · Rendición de Cuentas",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Propósito: Desarrollar un recurso de código abierto de educación cívica y auditoría de seguridad para evaluar espacios públicos y comprender cómo denunciar conductas institucionales indebidas.\n\nLa perspectiva de UltimateHealth:\nRecordar a Sarah Everard significa defender el derecho de toda persona a desplazarse libremente, cuestionar el abuso de la autoridad pública y exigir instituciones que merezcan la confianza depositada en ellas."
+              }
+          },
+          "fr": {
+              "name": "Sarah Everard",
+              "roleAndField": "Cadre en Marketing · Londres, Angleterre",
+              "categoryLabel": "Confiance Publique et Sécurité des Femmes dans l'Espace Public",
+              "coreMessage": "La sécurité publique doit être intégrée aux infrastructures civiques du quotidien, et les institutions chargées de protéger les citoyens doivent rendre compte de l'autorité qu'elles exercent. Les femmes doivent pouvoir circuler dans l'espace public sans crainte, et nul ne doit pouvoir détourner un pouvoir institutionnel pour commettre des violences.",
+              "whoWasThisPerson": "Sarah Everard était une cadre en marketing de 33 ans vivant à Brixton, dans le sud de Londres.\nElle avait grandi à York et fréquenté la Fulford School avant d'étudier la géographie humaine à la St Cuthbert's Society de l'Université de Durham de 2005 à 2008.\nAprès ses études, elle s'était installée à Londres pour y construire sa carrière. Ses proches se souviennent d'elle comme d'une personne intelligente, bienveillante, réfléchie et indépendante.\nSon histoire compte non pas parce que sa vie devrait être réduite aux circonstances de sa mort, mais parce qu'elle était une personne à part entière, avec ses propres liens, ses projets et son avenir.",
+              "contributions": "Sarah travaillait comme professionnelle du marketing et était diplômée de l'Université de Durham.\nContrairement à une personnalité publique, sa vie était avant tout celle d'une citoyenne menant sa carrière et cultivant ses amitiés. Il n'existe pas d'éléments probants permettant de lui attribuer des campagnes publicitaires majeures ou des fonctions officielles d'engagement civique.\n\nSon histoire a néanmoins pris une place centrale dans le débat public concernant :\n• La liberté des femmes de se déplacer de manière autonome en ville.\n• Le droit de rentrer chez soi en sécurité.\n• La confiance du public envers la police et les dépositaires de l'autorité.\n• La responsabilité des institutions lorsque des agents investis de la puissance publique en abusent.\n\nPrincipe éditorial : La valeur d'une vie humaine ne dépend pas d'une réalisation publique extraordinaire. La vie de Sarah mérite d'être reconnue pour elle-même.",
+              "factualContext": "Le soir du 3 mars 2021, Sarah Everard rentrait chez elle à pied après avoir rendu visite à une amie à Clapham, dans le sud de Londres.\nElle a été abordée par Wayne Couzens, alors policier en exercice au sein de la Metropolitan Police, qui a usé de sa qualité de policier pour procéder à une arrestation fictive sous prétexte d'une infraction aux restrictions liées à la COVID-19, la menottant avant de la faire monter dans un véhicule loué.\nLes actes judiciaires ont établi qu'il ne s'agissait nullement d'un contrôle légitime : Couzens avait prémédité l'enlèvement et utilisé les attributs de sa fonction pour l'exécuter. Il a enlevé, violé et assassiné Sarah, dont le corps a été retrouvé dans un bois du Kent.\n\nProcédures judiciaires :\nWayne Couzens a plaidé coupable d'enlèvement, de viol et de meurtre. Le 30 septembre 2021, le juge Lord Justice Fulford l'a condamné à la Cour criminelle centrale (Old Bailey) à une peine de perpétuité incompressible (whole-life order), soulignant la gravité exceptionnelle du détournement de l'autorité policière.",
+              "editorialNotes": "Note de publication : Le récit judiciaire s'appuie sur les décisions de condamnation et d'appel. Le rapport de la baronne Casey et l'enquête Angiolini sont deux procédures distinctes. Le premier rapport de la deuxième partie de l'enquête Angiolini, publié en décembre 2025, est inclus car il actualise de manière déterminante le débat sur la sécurité publique.",
+              "verifiedFacts": [
+                  "Cadre en marketing de 33 ans vivant à Brixton (Londres) ; a grandi à York et étudié la géographie humaine à l'Université de Durham (2005–2008).",
+                  "Enlevée le soir du 3 mars 2021 alors qu'elle rentrait à pied de Clapham par Wayne Couzens, policier en service de la Metropolitan Police, sous le faux prétexte d'un contrôle COVID-19.",
+                  "Le 30 septembre 2021, Lord Justice Fulford a condamné Couzens à l'Old Bailey à une peine de perpétuité incompressible (whole-life order).",
+                  "Le rapport de la baronne Casey (publié le 21 mars 2023) a conclu que la Metropolitan Police souffrait de racisme, de misogynie et d'homophobie institutionnels.",
+                  "L'enquête indépendante Angiolini a publié le rapport de sa 1re partie le 29 février 2024 (16 recommandations) et le premier rapport de sa 2e partie le 2 décembre 2025 (13 recommandations sur la prévention des crimes à caractère sexuel contre les femmes dans l'espace public)."
+              ],
+              "societalImpact": "A. Rapport de la baronne Casey (mars 2023) :\nCommandé en octobre 2021 et publié le 21 mars 2023, cet audit indépendant sur la culture et les normes de la Metropolitan Police a mis en évidence un racisme, une misogynie et une homophobie institutionnels ainsi que de graves défaillances dans le traitement des plaintes et des fautes disciplinaires.\n\nB. Enquête Angiolini — Rapport de la 1re partie (29 février 2024) :\nA examiné la carrière policière de Couzens, relevé de nombreux signaux d'alerte ignorés et formulé 16 recommandations pour renforcer le contrôle des antécédents (vetting) et prévenir les abus d'autorité.\n\nC. Enquête Angiolini — Premier rapport de la 2e partie (2 décembre 2025) :\nConsacré à la prévention des crimes à motivation sexuelle contre les femmes dans l'espace public (13 recommandations), il met en garde contre le fait de faire peser la responsabilité de la sécurité principalement sur les femmes plutôt que de cibler et neutraliser les auteurs de violences.",
+              "actionableLesson": "Audits de sécurité urbaine et responsabilité du pouvoir institutionnel :\n1. Recrutement et vérification rigoureuse des antécédents (vetting) au sein des forces de police.\n2. Procédures claires de vérification de l'identité des policiers en civil.\n3. Canaux confidentiels et accessibles de signalement des fautes professionnelles.\n4. Infrastructures publiques sécurisées (audit de l'éclairage, des cheminements piétons et des transports).\n5. Transparence institutionnelle et suivi indépendant des recommandations d'enquêtes publiques.\n6. Prévention centrée sur les auteurs d'infractions (détection du harcèlement et des comportements prédateurs).",
+              "memorialPublication": {
+                  "title": "Guide d'Audits de Sécurité Urbaine et de Responsabilité du Pouvoir Institutionnel",
+                  "focus": "Infrastructures Civiques · Sécurité des Femmes · Confiance dans la Police · Responsabilité Institutionnelle",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Objectif : Développer une ressource citoyenne en libre accès permettant d'évaluer la sécurité des espaces publics et de comprendre comment signaler les abus d'autorité.\n\nLa perspective d'UltimateHealth :\nSe souvenir de Sarah Everard signifie défendre le droit de chaque personne à circuler librement, mettre en cause les détournements de l'autorité publique et exiger des institutions dignes de la confiance qui leur est accordée."
+              }
+          },
+          "de": {
+              "name": "Sarah Everard",
+              "roleAndField": "Marketing-Managerin · London, England",
+              "categoryLabel": "Öffentliches Vertrauen & Sicherheit von Frauen im Öffentlichen Raum",
+              "coreMessage": "Öffentliche Sicherheit muss in die alltägliche städtische Infrastruktur integriert sein, und Institutionen, denen der Schutz der Bürgerinnen und Bürger anvertraut ist, müssen für die Ausübung ihrer Befugnisse rechenschaftspflichtig bleiben. Frauen müssen sich angstfrei im öffentlichen Raum bewegen können, und niemand darf institutionelle Macht für Gewalttaten missbrauchen können.",
+              "whoWasThisPerson": "Sarah Everard war eine 33-jährige Marketing-Managerin, die in Brixton im Süden Londons lebte.\nSie wuchs in York auf, besuchte die Fulford School und studierte von 2005 bis 2008 Humangeographie an der St Cuthbert's Society der University of Durham.\nNach ihrem Abschluss zog sie nach London und baute sich eine berufliche Laufbahn im Marketing auf. Freunde und Familie erinnerten sich an sie als klug, herzlich, umsichtig und unabhängig.\nIhre Geschichte ist wichtig, weil ihr Leben nicht auf die Umstände ihres Todes reduziert werden darf: Sie war ein Mensch mit eigenen Beziehungen, Zielen und einer eigenen Zukunft.",
+              "contributions": "Sarah arbeitete als Marketing-Fachkraft und war Absolventin der University of Durham.\nAnders als bei einer Person des öffentlichen Lebens war ihr Leben vor allem das einer Privatperson, die ihren Beruf ausübte und ihren Freundes- und Familienkreis pflegte. Es gibt keine hinreichenden Belege, um ihr spezifische Großkampagnen oder formelle öffentliche Ämter zuzuschreiben.\n\nDennoch erlangte ihre Geschichte große Bedeutung in der gesellschaftlichen Debatte über:\n• Die Freiheit von Frauen, sich unabhängig durch Städte zu bewegen.\n• Das Recht, sich auf dem Heimweg sicher zu fühlen.\n• Das Vertrauen der Öffentlichkeit in Polizeibeamte und staatliche Autorität.\n• Die institutionelle Verantwortung, wenn Träger öffentlicher Gewalt ihre Befugnisse missbrauchen.\n\nRedaktioneller Grundsatz: Der Wert eines Menschen hängt nicht von außergewöhnlichen öffentlichen Leistungen ab. Sarahs Leben verdient Anerkennung um ihrer selbst willen.",
+              "factualContext": "Am Abend des 3. März 2021 ging Sarah Everard zu Fuß nach Hause, nachdem sie eine Freundin in Clapham im Süden Londons besucht hatte.\nSie wurde von Wayne Couzens angesprochen, der damals aktiver Polizeibeamter der Metropolitan Police war.\nCouzens nutzte seine Stellung als Polizist, um eine Festnahme wegen eines angeblichen Verstoßes gegen COVID-19-Auflagen vorzutäuschen, legte ihr Handschellen an und brachte sie in ein gemietetes Fahrzeug.\nDie Gerichtsakten belegen, dass es sich um keine rechtmäßige Polizeikontrolle handelte: Couzens hatte die Entführung geplant und die Autorität seines Amtes gezielt missbraucht. Er entführte, vergewaltigte und ermordete Sarah; ihre sterblichen Überreste wurden später in einem Waldstück in Kent gefunden.\n\nGerichtsverfahren:\nWayne Couzens bekannte sich der Entführung, Vergewaltigung und des Mordes schuldig. Am 30. September 2021 verurteilte ihn Richter Lord Justice Fulford am Central Criminal Court (Old Bailey) zu einer lebenslangen Freiheitsstrafe ohne vorzeitige Entlassungsmöglichkeit (whole-life order) und betonte den schweren Missbrauch polizeilicher Amtsgewalt.",
+              "editorialNotes": "Publikationshinweis: Die Darstellung des Strafverfahrens stützt sich auf die Urteils- und Berufungsdokumente. Der Baroness-Casey-Bericht und die Angiolini Inquiry sind eigenständige Untersuchungen. Der im Dezember 2025 veröffentlichte erste Bericht von Teil 2 der Angiolini Inquiry wurde aufgenommen, da er die Debatte über öffentliche Sicherheit wesentlich fortschreibt.",
+              "verifiedFacts": [
+                  "33-jährige Marketing-Managerin aus Brixton, Süd-London; aufgewachsen in York, Studium der Humangeographie an der University of Durham (2005–2008).",
+                  "Am Abend des 3. März 2021 auf dem Heimweg von Clapham durch den aktiven Beamten der Metropolitan Police Wayne Couzens unter dem Vorwand einer COVID-19-Kontrolle entführt und ermordet.",
+                  "Am 30. September 2021 verurteilte Lord Justice Fulford Couzens am Old Bailey zu einer lebenslangen Haftstrafe ohne Bewährung (whole-life order).",
+                  "Der Baroness-Casey-Bericht (veröffentlicht am 21. März 2023) stellte institutionellen Rassismus, Frauenfeindlichkeit und Homophobie bei der Metropolitan Police fest.",
+                  "Die unabhängige Angiolini Inquiry veröffentlichte am 29. Februar 2024 ihren Teil-1-Bericht (16 Empfehlungen) und am 2. Dezember 2025 ihren ersten Bericht zu Teil 2 (13 Empfehlungen zur Prävention sexuell motivierter Straftaten gegen Frauen im öffentlichen Raum)."
+              ],
+              "societalImpact": "A. Baroness Casey Review (März 2023):\nDie im Oktober 2021 eingesetzte unabhängige Untersuchung (Abschlussbericht vom 21. März 2023) prüfte Führung, Einstellungsverfahren, Disziplinarsystem und Organisationskultur der Metropolitan Police und stellte institutionellen Rassismus, Misogynie und Homophobie sowie gravierende Mängel im Umgang mit Fehlverhalten fest.\n\nB. Angiolini Inquiry — Teil-1-Bericht (29. Februar 2024):\nUntersuchte Couzens' Polizeilaufbahn, deckte übersehene Warnsignale auf und sprach 16 Empfehlungen zur Verschärfung von Sicherheitsüberprüfungen (Vetting) und Dienstaufsicht aus.\n\nC. Angiolini Inquiry — Erster Bericht zu Teil 2 (2. Dezember 2025):\nUntersuchte die Prävention sexuell motivierter Straftaten gegen Frauen im öffentlichen Raum (13 Empfehlungen) und warnte davor, die Verantwortung für Sicherheit primär auf Frauen abzuwälzen, statt konsequent gegen Täter vorzugehen.",
+              "actionableLesson": "Städtische Sicherheitsprüfungen und Rechenschaftspflicht öffentlicher Gewalt:\n1. Gründliche Einstellungs- und Zuverlässigkeitsüberprüfungen (Vetting) bei der Polizei.\n2. Klare Verifikationsmöglichkeiten bei Kontrollen durch Polizeibeamte in Zivil.\n3. Vertrauliche und zugängliche Meldestellen für polizeiliches Fehlverhalten.\n4. Sichere öffentliche Infrastruktur (Prüfung von Fußwegen, Beleuchtung und Notrufsystemen).\n5. Institutionelle Transparenz und unabhängige Aufsicht mit messbaren Indikatoren.\n6. Täterorientierte Prävention zur frühzeitigen Unterbindung von Stalking, Belästigung und Sexualdelikten.",
+              "memorialPublication": {
+                  "title": "Leitfaden für Städtische Sicherheitsaudits & Institutionelle Rechenschaftspflicht",
+                  "focus": "Städtische Infrastruktur · Sicherheit von Frauen · Vertrauen in die Polizei · Institutionelle Aufsicht",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Ziel: Entwicklung eines offenen Bildungs- und Prüfinstruments für Kommunen, Hochschulen und Bürgerinitiativen zur Bewertung der Sicherheit öffentlicher Räume und zum Umgang mit Amtsmissbrauch.\n\nDie UltimateHealth-Perspektive:\nSarah Everard zu gedenken bedeutet, das Recht jedes Menschen auf freie Bewegung zu verteidigen, den Missbrauch öffentlicher Gewalt konsequent zu hinterfragen und Institutionen einzufordern, die das in sie gesetzte Vertrauen verdienen."
+              }
+          },
+          "hr": {
+              "name": "Sarah Everard",
+              "roleAndField": "Marketinška stručnjakinja · London, Engleska",
+              "categoryLabel": "Javno povjerenje i sigurnost žena na ulicama",
+              "coreMessage": "Javna sigurnost mora biti ugrađena u svakodnevnu građansku infrastrukturu, a institucije kojima je povjerena zaštita građana moraju odgovarati za ovlasti koje izvršavaju. Žene moraju moći hodati javnim prostorima bez straha, a nijedan pojedinac ne smije moći zloupotrijebiti institucionalnu moć za počinjenje nasilja.",
+              "whoWasThisPerson": "Sarah Everard bila je 33-godišnja marketinška stručnjakinja koja je živjela u Brixtonu u južnom Londonu.\nOdrasla je u Yorku i pohađala školu Fulford prije studija antropogeografije na Sveučilištu Durham (St Cuthbert's Society) od 2005. do 2008. godine.\nNakon diplome preselila se u London i izgradila karijeru u marketingu. Prijatelji i obitelj pamtili su je kao inteligentnu, brižnu, promišljenu i neovisnu osobu.\nNjezina je priča važna ne zato što bi njezin život trebalo svesti na okolnosti njezine smrti, već zato što je bila pojedinka s vlastitim odnosima, амbicijama i budućnošću.",
+              "contributions": "Sarah je radila kao stručnjakinja za marketing i bila diplomantica Sveučilišta Durham.\nZa razliku od javnih osoba, njezin je život prvenstveno bio život privatne osobe koja gradi karijeru i njeguje prijateljstva. Nema dovoljno pouzdanih dokaza koji bi joj pripisali specifične velike brend-kampanje ili formalne građanske funkcije.\n\nNjezina je priča ipak postala iznimno važna u široj javnoj raspravi o:\n• Slobodi žena da se samostalno kreću gradovima.\n• Pravu na osjećaj sigurnosti pri povratku kući.\n• Povjerenju javnosti u policijske službenike i javne ovlasti.\n• Institucionalnoj odgovornosti kada pojedinci zloupotrijebe javnu ovlast.\n\nUredničko načelo: Vrijednost osobe ne ovisi o izvanrednom javnom postignuću; život Sarah Everard zaslužuje poštovanje sam po sebi.",
+              "factualContext": "Uvečer 3. ožujka 2021. Sarah Everard vraćala se pješice kući nakon posjeta prijateljici u Claphamu u južnom Londonu.\nPrišao joj je Wayne Couzens, tada активni policijski službenik лондонske Metropolitanske policije, koji je zloupotrijebio svoj položaj kako bi je lažno priveo pod izlikom kršenja mjera vezanih uz COVID-19, stavio joj lisice i uveo je u unajmljeno vozilo.\nSudski спиsi utvrdili su da to nije bilo zakonito policijsko postupanje, već unaprijed планиrana otmica. Couzens je oteo, silovao i ubio Sarah, a njezini su posmrtni ostaci kasnije pronađeni u šumi u Kentu.\n\nSudski postupak:\nWayne Couzens priznao je krivnju za otmicu, silovanje i ubojstvo. Dana 30. rujna 2021. sudac Lord Justice Fulford osudio ga je na Središnjem kaznenom sudu (Old Bailey) na kaznu doživotnog zatvora bez mogućnosti pomilovanja (whole-life order), istaknuvši težinu zloupotrebe policijskih ovlasti.",
+              "editorialNotes": "Napomena o objavi: Sudski prikaz temelji se na presudi i žalbenim spisima. Izvješće barunice Casey i Istraga Angiolini zasebne su istrage. Prvo izvješće 2. dijela Istrage Angiolini iz prosinca 2025. uključeno je jer značajno ažurira raspravu o javnoj sigurnosti.",
+              "verifiedFacts": [
+                  "33-godišnja marketinška stručnjakinja iz Brixtona u Londonu; odrasla u Yorku i diplomirala na Sveučilištu Durham (2005.–2008.).",
+                  "Oteta 3. ožujka 2021. pri povratku iz Claphama od strane aktivnog policajca Metropolitanske policije Waynea Couzensa pod lažnom izlikom kršenja mjera za COVID-19.",
+                  "Dana 30. rujna 2021. Lord Justice Fulford izrekao je Couzensu na sudu Old Bailey kaznu doživotnog zatvora (whole-life order).",
+                  "Izvješće barunice Casey (objavljeno 21. ožujka 2023.) utvrdilo je institucionalni rasizam, mizoginiju i homofobiju u Metropolitanskoj policiji.",
+                  "Neovisna istraga Angiolini objavila je Izvješće 1. dijela 29. veljače 2024. (16 preporuka) i Prvo izvješće 2. dijela 2. prosinca 2025. (13 preporuka o sprječavanju сексуalno motiviranih zločina nad ženama u javnom prostoru)."
+              ],
+              "societalImpact": "A. Izvješće barunice Casey (ožujak 2023.):\nNeovisna revizija kulture i standarda ponašanja Metropolitanske policije utvrdila je institucionalni rasizam, mizoginiju i homofobiju te ozbiljne propuste u rješavanju pritužbi.\n\nB. Istraga Angiolini — Izvješće 1. dijela (29. veljače 2024.):\nIspitala je Couzensovu policijsku karijeru i propuštene znakove upozorenja te donijela 16 preporuka za jačanje sigurnosnih provjera.\n\nC. Istraga Angiolini — Prvo izvješće 2. dijela (2. prosinca 2025.):\nUsmjereno na sprječavanje seksualno motiviranih zločina nad ženama u javnim prostorima (13 preporuka), uz upozorenje da se teret sigurnosti ne smije prebacivati na žene nego na suzbijanje počinitelja.",
+              "actionableLesson": "Revizije urbane sigurnosti i odgovornost institucionalne moći:\n1. Temeljita provjera kandidata i policijskih službenika (vetting)\n2. Jasni начиni provjere identiteta policajaca u civilu\n3. Povjerljivi kanali za prijavu policijskog nedoličnog ponašanja\n4. Sigurnija javna infrastruktura i rasvjeta pješačkih ruta\n5. Institucionalna transparentnost i neovisni nadzor\n6. Prevencija usmjerena na počinitelje.",
+              "memorialPublication": {
+                  "title": "Vodič za reviziju urbane sigurnosti i odgovornost institucionalnih ovlasti",
+                  "focus": "Građanska infrastruktura · Sigurnost žena · Javno povjerenje u policiju · Institucionalna odgovornost",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Sjećanje na Sarah Everard znači obranu prava svake osobe na slobodno kretanje, preispitivanje zloupotrebe javnih ovlasti i zahtijevanje institucija koje opravdavaju povjerenje građana."
+              }
+          }
+      }
   },
   {
     id: 8,
