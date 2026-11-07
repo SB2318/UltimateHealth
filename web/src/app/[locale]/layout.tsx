@@ -8,7 +8,7 @@ import { headers } from 'next/headers'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { NextIntlClientProvider } from 'next-intl'
-import { getMessages } from 'next-intl/server'
+import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import CookieConsent from "@/components/ui/cookie-consent";
@@ -143,7 +143,8 @@ export default async function RootLayout({
   }
 
   const nonce = (await headers()).get('x-nonce') ?? undefined
-  const messages = await getMessages()
+  setRequestLocale(locale)
+  const messages = await getMessages({ locale })
 
   const organizationJsonLd = buildOrganizationJsonLd();
   const websiteJsonLd = buildWebSiteJsonLd(locale);
@@ -172,7 +173,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider
             attribute="class"
             defaultTheme="light"

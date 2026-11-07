@@ -27,6 +27,16 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
     return TRIBUTE_PROFILES.map((p) => getLocalizedProfile(p, locale));
   }, [locale]);
 
+  const categoryLabelMap: Record<TributeCategory, string> = {
+    all: t("categoryAll"),
+    healthcare: t("categoryHealthcare"),
+    "safety-justice": t("categorySafety"),
+    journalism: t("categoryJournalism"),
+    "environment-community": t("categoryEnvironment"),
+    "education-dignity": t("categoryEducation"),
+    survivors: t("categorySurvivors"),
+  };
+
   // Filter profiles
   const filteredProfiles = useMemo(() => {
     return localizedAllProfiles.filter((profile) => {
@@ -117,7 +127,7 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
               boxShadow: activeCategory === cat.id ? "0 4px 12px rgba(225, 29, 72, 0.25)" : "none",
             }}
           >
-            <span>{cat.label}</span>
+            <span>{categoryLabelMap[cat.id] || cat.label}</span>
             <span
               style={{
                 fontSize: "0.7rem",
@@ -201,7 +211,12 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
         </div>
 
         <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--explorer-text-secondary, #64748b)" }}>
-          Showing {paginatedProfiles.length} of {filteredProfiles.length} profiles (Page {currentPage} of {totalPages})
+          {t("showingProfiles", {
+            shown: paginatedProfiles.length,
+            total: filteredProfiles.length,
+            page: currentPage,
+            totalPages,
+          })}
         </div>
       </div>
 
@@ -237,7 +252,7 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
           }}
         >
           <p style={{ fontSize: "1rem", fontWeight: 700, color: "var(--site-heading, #0f172a)", marginBottom: "6px" }}>
-            No profiles found matching &ldquo;{searchQuery}&rdquo;
+            {t("noProfilesFound", { query: searchQuery })}
           </p>
           <button
             type="button"
@@ -256,7 +271,7 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
               cursor: "pointer",
             }}
           >
-            Reset Filters
+            {t("resetFilters")}
           </button>
         </div>
       )}
@@ -293,7 +308,7 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
             }}
           >
             <ChevronLeft size={16} />
-            Previous
+            {t("prevPage")}
           </button>
 
           <div style={{ display: "flex", gap: "6px" }}>
@@ -342,7 +357,7 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
               opacity: currentPage === totalPages ? 0.5 : 1,
             }}
           >
-            Next
+            {t("nextPage")}
             <ChevronRight size={16} />
           </button>
         </nav>
@@ -350,7 +365,11 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
 
       {/* Detail Modal */}
       <ProfileDetailModal
-        profile={selectedProfile}
+        profile={
+          selectedProfile
+            ? localizedAllProfiles.find((p) => p.id === selectedProfile.id) ?? selectedProfile
+            : null
+        }
         isOpen={!!selectedProfile}
         onClose={() => setSelectedProfile(null)}
         onSelectNext={handleNext}

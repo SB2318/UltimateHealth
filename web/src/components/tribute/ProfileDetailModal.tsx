@@ -114,7 +114,7 @@ export default function ProfileDetailModal({
                 border: "1px solid rgba(244, 63, 94, 0.25)",
               }}
             >
-              Profile #{profile.id} of 30
+              {t("profileOfTotal", { id: profile.id })}
             </span>
             <span style={{ fontSize: "0.78rem", color: "var(--explorer-text-secondary, #64748b)" }}>
               {profile.categoryLabel}
@@ -318,7 +318,7 @@ export default function ProfileDetailModal({
           <div>
             <h3 style={{ fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#e11d48", display: "flex", alignItems: "center", gap: "6px", margin: "0 0 8px" }}>
               <User size={15} />
-              1. Who Was This Person?
+              {t("modalSection1")}
             </h3>
             <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0, whiteSpace: "pre-line" }}>
               {profile.whoWasThisPerson}
@@ -329,7 +329,7 @@ export default function ProfileDetailModal({
           <div>
             <h3 style={{ fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#0d9488", display: "flex", alignItems: "center", gap: "6px", margin: "0 0 8px" }}>
               <Heart size={15} />
-              2. What They Contributed to the World
+              {t("modalSection2")}
             </h3>
             <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0, whiteSpace: "pre-line" }}>
               {profile.contributions}
@@ -340,7 +340,7 @@ export default function ProfileDetailModal({
           <div>
             <h3 style={{ fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#d97706", display: "flex", alignItems: "center", gap: "6px", margin: "0 0 8px" }}>
               <Shield size={15} />
-              3. What Happened (Sensitive Factual Context)
+              {t("modalSection3")}
             </h3>
             <div
               style={{
@@ -358,7 +358,7 @@ export default function ProfileDetailModal({
 
               {profile.editorialNotes && (
                 <div style={{ marginTop: "12px", padding: "10px 12px", background: "rgba(244, 63, 94, 0.06)", borderLeft: "3px solid #e11d48", borderRadius: "0 6px 6px 0", fontSize: "0.82rem", color: "#475569" }}>
-                  <strong style={{ color: "#be123c" }}>Editorial & Legal Notice:</strong> {profile.editorialNotes}
+                  <strong style={{ color: "#be123c" }}>{t("editorialLegalNotice")}</strong> {profile.editorialNotes}
                 </div>
               )}
 
@@ -377,7 +377,7 @@ export default function ProfileDetailModal({
                 <div style={{ marginTop: "14px", paddingTop: "12px", borderTop: "1px dashed var(--explorer-border, #cbd5e1)" }}>
                   <div style={{ fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", color: "#059669", marginBottom: "6px", display: "flex", alignItems: "center", gap: "5px" }}>
                     <CheckCircle2 size={13} />
-                    Verified Facts {profile.lastVerifiedAt && `(Audited ${profile.lastVerifiedAt})`}
+                    {t("verifiedFactsTitle")} {profile.lastVerifiedAt && `(${profile.lastVerifiedAt})`}
                   </div>
                   <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "0.82rem", color: "var(--explorer-text-secondary, #475569)", lineHeight: 1.6 }}>
                     {profile.verifiedFacts.map((fact, idx) => (
@@ -393,7 +393,7 @@ export default function ProfileDetailModal({
           <div>
             <h3 style={{ fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#4f46e5", display: "flex", alignItems: "center", gap: "6px", margin: "0 0 8px" }}>
               <Landmark size={15} />
-              4. Societal Impact & Subsequent Reforms
+              {t("modalSection4")}
             </h3>
             <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0, whiteSpace: "pre-line" }}>
               {profile.societalImpact}
@@ -404,7 +404,7 @@ export default function ProfileDetailModal({
           <div>
             <h3 style={{ fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#be123c", display: "flex", alignItems: "center", gap: "6px", margin: "0 0 8px" }}>
               <Award size={15} />
-              5. What Society Must Learn & Implement Today
+              {t("modalSection5")}
             </h3>
             <div
               style={{
@@ -435,7 +435,7 @@ export default function ProfileDetailModal({
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
               <span style={{ fontSize: "0.78rem", fontWeight: 800, textTransform: "uppercase", color: "#e11d48", display: "flex", alignItems: "center", gap: "6px" }}>
                 <BookOpen size={14} />
-                6. UltimateHealth Living Memorial Initiative
+                {t("modalSection6")}
               </span>
               <span
                 style={{
@@ -452,7 +452,7 @@ export default function ProfileDetailModal({
                 }}
               >
                 <Clock size={12} />
-                {profile.memorialPublication.initiativeStatus || "Proposed Initiative"}
+                {profile.memorialPublication.initiativeStatus || t("proposedInitiativeBadge")}
               </span>
             </div>
 
@@ -461,7 +461,7 @@ export default function ProfileDetailModal({
             </h4>
 
             <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--explorer-text-secondary, #64748b)", marginBottom: "8px" }}>
-              Focus: {profile.memorialPublication.focus}
+              {t("focusLabel")} {profile.memorialPublication.focus}
             </div>
 
             <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--explorer-text-secondary, #475569)", margin: 0, whiteSpace: "pre-line" }}>
@@ -472,7 +472,7 @@ export default function ProfileDetailModal({
           {/* 7. References and Further Reading */}
           <div style={{ borderTop: "1px solid var(--explorer-border, #e2e8f0)", paddingTop: "18px" }}>
             <h3 style={{ fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--explorer-text-secondary, #94a3b8)", margin: "0 0 10px" }}>
-              7. Verified Primary Sources & Court / Human Rights Archives
+              {t("modalSection7")}
             </h3>
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
               {profile.references.map((ref, idx) => (
@@ -500,7 +500,7 @@ export default function ProfileDetailModal({
                           whiteSpace: "nowrap",
                         }}
                       >
-                        Primary Record
+                        {t("primaryRecordBadge")}
                       </span>
                     )}
                     {ref.publisher && (
@@ -545,7 +545,7 @@ export default function ProfileDetailModal({
                   cursor: "pointer",
                 }}
               >
-                ← Previous
+                {t("prevStory")}
               </button>
             )}
             {onSelectNext && (
@@ -563,7 +563,7 @@ export default function ProfileDetailModal({
                   cursor: "pointer",
                 }}
               >
-                Next →
+                {t("nextStory")}
               </button>
             )}
           </div>
@@ -582,7 +582,7 @@ export default function ProfileDetailModal({
               cursor: "pointer",
             }}
           >
-            Close Story
+            {t("closeStory")}
           </button>
         </div>
       </div>

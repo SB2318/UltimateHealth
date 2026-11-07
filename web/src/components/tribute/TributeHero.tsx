@@ -240,7 +240,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
                 {t("startingPointBadge")}
               </span>
               <span style={{ fontSize: "0.78rem", color: "var(--explorer-text-secondary, #64748b)" }}>
-                Kolkata · 2024 · Pulmonary & Chest Medicine
+                {t("startingPointLocation")}
               </span>
             </div>
 
@@ -313,7 +313,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
                 onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
               >
                 <BookOpen size={16} />
-                <span>View 30 Living Memorial Guides (Coming Soon)</span>
+                <span>{t("ctaMemorialGuides")}</span>
               </button>
 
               <button
@@ -343,7 +343,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
                 }}
               >
                 <ArrowDown size={16} />
-                <span>Explore All 30 Profiles</span>
+                <span>{t("ctaExploreProfiles")}</span>
               </button>
             </div>
           </div>
@@ -373,7 +373,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
           >
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#e11d48", lineHeight: 1 }}>30</div>
             <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--explorer-text-secondary, #64748b)", marginTop: "6px" }}>
-              Human Profiles
+              {t("statHumanProfiles")}
             </div>
           </div>
 
@@ -389,7 +389,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
           >
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#0d9488", lineHeight: 1 }}>6</div>
             <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--explorer-text-secondary, #64748b)", marginTop: "6px" }}>
-              Thematic Series
+              {t("statThematicSeries")}
             </div>
           </div>
 
@@ -405,7 +405,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
           >
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#d97706", lineHeight: 1 }}>10</div>
             <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--explorer-text-secondary, #64748b)", marginTop: "6px" }}>
-              Societal Lessons
+              {t("statSocietalLessons")}
             </div>
           </div>
 
@@ -421,7 +421,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
           >
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#4f46e5", lineHeight: 1 }}>30</div>
             <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--explorer-text-secondary, #64748b)", marginTop: "6px" }}>
-              Living Memorial Guides
+              {t("statMemorialGuides")}
             </div>
           </div>
         </div>

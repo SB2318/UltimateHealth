@@ -36,7 +36,7 @@ html { scroll-behavior: smooth; }
    ============================================================= */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 
 @keyframes zoomIn {
@@ -61,7 +61,7 @@ html { scroll-behavior: smooth; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 
 @keyframes uh-pulse {
@@ -81,7 +81,7 @@ html { scroll-behavior: smooth; }
 
 @keyframes uh-fade-up {
   from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 
 @keyframes uh-slide-left {
@@ -127,7 +127,7 @@ html { scroll-behavior: smooth; }
 }
 @keyframes hero-rise {
   from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 @keyframes hero-badge-in {
   from { opacity: 0; transform: translateY(10px) scale(0.96); }
@@ -135,7 +135,7 @@ html { scroll-behavior: smooth; }
 }
 @keyframes hero-heading-in {
   from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 @keyframes hero-sub-in {
   from { opacity: 0; }
@@ -143,11 +143,11 @@ html { scroll-behavior: smooth; }
 }
 @keyframes hero-cta-in {
   from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 @keyframes hero-stats-in {
   from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* =============================================================
@@ -483,7 +483,7 @@ body.touch-device .dna-cursor-canvas {
 /* ==================== HEADER ==================== */
 @keyframes header-drop-in {
   from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 .header {
   position: fixed;
@@ -493,6 +493,7 @@ body.touch-device .dna-cursor-canvas {
   padding: 14px 0;
   border-bottom: 1px solid #262640 !important;
   z-index: 1000;
+  overflow: visible !important;
   transition: var(--transition);
   animation: header-drop-in 0.5s cubic-bezier(0.22,1,0.36,1) both;
 }
@@ -2405,6 +2406,7 @@ i, svg {
   cursor: pointer;
   font-size: 20px;
   z-index: 1000;
+  overflow: visible !important;
   transition: all 0.3s ease;
   background: #764ba2;
   color:white;

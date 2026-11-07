@@ -91,7 +91,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
 
   return (
     <header
-      className={`header font-vice overflow-x-clip w-full ${
+      className={`header font-vice w-full ${
         scrolled
           ? " scrolled bg-white/95 dark:bg-[#0b0b12]/95 border-b border-slate-200 dark:border-[#252538] backdrop-blur-md"
           : "bg-white/80 dark:bg-[#0b0b12]/75 backdrop-blur-md border-b border-slate-200/60 dark:border-white/5"

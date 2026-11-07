@@ -80,8 +80,8 @@ export default function ProfileCard({ profile: rawProfile, onOpenModal }: Profil
                 }}
               >
                 {profile.verificationStatus === "Verified" || profile.verificationStatus === "Historically Verified"
-                  ? "✓ Verified"
-                  : "⚠ Qualified"}
+                  ? `✓ ${t("verifiedBadge")}`
+                  : `⚠ ${t("qualifiedBadge")}`}
               </span>
             )}
           </div>

@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { Check, Globe, ChevronDown } from "lucide-react";
-import { withBasePath, BASE_PATH } from "@/lib/basePath";
+import { withBasePath } from "@/lib/basePath";
 
 interface LocaleOption {
   code: string;
@@ -27,23 +27,45 @@ const locales: LocaleOption[] = [
 ];
 
 export function LanguageSwitcher() {
-  const currentLocale = useLocale();
+  const hookLocale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const currentLocale = useMemo(() => {
+    if (pathname) {
+      const segs = pathname.split("/").filter(Boolean);
+      while (segs.length > 0 && segs[0] === "web") {
+        segs.shift();
+      }
+      if (segs.length > 0 && locales.some((l) => l.code === segs[0])) {
+        return segs[0];
+      }
+    }
+    return hookLocale || "en";
+  }, [pathname, hookLocale]);
+
   const activeOption = locales.find((l) => l.code === currentLocale) || locales[0];
 
-  // Close on outside click
+  // Close on outside click or Escape key
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const handleLocaleChange = (newLocale: string) => {
@@ -56,19 +78,33 @@ export function LanguageSwitcher() {
 
     if (newLocale === currentLocale) return;
 
-    // Sanitize pathname to extract only content segments (removing any duplicate /web or locale prefixes)
-    const rawPath = pathname || (typeof window !== "undefined" ? window.location.pathname : "/");
+    // Extract content path segments cleanly (strip leading /web and leading locale prefixes)
+    const rawPath =
+      (typeof window !== "undefined" ? window.location.pathname : "") ||
+      pathname ||
+      "/";
     const segments = rawPath.split("/").filter(Boolean);
     const knownCodes = new Set(locales.map((l) => l.code));
-    const nonContent = new Set([...knownCodes, "web"]);
-    const rest = segments.filter((s) => !nonContent.has(s)).join("/");
+
+    while (
+      segments.length > 0 &&
+      (segments[0] === "web" || knownCodes.has(segments[0]))
+    ) {
+      segments.shift();
+    }
+
+    const rest = segments.join("/");
     const finalClean = `/${newLocale}${rest ? `/${rest}` : ""}`;
+    const targetUrl = withBasePath(finalClean);
 
     const search = typeof window !== "undefined" ? window.location.search : "";
     const hash = typeof window !== "undefined" ? window.location.hash : "";
 
-    // Direct page transition with single prepended basePath
-    window.location.href = `${withBasePath(finalClean)}${search}${hash}`;
+    if (typeof window !== "undefined") {
+      window.location.assign(`${targetUrl}${search}${hash}`);
+    } else {
+      router.push(`${finalClean}${search}${hash}`);
+    }
   };
 
   return (
@@ -78,6 +114,7 @@ export function LanguageSwitcher() {
         .lang-switcher-wrapper {
           position: relative;
           display: inline-block;
+          z-index: 10002;
         }
 
         /* ── Trigger Button (Default: Light Mode) ── */
@@ -127,17 +164,30 @@ export function LanguageSwitcher() {
           position: absolute;
           top: calc(100% + 8px);
           right: 0;
-          width: 220px;
+          width: 230px;
+          max-height: min(75vh, 430px);
+          overflow-y: auto;
+          overscroll-behavior: contain;
           background: #ffffff;
           border: 1px solid #e2e8f0;
           border-radius: 16px;
           padding: 6px;
-          box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
+          box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06);
           z-index: 99999;
           display: flex;
           flex-direction: column;
           gap: 2px;
           animation: langDropdownFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* Mobile drawer positioning so dropdown is never clipped off-screen */
+        .mobile-nav .lang-switcher-dropdown {
+          left: 50%;
+          right: auto;
+          top: auto;
+          bottom: calc(100% + 8px);
+          transform: translateX(-50%);
+          max-height: min(60vh, 340px);
+          animation: none;
         }
         @keyframes langDropdownFadeIn {
           from {
@@ -268,8 +318,10 @@ export function LanguageSwitcher() {
       <div ref={containerRef} className="lang-switcher-wrapper">
         {/* ── Trigger Button ── */}
         <button
+          type="button"
           onClick={() => setIsOpen((prev) => !prev)}
           aria-expanded={isOpen}
+          aria-haspopup="listbox"
           aria-label="Select Language"
           className={`lang-switcher-btn${isOpen ? " open" : ""}`}
         >
@@ -280,7 +332,7 @@ export function LanguageSwitcher() {
 
         {/* ── Dropdown Menu ── */}
         {isOpen && (
-          <div className="lang-switcher-dropdown">
+          <div className="lang-switcher-dropdown" role="listbox" aria-label="Available languages">
             {/* Header title */}
             <div className="lang-switcher-header">
               Select Language
@@ -291,6 +343,9 @@ export function LanguageSwitcher() {
               return (
                 <button
                   key={locale.code}
+                  type="button"
+                  role="option"
+                  aria-selected={isActive}
                   onClick={() => handleLocaleChange(locale.code)}
                   className={`lang-switcher-item${isActive ? " active" : ""}`}
                 >
