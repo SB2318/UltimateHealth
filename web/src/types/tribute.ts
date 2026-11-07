@@ -93,6 +93,7 @@ export interface TributeProfileTranslation {
   societalImpact?: string;
   actionableLesson?: string;
   verifiedFacts?: string[];
+  editorialNotes?: string;
   memorialPublication?: {
     title?: string;
     focus?: string;

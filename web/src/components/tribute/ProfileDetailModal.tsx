@@ -320,7 +320,7 @@ export default function ProfileDetailModal({
               <User size={15} />
               1. Who Was This Person?
             </h3>
-            <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0 }}>
+            <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0, whiteSpace: "pre-line" }}>
               {profile.whoWasThisPerson}
             </p>
           </div>

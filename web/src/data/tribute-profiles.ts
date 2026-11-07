@@ -580,8 +580,284 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
           }
       }
   },
+    {
+      "id": 3,
+      "slug": "dr-vandana-das",
+      "name": "Dr. Vandana Das",
+      "country": "India",
+      "countryFlag": "🇮🇳",
+      "category": "healthcare",
+      "categoryLabel": "Emergency Medicine & Clinical Protection",
+      "eraOrYear": "2023",
+      "roleAndField": "House Surgeon · Kottarakkara Taluk Hospital, Kerala",
+      "avatarUrl": "https://images.openai.com/static-rsc-4/WmEpQw-lqYO47-p4A7eQQMIWYeFkI4LlmCI17Np-wNnRtq2KyU3UISZoLOnbFm3z8LbgP6EVgVoahv3rvrfUIA1tD5GS9PuiV70pD4N2IxrSAaSc1tEMBfXqPNph8goJVT2Y_KKjjY25HIUsKoBgKybSwqmGd47-XhFbWEulCaM?purpose=inline",
+      "verificationStatus": "Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "coreMessage": "Healthcare workers must be protected while delivering care, including in emergency settings. A person's contribution to healthcare can also continue through the people who choose to carry their values forward.",
+      "whoWasThisPerson": "Dr. Vandana Das was a young medical professional working as a house surgeon at Kottarakkara Taluk Hospital in Kerala. She had completed her MBBS at Azeezia Medical College.\nShe was at the beginning of her medical career, undertaking clinical responsibilities as part of her professional training. Her work placed her in a setting where healthcare personnel regularly attend to patients in urgent and unpredictable circumstances.",
+      "contributions": "A Legacy Continued — Her Parents' Contribution (A separate and meaningful contribution to community healthcare)\n\nDr. Vandana Das's story did not end with the tragedy. Her parents chose to establish a memorial clinic in her memory, creating a continuing contribution to healthcare beyond the hospital where she had worked.\nThey established the Dr. Vandana Das Memorial Clinic at Thrikkunnappuzha, in Alappuzha district, Kerala. The clinic was inaugurated on 10 October 2024 by the then Governor of Kerala, Arif Mohammed Khan.\nThe initiative was intended to provide medical assistance to economically disadvantaged people.\nThis contribution deserves recognition in its own right. Her parents did not limit their remembrance to a memorial in name alone; they created a healthcare initiative intended to serve people who may otherwise face difficulties accessing medical assistance.\nTheir initiative connects remembrance with public service. It gives Dr. Vandana Das's name a continuing place in community healthcare while recognising her parents' decision to turn personal loss into an effort to help others.\n\nWhy this matters to UltimateHealth:\n• It recognises the contribution of family members who continue a healthcare-related public service initiative.\n• It highlights community-oriented healthcare beyond institutional settings.\n• It shows how memorial initiatives can create practical value when they are connected to accessible medical assistance.\n• It gives her parents independent recognition as contributors to this continuing effort.\n\nEditorial distinction: The clinic's establishment and inauguration are documented. Its current operating status, service schedule, patient numbers, and the full range of services should be verified separately before making claims about its ongoing activities.",
+      "factualContext": "On 10 May 2023, Dr. Vandana Das was attending to a man who had been brought to the hospital by police for medical treatment following an altercation.\nWhile she was treating his injuries in the casualty department, the man attacked her with surgical scissors. Other people at the hospital were also injured during the incident.\nDr. Vandana Das sustained critical injuries. She was taken to KIMS Hospital in Thiruvananthapuram, where she later died.\nThe accused was identified as G. Sandeep. Early speculation about intoxication should not be treated as established fact. The circumstances and the accused's legal defence were matters considered during the subsequent criminal proceedings.\nHer death raised serious concerns about the safety of healthcare workers, particularly those working in emergency and casualty departments.\n\nJudicial Proceedings:\nThe criminal case proceeded through the trial court.\nIn March 2026, the Kollam Additional Sessions Court found G. Sandeep guilty in connection with Dr. Vandana Das's murder and other offences. The court subsequently imposed a life sentence for the murder, along with additional sentences for other offences.\nAn appeal was subsequently filed before the Kerala High Court. The trial court's verdict should therefore be described as the outcome at the trial stage, with the appeal proceedings noted separately.",
+      "editorialNotes": "The trial judgment and the subsequent appeal should be checked against the relevant court records before publishing detailed sentence-by-sentence descriptions or stating the final status of the case. Publication note: The sources listed below are a research trail, not a substitute for checking the original court judgment and official legislative text. Add direct links to those primary records before marking the judicial and legislative sections fully verified.",
+      "verifiedFacts": [
+          "House surgeon at Kottarakkara Taluk Hospital, Kerala; completed MBBS at Azeezia Medical College.",
+          "Fatally attacked on 10 May 2023 with surgical scissors while treating a patient brought by police to the casualty department; later died at KIMS Hospital, Thiruvananthapuram.",
+          "In March 2026, Kollam Additional Sessions Court found accused G. Sandeep guilty and imposed a life sentence for murder along with additional sentences (subsequently appealed before the Kerala High Court).",
+          "Kerala amended its legislation through the Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment legislation in 2023.",
+          "Her parents established the Dr. Vandana Das Memorial Clinic at Thrikkunnappuzha, Alappuzha district, Kerala, inaugurated on 10 October 2024 by Governor Arif Mohammed Khan."
+      ],
+      "societalImpact": "Legislative Response: Protection of Healthcare Workers\n\nDr. Vandana Das's death intensified public concern about violence against healthcare professionals.\nKerala amended its legislation protecting healthcare service personnel through the Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment legislation in 2023.\nThe amendment strengthened the legal framework addressing violence against healthcare personnel and damage to healthcare institutions.\nThe legislation is an important part of the wider discussion about workplace safety in hospitals. However, passing stronger laws alone does not guarantee safety. Effective implementation, reporting mechanisms, staff training, and emergency-response arrangements remain essential.",
+      "actionableLesson": "Dr. Vandana Das's case highlights the need for practical safeguards in emergency-care environments.\n\nHealthcare institutions should consider:\n1. Emergency risk assessment: Identify situations in which patients or accompanying individuals may pose an immediate risk to healthcare personnel.\n2. Rapid security response: Establish clear procedures for calling trained security staff when violence or threats occur.\n3. Casualty-area safety: Review the layout of emergency departments, staff access to exits, and the availability of emergency alerts.\n4. De-escalation training: Equip healthcare workers with practical training for handling threatening or aggressive situations.\n5. Incident reporting and accountability: Ensure that threats and assaults are documented, investigated, and addressed through appropriate institutional and legal processes.\n6. Post-incident support: Provide timely medical, psychological, and legal support to affected healthcare workers and their families.\n\nThese are proposed institutional safeguards, not claims that a particular hospital has implemented them.",
+      "memorialPublication": {
+          "title": "The UltimateHealth Perspective: Protecting Healthcare Workers & Continuing Community Service",
+          "focus": "Emergency-Care Workplace Safeguards & Family-Led Community Healthcare",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "Dr. Vandana Das's story represents two connected dimensions of healthcare:\n• The responsibility to protect healthcare workers: Medical professionals should be able to provide treatment without facing violence in their workplace.\n• The responsibility to continue serving communities: Her parents' memorial clinic demonstrates how a family's initiative can extend a healthcare-related contribution beyond an individual lifetime.\n\nHer story should be remembered not only through the circumstances of her death, but also through the community-oriented initiative established in her memory.\nRemembering Dr. Vandana Das means recognising both the need for safer healthcare workplaces and the continuing contribution made by her parents."
+      },
+      "references": [
+          {
+              "title": "The Indian Express — Contemporary reporting on the attack and the death of Dr. Vandana Das, May 2023",
+              "url": "https://indianexpress.com/article/india/kerala/kerala-young-doctor-stabbed-to-death-by-patient-at-kollam-hospital-8599940/",
+              "publisher": "The Indian Express"
+          },
+          {
+              "title": "The New Indian Express — Reporting on the incident and subsequent investigation",
+              "url": "https://www.newindianexpress.com/states/kerala/2023/May/10/young-woman-doctor-stabbed-to-death-by-patient-in-keralas-kottarakkara-2574072.html",
+              "publisher": "The New Indian Express"
+          },
+          {
+              "title": "The New Indian Express / Kerala news coverage — Reporting on the 2023 legislative response to violence against healthcare workers",
+              "url": "https://www.newindianexpress.com/states/kerala/2023/May/17/kerala-cabinet-approves-ordinance-to-ensure-strict-punishment-for-hospital-attacks-2576228.html",
+              "publisher": "The New Indian Express"
+          },
+          {
+              "title": "The Times of India — Inauguration of clinic for the poor in memory of Dr. Vandana Das (September 2024)",
+              "url": "https://timesofindia.indiatimes.com/city/kochi/inauguration-of-clinic-for-the-poor-in-memory-of-dr-vandana-das/articleshow/113671835.cms",
+              "publisher": "The Times of India",
+              "isPrimary": true
+          },
+          {
+              "title": "The Times of India — Governor inaugurates Dr. Vandana Das Memorial Clinic (October 2024)",
+              "url": "https://timesofindia.indiatimes.com/city/kochi/governor-inaugurates-dr-vandana-das-memorial-clinic-a-lasting-tribute-to-healthcare-hero/articleshow/114125727.cms",
+              "publisher": "The Times of India",
+              "isPrimary": true
+          },
+          {
+              "title": "Kerala legislative records — Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment legislation, 2023",
+              "url": "https://prsindia.org/files/bills_acts/acts_states/kerala/2023/Act%2022%20of%202023%20Kerala.pdf",
+              "publisher": "Government of Kerala",
+              "isPrimary": true
+          },
+          {
+              "title": "Court records and reporting — Kollam Additional Sessions Court trial outcome, March 2026, and subsequent Kerala High Court appeal proceedings",
+              "url": "https://kollam.dcourts.gov.in/",
+              "publisher": "Kollam Additional Sessions Court / Kerala High Court"
+          }
+      ],
+      "translations": {
+          "hi": {
+              "name": "डॉ. वंदना दास",
+              "roleAndField": "हाउस सर्जन · कोट्टारक्करा तालुक अस्पताल, केरल",
+              "categoryLabel": "आपातकालीन चिकित्सा एवं क्लिनिकल सुरक्षा",
+              "coreMessage": "आपातकालीन परिस्थितियों सहित देखभाल प्रदान करते समय स्वास्थ्य कर्मियों की सुरक्षा सुनिश्चित की जानी चाहिए। स्वास्थ्य सेवा में किसी व्यक्ति का योगदान उन लोगों के माध्यम से भी जारी रह सकता है जो उनके मूल्यों को आगे बढ़ाने का संकल्प लेते हैं।",
+              "whoWasThisPerson": "डॉ. वंदना दास केरल के कोट्टारक्करा तालुक अस्पताल में हाउस सर्जन के रूप में कार्यरत एक युवा चिकित्सा पेशेवर थीं। उन्होंने अजीजिया मेडिकल कॉलेज से अपना एमबीबीएस पूरा किया था।\nवे अपने चिकित्सा करियर की शुरुआत में थीं और अपने पेशेवर प्रशिक्षण के हिस्से के रूप में नैदानिक जिम्मेदारियों का निर्वहन कर रही थीं। उनका कार्य एक ऐसे परिवेश में था जहाँ स्वास्थ्य कर्मी नियमित रूप से तत्काल और अप्रत्याशित परिस्थितियों में रोगियों की देखभाल करते हैं।",
+              "contributions": "एक निरंतर विरासत — उनके माता-पिता का योगदान (सामुदायिक स्वास्थ्य सेवा में एक अलग और सार्थक योगदान)\n\nडॉ. वंदना दास की कहानी इस त्रासदी के साथ समाप्त नहीं हुई। उनके माता-पिता ने उनकी स्मृति में एक मेमोरियल क्लिनिक स्थापित करने का निर्णय लिया, जिससे उस अस्पताल से परे भी स्वास्थ्य सेवा में एक निरंतर योगदान शुरू हुआ जहाँ उन्होंने काम किया था।\nउन्होंने केरल के अलप्पुझा जिले के थ्रिक्कुन्नप्पुझा में 'डॉ. वंदना दास मेमोरियल क्लिनिक' की स्थापना की। इस क्लिनिक का उद्घाटन 10 अक्टूबर 2024 को केरल के तत्कालीन राज्यपाल आरिफ मोहम्मद खान द्वारा किया गया था।\nइस पहल का उद्देश्य आर्थिक रूप से वंचित लोगों को चिकित्सा सहायता प्रदान करना था।\nयह योगदान अपने आप में सम्मान का पात्र है। उनके माता-पिता ने अपनी स्मृति को केवल नाम के स्मारक तक सीमित नहीं रखा; उन्होंने एक ऐसी स्वास्थ्य पहल बनाई जिसका उद्देश्य उन लोगों की सेवा करना है जिन्हें अन्यथा चिकित्सा सहायता प्राप्त करने में कठिनाइयों का सामना करना पड़ सकता है।\nउनकी यह पहल स्मृति को जनसेवा से जोड़ती है।\n\nUltimateHealth के लिए यह क्यों महत्वपूर्ण है:\n• यह परिवार के उन सदस्यों के योगदान को मान्यता देता है जो स्वास्थ्य सेवा से जुड़ी जनसेवा पहल को आगे बढ़ाते हैं।\n• यह संस्थागत ढांचों से परे सामुदायिक-उन्मुख स्वास्थ्य सेवा को रेखांकित करता है।\n• यह दर्शाता है कि जब स्मारक पहल सुलभ चिकित्सा सहायता से जुड़ती हैं तो वे व्यावहारिक मूल्य कैसे पैदा कर सकती हैं।\n• यह इस निरंतर प्रयास के योगदानकर्ताओं के रूप में उनके माता-पिता को स्वतंत्र मान्यता देता है।\n\nसंपादकीय अंतर: क्लिनिक की स्थापना और उद्घाटन प्रलेखित हैं। इसकी वर्तमान संचालन स्थिति, सेवा समय-सारणी, रोगियों की संख्या और सेवाओं की पूरी श्रृंखला के बारे में दावे करने से पहले स्वतंत्र रूप से सत्यापन किया जाना चाहिए।",
+              "factualContext": "10 मई 2023 को, डॉ. वंदना दास एक ऐसे व्यक्ति का उपचार कर रही थीं जिसे एक झगड़े के बाद चिकित्सा उपचार के लिए पुलिस द्वारा अस्पताल लाया गया था।\nजब वे कैजुअल्टी विभाग में उसके घावों का इलाज कर रही थीं, तभी उस व्यक्ति ने सर्जिकल कैंची से उन पर हमला कर दिया। घटना के दौरान अस्पताल में मौजूद अन्य लोग भी घायल हुए।\nडॉ. वंदना दास को गंभीर चोटें आईं। उन्हें तिरुवनंतपुरम के KIMS अस्पताल ले जाया गया, जहाँ बाद में उनकी मृत्यु हो गई।\nआरोपी की पहचान जी. संदीप के रूप में हुई। नशे के बारे में शुरुआती अटकलों को स्थापित तथ्य के रूप में नहीं माना जाना चाहिए। परिस्थितियाँ और आरोपी का कानूनी बचाव बाद की आपराधिक कार्यवाही के दौरान विचार किए गए विषय थे।\nउनकी मृत्यु ने स्वास्थ्य कर्मियों, विशेष रूप से आपातकालीन और कैजुअल्टी विभागों में काम करने वालों की सुरक्षा के बारे में गंभीर चिंताएँ पैदा कीं।\n\nन्यायिक कार्यवाही:\nआपराधिक मामला ट्रायल कोर्ट के माध्यम से आगे बढ़ा।\nमार्च 2026 में, कोल्लम अतिरिक्त सत्र न्यायालय ने डॉ. वंदना दास की हत्या और अन्य अपराधों के संबंध में जी. संदीप को दोषी पाया। अदालत ने बाद में हत्या के लिए आजीवन कारावास के साथ-साथ अन्य अपराधों के लिए अतिरिक्त सजा सुनाई।\nबाद में केरल उच्च न्यायालय के समक्ष एक अपील दायर की गई। इसलिए ट्रायल कोर्ट के फैसले को ट्रायल चरण के परिणाम के रूप में वर्णित किया जाना चाहिए, और अपील कार्यवाही को अलग से नोट किया जाना चाहिए।",
+              "editorialNotes": "विस्तृत सजा-दर-सजा विवरण प्रकाशित करने या मामले की अंतिम स्थिति बताने से पहले ट्रायल निर्णय और बाद की अपील की जांच संबंधित अदालती रिकॉर्ड से की जानी चाहिए। प्रकाशन नोट: नीचे दिए गए स्रोत एक शोध श्रृंखला हैं, न कि मूल अदालती फैसले और आधिकारिक विधायी पाठ की जांच का विकल्प।",
+              "verifiedFacts": [
+                  "कोट्टारक्करा तालुक अस्पताल, केरल में हाउस सर्जन; अजीजिया मेडिकल कॉलेज से एमबीबीएस पूरा किया।",
+                  "10 मई 2023 को कैजुअल्टी विभाग में पुलिस द्वारा लाए गए एक मरीज का इलाज करते समय सर्जिकल कैंची से किए गए हमले में गंभीर रूप से घायल; बाद में KIMS अस्पताल, तिरुवनंतपुरम में निधन।",
+                  "मार्च 2026 में कोल्लम अतिरिक्त सत्र न्यायालय ने आरोपी जी. संदीप को दोषी पाया और हत्या के लिए आजीवन कारावास की सजा सुनाई (जिसके बाद केरल उच्च न्यायालय में अपील दायर की गई)।",
+                  "केरल ने 2023 में केरल स्वास्थ्य सेवा व्यक्ति और स्वास्थ्य सेवा संस्थान (हिंसा और संपत्ति को नुकसान की रोकथाम) संशोधन कानून के माध्यम से अपने कानून में संशोधन किया।",
+                  "उनके माता-पिता ने अलप्पुझा जिले के थ्रिक्कुन्नप्पुझा में डॉ. वंदना दास मेमोरियल क्लिनिक की स्थापना की, जिसका उद्घाटन 10 अक्टूबर 2024 को राज्यपाल आरिफ मोहम्मद खान ने किया।"
+              ],
+              "societalImpact": "विधायी प्रतिक्रिया: स्वास्थ्य कर्मियों की सुरक्षा\n\nडॉ. वंदना दास की मृत्यु ने स्वास्थ्य पेशेवरों के खिलाफ हिंसा को लेकर सार्वजनिक चिंता को गहरा कर दिया।\nकेरल ने 2023 में केरल स्वास्थ्य सेवा व्यक्ति और स्वास्थ्य सेवा संस्थान (हिंसा और संपत्ति को नुकसान की रोकथाम) संशोधन कानून के माध्यम से स्वास्थ्य सेवा कर्मियों की रक्षा करने वाले अपने कानून में संशोधन किया।\nइस संशोधन ने स्वास्थ्य कर्मियों के खिलाफ हिंसा और स्वास्थ्य संस्थानों को होने वाले नुकसान से निपटने वाले कानूनी ढांचे को मजबूत किया।\nहालांकि, केवल कड़े कानून पारित करने से ही सुरक्षा की गारंटी नहीं मिलती। प्रभावी कार्यान्वयन, रिपोर्टिंग तंत्र, स्टाफ प्रशिक्षण और आपातकालीन-प्रतिक्रिया व्यवस्थाएं अनिवार्य बनी हुई हैं।",
+              "actionableLesson": "डॉ. वंदना दास का मामला आपातकालीन-देखभाल वातावरण में व्यावहारिक सुरक्षा उपायों की आवश्यकता को रेखांकित करता है।\n\nस्वास्थ्य संस्थानों को विचार करना चाहिए:\n1. आपातकालीन जोखिम मूल्यांकन: उन स्थितियों की पहचान करें जिनमें रोगी या साथ आने वाले व्यक्ति स्वास्थ्य कर्मियों के लिए तत्काल जोखिम पैदा कर सकते हैं।\n2. त्वरित सुरक्षा प्रतिक्रिया: हिंसा या धमकी होने पर प्रशिक्षित सुरक्षा कर्मचारियों को बुलाने के लिए स्पष्ट प्रक्रियाएं स्थापित करें।\n3. कैजुअल्टी-क्षेत्र की सुरक्षा: आपातकालीन विभागों के लेआउट, निकास द्वारों तक कर्मचारियों की पहुंच और आपातकालीन अलर्ट की उपलब्धता की समीक्षा करें।\n4. डी-एस्केलेशन प्रशिक्षण: धमकी भरी या आक्रामक स्थितियों से निपटने के लिए स्वास्थ्य कर्मियों को व्यावहारिक प्रशिक्षण से लैस करें।\n5. घटना की रिपोर्टिंग और जवाबदेही: सुनिश्चित करें कि धमकियों और हमलों का दस्तावेजीकरण, जांच और उचित संस्थागत और कानूनी प्रक्रियाओं के माध्यम से समाधान किया जाए।\n6. घटना के बाद सहायता: प्रभावित स्वास्थ्य कर्मियों और उनके परिवारों को समय पर चिकित्सा, मनोवैज्ञानिक और कानूनी सहायता प्रदान करें।\n\nये प्रस्तावित संस्थागत सुरक्षा उपाय हैं, न कि यह दावा कि किसी विशेष अस्पताल ने इन्हें लागू किया है।",
+              "memorialPublication": {
+                  "title": "UltimateHealth दृष्टिकोण: स्वास्थ्य कर्मियों की सुरक्षा और सामुदायिक सेवा की निरंतरता",
+                  "focus": "आपातकालीन-देखभाल कार्यस्थल सुरक्षा उपाय और परिवार-नेतृत्व वाली सामुदायिक स्वास्थ्य सेवा",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "डॉ. वंदना दास की कहानी स्वास्थ्य सेवा के दो जुड़े हुए आयामों का प्रतिनिधित्व करती है:\n• स्वास्थ्य कर्मियों की रक्षा करने की जिम्मेदारी: चिकित्सा पेशेवरों को अपने कार्यस्थल में हिंसा का सामना किए बिना उपचार प्रदान करने में सक्षम होना चाहिए।\n• समुदायों की सेवा जारी रखने की जिम्मेदारी: उनके माता-पिता का मेमोरियल क्लिनिक यह दर्शाता है कि कैसे एक परिवार की पहल व्यक्तिगत जीवनकाल से परे स्वास्थ्य सेवा से जुड़े योगदान का विस्तार कर सकती है।\n\nडॉ. वंदना दास को याद करने का अर्थ है सुरक्षित स्वास्थ्य कार्यस्थलों की आवश्यकता और उनके माता-पिता द्वारा किए गए निरंतर योगदान दोनों को मान्यता देना।"
+              }
+          },
+          "bn": {
+              "name": "ডা. বন্দনা দাস",
+              "roleAndField": "হাউস সার্জন · কোত্তারাক্কারা তালুক হাসপাতাল, কেরালা",
+              "categoryLabel": "জরুরি চিকিৎসা ও ক্লিনিক্যাল সুরক্ষা",
+              "coreMessage": "জরুরি বিভাগসহ যেকোনো পরিস্থিতিতে চিকিৎসাসেবা প্রদানের সময় স্বাস্থ্যকর্মীদের সুরক্ষা নিশ্চিত করতে হবে। একজন মানুষের স্বাস্থ্যসেবার অবদান তাঁদের মাধ্যমেও বেঁচে থাকতে পারে যাঁরা তাঁর মূল্যবোধকে এগিয়ে নিয়ে যাওয়ার সিদ্ধান্ত নেন।",
+              "whoWasThisPerson": "ডা. বন্দনা দাস ছিলেন কেরালার কোত্তারাক্কারা তালুক হাসপাতালের একজন তরুণ হাউস সার্জন। তিনি আজিজিয়া মেডিকেল কলেজ থেকে এমবিবিএস সম্পন্ন করেছিলেন।\nতিনি তাঁর চিকিৎসা জীবনের শুরুতে পেশাগত প্রশিক্ষণের অংশ হিসেবে জরুরি ও অপ্রত্যাশিত পরিস্থিতিতে রোগীদের সেবা প্রদান করছিলেন।",
+              "contributions": "একটি চলমান উত্তরাধিকার — তাঁর বাবা-মায়ের অবদান (কমিউনিটি স্বাস্থ্যসেবায় একটি স্বতন্ত্র ও অর্থবহ অবদান)\n\nডা. বন্দনা দাসের গল্প ট্র্যাজেডিতেই শেষ হয়ে যায়নি। তাঁর বাবা-মা তাঁর স্মৃতিতে কেরালার আলাপ্পুঝা জেলার থ্রিক্কুন্নপ্পুঝায় 'ডা. বন্দনা দাস মেমোরিয়াল ক্লিনিক' প্রতিষ্ঠা করেন, যা ১০ অক্টোবর ২০২৪-এ কেরালার তৎকালীন রাজ্যপাল আরিফ মোহাম্মদ খান উদ্বোধন করেন।\nঅর্থনৈতিকভাবে পিছিয়ে পড়া মানুষদের চিকিৎসা সহায়তা দেওয়ার লক্ষ্যে এই উদ্যোগ নেওয়া হয়।\n\nকেন এটি UltimateHealth-এর কাছে গুরুত্বপূর্ণ:\n• এটি পরিবারের সদস্যদের জনসেবামূলক স্বাস্থ্য উদ্যোগকে স্বীকৃতি দেয়।\n• এটি প্রাতিষ্ঠানিক গণ্ডির বাইরে কমিউনিটি-ভিত্তিক স্বাস্থ্যসেবাকে তুলে ধরে।\n• এটি তাঁর বাবা-মাকে এই চলমান প্রচেষ্টার স্বতন্ত্র অবদানকারী হিসেবে স্বীকৃতি দেয়।\n\nসম্পাদকীয় পার্থক্য: ক্লিনিকটির প্রতিষ্ঠা ও উদ্বোধন নথিবদ্ধ। তবে এর বর্তমান কার্যক্রম, সময়সূচি ও রোগীর সংখ্যা সম্পর্কে দাবি করার আগে তা আলাদাভাবে যাচাই করা প্রয়োজন।",
+              "factualContext": "১০ মে ২০২৩ তারিখে ডা. বন্দনা দাস পুলিশ প্রহরায় হাসপাতালে আনা এক আহত ব্যক্তির চিকিৎসা করছিলেন। ক্যাজুয়ালটি বিভাগে ক্ষত ড্রেসিং করার সময় ওই ব্যক্তি সার্জিক্যাল কাঁচি দিয়ে তাঁকে আক্রমণ করে। গুরুতর আহত অবস্থায় তাঁকে তিরুবনন্তপুরমের কিমস (KIMS) হাসপাতালে নেওয়া হলে সেখানে তাঁর মৃত্যু হয়।\nঅভিযুক্তের নাম জি. সন্দীপ। নেশাগ্রস্ততা সংক্রান্ত প্রাথমিক জল্পনা প্রতিষ্ঠিত সত্য হিসেবে গণ্য করা উচিত নয়।\n\nবিচারিক প্রক্রিয়া:\nমার্চ ২০২৬-এ কোল্লাম অতিরিক্ত দায়রা আদালত জি. সন্দীপকে হত্যার দায়ে দোষী সাব্যস্ত করে যাবজ্জীবন কারাদণ্ড ও অন্যান্য অপরাধে অতিরিক্ত সাজা প্রদান করে। পরবর্তীতে কেরালা হাইকোর্টে আপিল দায়ের করা হয়।",
+              "editorialNotes": "বিচারিক আদালতের রায় এবং পরবর্তী আপিল সম্পর্কে বিস্তারিত প্রকাশের পূর্বে মূল আদালতের নথি ও সরকারি আইনি পাঠ যাচাই করা আবশ্যক।",
+              "verifiedFacts": [
+                  "কেরালার কোত্তারাক্কারা তালুক হাসপাতালের হাউস সার্জন; আজিজিয়া মেডিকেল কলেজ থেকে এমবিবিএস সম্পন্ন করেন।",
+                  "১০ মে ২০২৩-এ ক্যাজুয়ালটি বিভাগে চিকিৎসা চলাকালীন সার্জিক্যাল কাঁচি দিয়ে আক্রমণে গুরুতর আহত হন এবং পরে কিমস হাসপাতালে মৃত্যুবরণ করেন।",
+                  "মার্চ ২০২৬-এ কোল্লাম অতিরিক্ত দায়রা আদালত অভিযুক্ত জি. সন্দীপকে যাবজ্জীবন কারাদণ্ড দেয় (যা পরবর্তীতে কেরালা হাইকোর্টে আপিল করা হয়)।",
+                  "২০২৩ সালে কেরালা সরকার স্বাস্থ্যকর্মীদের সুরক্ষায় সংশোধনী আইন প্রণয়ন করে।",
+                  "তাঁর বাবা-মা আলাপ্পুঝার থ্রিক্কুন্নপ্পুঝায় ডা. বন্দনা দাস মেমোরিয়াল ক্লিনিক প্রতিষ্ঠা করেন, যা ১০ অক্টোবর ২০২৪-এ উদ্বোধন করা হয়।"
+              ],
+              "societalImpact": "আইনি প্রতিক্রিয়া: স্বাস্থ্যকর্মীদের সুরক্ষা\n\nডা. বন্দনা দাসের মৃত্যু স্বাস্থ্যকর্মীদের বিরুদ্ধে সহিংসতা নিয়ে জনমনে তীব্র উদ্বেগ সৃষ্টি করে। ২০২৩ সালে কেরালা স্বাস্থ্যসেবা কর্মী ও প্রতিষ্ঠান সুরক্ষা (সহিংসতা ও সম্পত্তি ক্ষতি প্রতিরোধ) সংশোধনী আইন পাস হয়। তবে শুধু কঠোর আইন পাস করাই নিরাপত্তার নিশ্চয়তা দেয় না; কার্যকর বাস্তবায়ন, প্রশিক্ষণ ও জরুরি সাড়াদান ব্যবস্থা অপরিহার্য।",
+              "actionableLesson": "জরুরি চিকিৎসা পরিবেশে ব্যবহারিক সুরক্ষার প্রয়োজনীয়তা:\n১. জরুরি ঝুঁকি মূল্যায়ন\n২. দ্রুত নিরাপত্তা সাড়া\n৩. ক্যাজুয়ালটি এলাকার নিরাপত্তা ও জরুরি অ্যালার্ট\n৪. ডি-এস্কেলেশন প্রশিক্ষণ\n৫. ঘটনার রিপোর্টিং ও জবাবদিহিতা\n৬. ঘটনা-পরবর্তী চিকিৎসা, মানসিক ও আইনি সহায়তা।\nএগুলো প্রস্তাবিত প্রাতিষ্ঠানিক সুরক্ষা ব্যবস্থা।",
+              "memorialPublication": {
+                  "title": "UltimateHealth দৃষ্টিভঙ্গি: স্বাস্থ্যকর্মীদের সুরক্ষা ও কমিউনিটি সেবা অব্যাহত রাখা",
+                  "focus": "জরুরি বিভাগে কর্মস্থলের সুরক্ষা এবং পরিবার-পরিচালিত কমিউনিটি স্বাস্থ্যসেবা",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ডা. বন্দনা দাসের গল্প স্বাস্থ্যসেবার দুটি সংযুক্ত দিক তুলে ধরে:\n• স্বাস্থ্যকর্মীদের সুরক্ষার দায়িত্ব।\n• সমাজের সেবা অব্যাহত রাখার দায়িত্ব: তাঁর বাবা-মায়ের প্রতিষ্ঠিত মেমোরিয়াল ক্লিনিক দেখায় কীভাবে একটি পরিবারের উদ্যোগ একজন মানুষের জীবনকালের পরেও স্বাস্থ্যসেবার অবদানকে প্রসারিত করতে পারে।"
+              }
+          },
+          "ta": {
+              "name": "டாக்டர் வந்தனா தாஸ்",
+              "roleAndField": "ஹவுஸ் சர்ஜன் (பயிற்சி மருத்துவர்) · கொட்டாரக்கரா தாலுகா மருத்துவமனை, கேரளா",
+              "categoryLabel": "அவசர சிகிச்சை மற்றும் மருத்துவப் பாதுகாப்பு",
+              "coreMessage": "அவசர சிகிச்சைப் பிரிவுகள் உட்பட அனைத்து இடங்களிலும் சிகிச்சை அளிக்கும் சுகாதாரப் பணியாளர்கள் பாதுகாக்கப்பட வேண்டும். ஒருவரின் மருத்துவப் பங்களிப்பு, அவரது விழுமியங்களை முன்னெடுத்துச் செல்லும் மனிதர்கள் மூலமாகவும் தொடர முடியும்.",
+              "whoWasThisPerson": "டாக்டர் வந்தனா தாஸ் கேரளாவின் கொட்டாரக்கரா தாலுகா மருத்துவமனையில் ஹவுஸ் சர்ஜனாகப் பணியாற்றிய இளம் மருத்துவர். அசீசியா மருத்துவக் கல்லூரியில் தனது எம்பிபிஎஸ் படிப்பை முடித்திருந்தார்.\nதனது மருத்துவப் பணியின் தொடக்கத்தில் இருந்த அவர், அவசர மற்றும் கணிக்க முடியாத சூழல்களில் நோயாளிகளுக்கு சிகிச்சை அளிக்கும் பொறுப்பில் இருந்தார்.",
+              "contributions": "தொடரும் மரபு — அவரது பெற்றோரின் பங்களிப்பு (சமூக சுகாதாரத்திற்கு ஒரு தனித்துவமான மற்றும் அர்த்தமுள்ள பங்களிப்பு)\n\nடாக்டர் வந்தனா தாஸின் கதை அந்தத் துயரத்துடன் முடிந்துவிடவில்லை. அவரது பெற்றோர் அவரது நினைவாக ஆலப்புழா மாவட்டம் த்ரிக்குன்னப்புழாவில் 'டாக்டர் வந்தனா தாஸ் நினைவு கிளினிக்கை' நிறுவினர். இது அக்டோபர் 10, 2024 அன்று அப்போதைய கேரள ஆளுநர் ஆரிப் முகமது கானால் திறந்து வைக்கப்பட்டது.\nபொருளாதாரத்தில் பின்தங்கிய மக்களுக்கு மருத்துவ உதவி வழங்குவதே இதன் நோக்கமாகும்.\n\nஇது ஏன் UltimateHealth-க்கு முக்கியமானது:\n• சுகாதாரப் பொதுச் சேவையைத் தொடரும் குடும்ப உறுப்பினர்களின் பங்களிப்பை அங்கீகரிக்கிறது.\n• நிறுவன அமைப்புகளுக்கு அப்பால் சமூக சார்ந்த மருத்துவ சேவையை முன்னிலைப்படுத்துகிறது.\n• அவரது பெற்றோருக்கு தனிப்பட்ட அங்கீகாரத்தை அளிக்கிறது.",
+              "factualContext": "மே 10, 2023 அன்று, காவல்துறையினரால் மருத்துவமனைக்குக் கொண்டுவரப்பட்ட ஒருவருக்கு டாக்டர் வந்தனா தாஸ் அவசர சிகிச்சைப் பிரிவில் சிகிச்சை அளித்துக் கொண்டிருந்தார். அப்போது அந்நபர் அறுவை சிகிச்சை கத்திரிக்கோலால் அவரைத் தாக்கினார். பலத்த காயமடைந்த அவர் திருவனந்தபுரம் கிம்ஸ் (KIMS) மருத்துவமனையில் உயிரிழந்தார்.\nகுற்றம் சாட்டப்பட்டவர் ஜி. சந்தீப் என அடையாளம் காணப்பட்டார்.\n\nநீதித்துறை நடவடிக்கைகள்:\nமார்ச் 2026 இல், கொல்லம் கூடுதல் அமர்வு நீதிமன்றம் ஜி. சந்தீப்பைக் குற்றவாளி எனத் தீர்ப்பளித்து ஆயுள் தண்டனை விதித்தது. பின்னர் கேரள உயர் நீதிமன்றத்தில் மேல்முறையீடு செய்யப்பட்டது.",
+              "editorialNotes": "விசாரணை நீதிமன்றத் தீர்ப்பு மற்றும் மேல்முறையீட்டு விவரங்களை வெளியிடும் முன் அதிகாரப்பூர்வ நீதிமன்ற ஆவணங்களுடன் சரிபார்க்கப்பட வேண்டும்.",
+              "verifiedFacts": [
+                  "கேரளாவின் கொட்டாரக்கரா தாலுகா மருத்துவமனையில் ஹவுஸ் சர்ஜன்; அசீசியா மருத்துவக் கல்லூரியில் எம்பிபிஎஸ் முடித்தவர்.",
+                  "மே 10, 2023 அன்று அவசர சிகிச்சைப் பிரிவில் நோயாளிக்கு சிகிச்சை அளிக்கும்போது கத்திரிக்கோலால் தாக்கப்பட்டு உயிரிழந்தார்.",
+                  "மார்ச் 2026 இல் கொல்லம் கூடுதல் அமர்வு நீதிமன்றம் குற்றவாளி ஜி. சந்தீப்பிற்கு ஆயுள் தண்டனை விதித்தது (கேரள உயர் நீதிமன்றத்தில் மேல்முறையீடு செய்யப்பட்டுள்ளது).",
+                  "2023 இல் கேரள அரசு சுகாதாரப் பணியாளர்கள் பாதுகாப்புத் திருத்தச் சட்டத்தை இயற்றியது.",
+                  "அவரது பெற்றோர் அக்டோபர் 10, 2024 அன்று ஆலப்புழாவில் டாக்டர் வந்தனா தாஸ் நினைவு கிளினிக்கைத் தொடங்கினர்."
+              ],
+              "societalImpact": "சட்டமன்ற நடவடிக்கை: சுகாதாரப் பணியாளர்கள் பாதுகாப்பு\n\nடாக்டர் வந்தனா தாஸின் மரணம் சுகாதாரப் பணியாளர்கள் மீதான வன்முறை குறித்த கவலையை அதிகரித்தது. கேரளா 2023 இல் சுகாதாரப் பணியாளர்கள் மற்றும் நிறுவனங்கள் பாதுகாப்புத் திருத்தச் சட்டத்தைக் கொண்டு வந்தது. இருப்பினும், சட்டங்கள் மட்டுமே பாதுகாப்பை உறுதி செய்யாது; முறையான செயல்படுத்தல் மற்றும் அவசரப் பாதுகாப்பு ஏற்பாடுகள் அவசியம்.",
+              "actionableLesson": "மருத்துவ நிறுவனங்கள் கவனத்தில் கொள்ள வேண்டியவை:\n1. அவசர ஆபத்து மதிப்பீடு\n2. விரைவான பாதுகாப்பு நடவடிக்கை\n3. அவசர சிகிச்சைப் பிரிவு பாதுகாப்பு\n4. பதற்றம் தணிக்கும் பயிற்சி\n5. சம்பவப் பதிவு மற்றும் பொறுப்புக்கூறல்\n6. சம்பவத்திற்குப் பிந்தைய மருத்துவ, உளவியல் மற்றும் சட்ட ஆதரவு.",
+              "memorialPublication": {
+                  "title": "UltimateHealth பார்வை: சுகாதாரப் பணியாளர்களைப் பாதுகாப்பதும் சமூக சேவையைத் தொடர்வதும்",
+                  "focus": "அவசர சிகிச்சைப் பிரிவு பாதுகாப்பு மற்றும் குடும்பத்தினர் வழிநடத்தும் சமூக மருத்துவம்",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "டாக்டர் வந்தனா தாஸை நினைவுகூர்வது என்பது பாதுகாப்பான மருத்துவப் பணியிடங்களின் தேவையையும், அவரது பெற்றோர் ஆற்றிவரும் தொடர்ச்சியான பங்களிப்பையும் அங்கீகரிப்பதாகும்."
+              }
+          },
+          "or": {
+              "name": "ଡା. ବନ୍ଦନା ଦାସ",
+              "roleAndField": "ହାଉସ୍ ସର୍ଜନ · କୋଟ୍ଟାରକ୍କରା ତାଲୁକ ହସ୍ପିଟାଲ, କେରଳ",
+              "categoryLabel": "ଜରୁରୀକାଳୀନ ଚିକିତ୍ସା ଓ କ୍ଲିନିକାଲ୍ ସୁରକ୍ଷା",
+              "coreMessage": "ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତି ସମେତ ରୋଗୀ সেবা ପ୍ରଦାନ ସମୟରେ ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀଙ୍କୁ ସୁରକ୍ଷା ଦିଆଯିବା ଆବଶ୍ୟକ। ଜଣେ ବ୍ୟକ୍ତିଙ୍କ ସ୍ୱାସ୍ଥ୍ୟସେବା ଅବଦାନ ସେମାନଙ୍କ ମୂଲ୍ୟବୋଧକୁ ଆଗକୁ ନେଉଥିବା ଲୋକଙ୍କ ମାଧ୍ୟମରେ ମଧ୍ୟ ଜାରି ରହିପାରେ।",
+              "whoWasThisPerson": "ଡା. ବନ୍ଦନା ଦାସ କେରଳର କୋଟ୍ଟାରକ୍କରା ତାଲୁକ ହସ୍ପିଟାଲରେ ହାଉସ୍ ସର୍ଜନ ଭାବେ କାର୍ଯ୍ୟରତ ଜଣେ ଯୁବ ଚିକିତ୍ସକ ଥିଲେ। ସେ ଆଜିଜିଆ ମେଡିକାଲ କଲେଜରୁ ଏମବିବିଏସ ସମାପ୍ତ କରିଥିଲେ।",
+              "contributions": "ଏକ ନିରନ୍ତର ପରମ୍ପରା — ତାଙ୍କ ପିତାମାତାଙ୍କ ଅବଦାନ (ସାମୁଦାୟିକ ସ୍ୱାସ୍ଥ୍ୟସେବାରେ ଏକ ସ୍ୱତନ୍ତ୍ର ଓ ଅର୍ଥପୂର୍ଣ୍ଣ ଅବଦାନ)\n\nଡା. ବନ୍ଦନା ଦାସଙ୍କ ପିତାମାତା ତାଙ୍କ স্মୃତିରେ କେରଳର ଆଲାପ୍ପୁଝା ଜିଲ୍ଲାର ଥ୍ରିକୁନ୍ନପ୍ପୁଝାରେ 'ଡା. ବନ୍ଦନା ଦାସ ମେମୋରିଆଲ କ୍ଲିନିକ୍' ସ୍ଥାପନ କରିଥିଲେ, ଯାହା ୧୦ ଅକ୍ଟୋବର ୨୦୨୪ରେ ତତ୍କାଳୀନ ରାଜ୍ୟପାଳ ଆରିଫ ମହମ୍ମଦ ଖାନଙ୍କ ଦ୍ୱାରା ଉଦଘାଟିତ ହୋଇଥିଲା। ଆର୍ଥିକ ଭାବେ ଦୁର୍ବଳ ଲୋକଙ୍କୁ ଚିକିତ୍ସା ସହାୟତା ଯୋଗାଇବା ଏହାର ଉଦ୍ଦେଶ୍ୟ।",
+              "factualContext": "୧୦ ମଇ ୨୦୨୩ରେ ପୋଲିସ ଦ୍ୱାରା ଚିକିତ୍ସା ପାଇଁ ଅଣାଯାଇଥିବା ଜଣେ ବ୍ୟକ୍ତିର ଚିକିତ୍ସା କରୁଥିବା ସମୟରେ ଡା. ବନ୍ଦନା ଦାସଙ୍କୁ ସର୍ଜିକାଲ କଇଁଚିରେ ଆକ୍ରମଣ କରାଯାଇଥିଲା। ପରେ ତିରୁବନନ୍ତପୁରମର KIMS ହସ୍ପିଟାଲରେ ତାଙ୍କର ମୃତ୍ୟୁ ଘଟିଥିଲା।\n\nନ୍ୟାୟିକ ପ୍ରକ୍ରିୟା:\nମାର୍ଚ୍ଚ ୨୦୨୬ରେ କୋଲ୍ଲାମ ଅତିରିକ୍ତ ଦୌରା କୋର୍ଟ ଅଭିଯୁକ୍ତ ଜି. ସନ୍ଦୀପକୁ ଦୋଷୀ ସାବ୍ୟସ୍ତ କରି ଆଜୀବନ କାରାଦଣ୍ଡ ଶୁଣାଇଥିଲେ। ପରେ କେରଳ ହାଇକୋର୍ଟରେ ଅପିଲ୍ ଦାୟର କରାଯାଇଥିଲା।",
+              "editorialNotes": "ଅଦାଲତଙ୍କ ରାୟ ଏବଂ ପରବର୍ତ୍ତୀ ଅପିଲ୍ ସମ୍ବନ୍ଧୀୟ ବିବରଣୀ ପ୍ରକାଶ କରିବା ପୂର୍ବରୁ ମୂଳ ନଥିପତ୍ର ଯାଞ୍ଚ କରାଯିବା ଉଚିତ।",
+              "verifiedFacts": [
+                  "କୋଟ୍ଟାରକ୍କରା ତାଲୁକ ହସ୍ପିଟାଲ, କେରଳରେ ହାଉସ୍ ସର୍ଜନ; ଆଜିଜିଆ ମେଡିକାଲ କଲେଜରୁ ଏମବିବିଏସ।",
+                  "୧୦ ମଇ ୨୦୨୩ରେ କାଜୁଆଲିଟି ବିଭାଗରେ ସର୍ଜିକାଲ କଇଁଚି ଆକ୍ରମଣରେ ଗୁରୁତର ଆହତ ହୋଇ ଶহୀଦ ହୋଇଥିଲେ।",
+                  "ମାର୍ଚ୍ଚ ୨୦୨୬ରେ କୋଲ୍ଲାମ ଅତିରିକ୍ତ ଦୌରା କୋର୍ଟ ଜି. ସନ୍ଦୀପକୁ ଆଜୀବନ କାରାଦଣ୍ଡ ପ୍ରଦାନ କରିଥିଲେ।",
+                  "୨୦୨୩ରେ କେରଳ ସରକାର ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀ ସୁରକ୍ଷା ସଂଶୋଧନ ଆଇନ ପ୍ରଣୟନ କରିଥିଲେ।",
+                  "ତାଙ୍କ ପିତାମାତା ୧୦ ଅକ୍ଟୋବର ୨୦୨୪ରେ ଡା. ବନ୍ଦନା ଦାସ ମେମୋରିଆଲ କ୍ଲିନିକ୍ ଉଦଘାଟନ କରିଥିଲେ।"
+              ],
+              "societalImpact": "୨୦୨୩ରେ କେରଳ ସରକାର ସ୍ୱାସ୍ଥ୍ୟସେବା କର୍ମୀ ଏବଂ ଅନୁଷ୍ଠାନ ସୁରକ୍ଷା ସଂଶୋଧନ ଆଇନ ଆଣିଥିଲେ। କିନ୍ତୁ କେବଳ ଆଇନ ନୁହେଁ, ଏହାର ସଠିକ୍ କାର୍ଯ୍ୟାନ୍ୱୟନ ଓ ଜରୁରୀକାଳୀନ ସୁରକ୍ଷା ବ୍ୟବସ୍ଥା ଅପରିହାର୍ଯ୍ୟ।",
+              "actionableLesson": "ଡାକ୍ତରଖାନାଗୁଡ଼ିକ ଜରୁରୀକାଳୀନ ବିପଦ ଆକଳନ, ତ୍ୱରିତ ସୁରକ୍ଷା ପ୍ରତିକ୍ରିୟା, କାଜୁଆଲିଟି ସୁରକ୍ଷା, ଡି-ଏସ୍କେଲେସନ ତାଲିମ ଏବଂ ଘଟଣା ପରବର୍ତ୍ତୀ ସହାୟତା ସୁନିଶ୍ଚିତ କରିବା ଉଚିତ।",
+              "memorialPublication": {
+                  "title": "UltimateHealth ଦୃଷ୍ଟିକୋଣ: ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀଙ୍କ ସୁରକ୍ଷା ଓ ଗୋଷ୍ଠୀ ସେବାର ନିରନ୍ତରତା",
+                  "focus": "ଜରୁରୀକାଳୀନ କାର୍ଯ୍ୟସ୍ଥଳୀ ସୁରକ୍ଷା ଓ ପରିବାର ଦ୍ୱାରା ପରିଚାଳିତ ଗୋଷ୍ଠୀ ସ୍ୱାସ୍ଥ୍ୟସେବା",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ଡା. ବନ୍ଦନା ଦାସଙ୍କୁ ସ୍ମରଣ କରିବାର ଅର୍ଥ ହେଉଛି ସୁରକ୍ଷିତ ଚିକିତ୍ସା କାର୍ଯ୍ୟସ୍ଥଳীর ଆବଶ୍ୟକତା ଏବଂ ତାଙ୍କ ପିତାମାତାଙ୍କ ଦ୍ୱାରା ଜାରି ରହିଥିବା ଜନସେବା ଅବଦାନକୁ ସମ୍ମାନ ଜଣାଇବା।"
+              }
+          },
+          "es": {
+              "name": "Dra. Vandana Das",
+              "roleAndField": "Médica Interna (House Surgeon) · Hospital Taluk de Kottarakkara, Kerala",
+              "categoryLabel": "Medicina de Urgencias y Protección Clínica",
+              "coreMessage": "Los trabajadores sanitarios deben estar protegidos mientras brindan atención, incluso en entornos de urgencias. La contribución de una persona a la salud también puede continuar a través de quienes eligen llevar adelante sus valores.",
+              "whoWasThisPerson": "La Dra. Vandana Das era una joven profesional médica que trabajaba como médica interna (house surgeon) en el Hospital Taluk de Kottarakkara en Kerala. Había completado su licenciatura en medicina (MBBS) en el Azeezia Medical College.\nSe encontraba al inicio de su carrera médica, asumiendo responsabilidades clínicas como parte de su formación profesional en un entorno donde el personal atiende regularmente a pacientes en circunstancias urgentes e impredecibles.",
+              "contributions": "Un legado que continúa — La contribución de sus padres (Una contribución independiente y significativa a la salud comunitaria)\n\nLa historia de la Dra. Vandana Das no terminó con la tragedia. Sus padres decidieron establecer una clínica conmemorativa en su memoria, creando una contribución continua a la atención médica más allá del hospital donde ella trabajaba.\nFundaron la Clínica Conmemorativa Dra. Vandana Das en Thrikkunnappuzha, en el distrito de Alappuzha, Kerala. La clínica fue inaugurada el 10 de octubre de 2024 por el entonces gobernador de Kerala, Arif Mohammed Khan.\nLa iniciativa fue concebida para brindar asistencia médica a personas económicamente desfavorecidas.\nEsta contribución merece reconocimiento por derecho propio. Sus padres conectaron el recuerdo con el servicio público, dando al nombre de la Dra. Vandana Das un lugar continuo en la salud comunitaria.\n\nPor qué esto es importante para UltimateHealth:\n• Reconoce la contribución de los familiares que continúan una iniciativa de servicio público relacionada con la salud.\n• Destaca la atención sanitaria orientada a la comunidad más allá de los entornos institucionales.\n• Muestra cómo las iniciativas conmemorativas pueden crear valor práctico cuando se conectan con asistencia médica accesible.\n• Otorga a sus padres un reconocimiento independiente como colaboradores de este esfuerzo continuo.\n\nDistinción editorial: El establecimiento y la inauguración de la clínica están documentados. Su estado operativo actual, horario de servicio, número de pacientes y gama completa de servicios deben verificarse por separado antes de realizar afirmaciones sobre sus actividades en curso.",
+              "factualContext": "El 10 de mayo de 2023, la Dra. Vandana Das atendía a un hombre que había sido llevado al hospital por la policía para recibir tratamiento médico tras un altercado.\nMientras ella trataba sus heridas en el departamento de urgencias, el hombre la atacó con tijeras quirúrgicas. Otras personas en el hospital también resultaron heridas durante el incidente.\nLa Dra. Vandana Das sufrió heridas críticas y fue trasladada al Hospital KIMS en Thiruvananthapuram, donde posteriormente falleció.\nEl acusado fue identificado como G. Sandeep. Las especulaciones iniciales sobre intoxicación no deben tratarse como hechos establecidos. Las circunstancias y la defensa legal del acusado fueron asuntos considerados durante el proceso penal posterior.\n\nProcedimientos judiciales:\nEn marzo de 2026, el Tribunal de Sesiones Adicional de Kollam declaró culpable a G. Sandeep en relación con el asesinato de la Dra. Vandana Das y otros delitos, imponiendo una condena a cadena perpetua por el asesinato junto con penas adicionales.\nPosteriormente se presentó una apelación ante el Tribunal Superior de Kerala. Por lo tanto, el veredicto del tribunal de primera instancia debe describirse como el resultado en la etapa de juicio, señalando por separado el proceso de apelación.",
+              "editorialNotes": "La sentencia del juicio y la apelación posterior deben verificarse con los registros judiciales pertinentes antes de publicar descripciones detalladas de las penas o afirmar el estado definitivo del caso. Nota de publicación: Las fuentes enumeradas son un rastro de investigación, no un sustituto de la verificación de la sentencia judicial original y el texto legislativo oficial.",
+              "verifiedFacts": [
+                  "Médica interna (house surgeon) en el Hospital Taluk de Kottarakkara, Kerala; graduada MBBS en Azeezia Medical College.",
+                  "Atacada mortalmente el 10 de mayo de 2023 con tijeras quirúrgicas mientras atendía a un paciente llevado por la policía al servicio de urgencias; falleció en el Hospital KIMS de Thiruvananthapuram.",
+                  "En marzo de 2026, el Tribunal de Sesiones Adicional de Kollam declaró culpable a G. Sandeep y le impuso cadena perpetua por asesinato (con apelación posterior ante el Tribunal Superior de Kerala).",
+                  "Kerala reformó su legislación mediante la Ley de Enmienda de Personas e Instituciones de Servicios de Salud de Kerala de 2023.",
+                  "Sus padres fundaron la Clínica Conmemorativa Dra. Vandana Das en Thrikkunnappuzha, distrito de Alappuzha, inaugurada el 10 de octubre de 2024 por el gobernador Arif Mohammed Khan."
+              ],
+              "societalImpact": "Respuesta legislativa: Protección de los trabajadores sanitarios\n\nLa muerte de la Dra. Vandana Das intensificó la preocupación pública por la violencia contra los profesionales de la salud.\nKerala modificó su legislación mediante la enmienda de 2023 a la Ley de Personas e Instituciones de Servicios de Salud de Kerala (Prevención de la Violencia y Daños a la Propiedad), fortaleciendo el marco legal.\nSin embargo, aprobar leyes más estrictas por sí solo no garantiza la seguridad. La implementación efectiva, los mecanismos de denuncia, la capacitación del personal y los protocolos de respuesta de emergencia siguen siendo esenciales.",
+              "actionableLesson": "El caso de la Dra. Vandana Das destaca la necesidad de salvaguardias prácticas en entornos de atención de urgencias.\n\nLas instituciones sanitarias deben considerar:\n1. Evaluación de riesgos en urgencias: Identificar situaciones en las que pacientes o acompañantes puedan representar un riesgo inmediato.\n2. Respuesta rápida de seguridad: Procedimientos claros para llamar a personal de seguridad capacitado.\n3. Seguridad en el área de urgencias: Revisar el diseño de los departamentos de emergencia, el acceso a salidas y las alertas de emergencia.\n4. Capacitación en desescalada: Dotar al personal sanitario de formación práctica ante situaciones amenazantes.\n5. Notificación de incidentes y rendición de cuentas: Garantizar que las amenazas y agresiones se documenten e investiguen.\n6. Apoyo posterior al incidente: Brindar apoyo médico, psicológico y legal oportuno.\n\nEstas son salvaguardias institucionales propuestas, no afirmaciones de que un hospital en particular las haya implementado.",
+              "memorialPublication": {
+                  "title": "La perspectiva de UltimateHealth: Proteger al personal sanitario y continuar el servicio comunitario",
+                  "focus": "Salvaguardias en salas de urgencias y atención sanitaria comunitaria impulsada por la familia",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "La historia de la Dra. Vandana Das representa dos dimensiones conectadas de la atención sanitaria:\n• La responsabilidad de proteger a los trabajadores de la salud.\n• La responsabilidad de seguir sirviendo a las comunidades: la clínica conmemorativa de sus padres demuestra cómo la iniciativa de una familia puede extender una contribución sanitaria más allá de una vida individual.\n\nRecordar a la Dra. Vandana Das significa reconocer tanto la necesidad de lugares de trabajo sanitarios más seguros como la contribución continua realizada por sus padres."
+              }
+          },
+          "fr": {
+              "name": "Dre Vandana Das",
+              "roleAndField": "Interne en médecine (House Surgeon) · Hôpital Taluk de Kottarakkara, Kerala",
+              "categoryLabel": "Médecine d'Urgence et Protection Clinique",
+              "coreMessage": "Les professionnels de santé doivent être protégés lorsqu'ils prodiguent des soins, y compris dans les services d'urgence. La contribution d'une personne à la santé peut également se poursuivre à travers celles et ceux qui choisissent de faire vivre ses valeurs.",
+              "whoWasThisPerson": "La Dre Vandana Das était une jeune professionnelle de santé travaillant comme interne (house surgeon) à l'hôpital Taluk de Kottarakkara, au Kerala. Elle avait obtenu son diplôme MBBS à l'Azeezia Medical College.\nElle était au début de sa carrière médicale, assumant des responsabilités cliniques dans un environnement où le personnel soignant prend régulièrement en charge des patients dans des circonstances urgentes et imprévisibles.",
+              "contributions": "Un héritage poursuivi — La contribution de ses parents (Une contribution distincte et significative à la santé communautaire)\n\nL'histoire de la Dre Vandana Das ne s'est pas arrêtée à la tragédie. Ses parents ont choisi de créer une clinique commémorative en sa mémoire, prolongeant sa contribution aux soins de santé au-delà de l'hôpital où elle avait travaillé.\nIls ont fondé la Clinique commémorative Dre Vandana Das à Thrikkunnappuzha, dans le district d'Alappuzha, au Kerala. La clinique a été inaugurée le 10 octobre 2024 par le gouverneur du Kerala de l'époque, Arif Mohammed Khan, afin d'offrir une assistance médicale aux personnes économiquement défavorisées.\n\nPourquoi cela compte pour UltimateHealth :\n• Cela reconnaît la contribution des membres de la famille qui poursuivent une initiative de service public liée à la santé.\n• Cela met en lumière des soins de santé tournés vers la communauté au-delà des cadres institutionnels.\n• Cela montre comment les initiatives commémoratives peuvent créer une valeur concrète lorsqu'elles sont liées à une aide médicale accessible.\n• Cela accorde à ses parents une reconnaissance indépendante en tant que contributeurs à cet effort continu.\n\nDistinction éditoriale : La création et l'inauguration de la clinique sont documentées. Son statut opérationnel actuel, ses horaires, le nombre de patients et l'éventail complet des services doivent être vérifiés séparément avant toute affirmation sur ses activités en cours.",
+              "factualContext": "Le 10 mai 2023, la Dre Vandana Das soignait un homme amené à l'hôpital par la police pour recevoir des soins médicaux à la suite d'une altercation.\nAlors qu'elle soignait ses blessures aux urgences, l'homme l'a attaquée avec des ciseaux chirurgicaux. D'autres personnes présentes à l'hôpital ont également été blessées.\nGrièvement blessée, la Dre Vandana Das a été transportée à l'hôpital KIMS de Thiruvananthapuram, où elle est décédée.\nL'accusé a été identifié comme G. Sandeep. Les premières spéculations sur une éventuelle intoxication ne doivent pas être traitées comme des faits établis.\n\nProcédures judiciaires :\nEn mars 2026, le tribunal correctionnel supplémentaire de Kollam a déclaré G. Sandeep coupable du meurtre de la Dre Vandana Das et d'autres infractions, le condamnant à la réclusion à perpétuité ainsi qu'à des peines complémentaires.\nUn appel a ensuite été interjeté devant la Haute Cour du Kerala. Le verdict doit donc être décrit comme l'issue en première instance, la procédure d'appel étant mentionnée séparément.",
+              "editorialNotes": "Le jugement de première instance et l'appel ultérieur doivent être vérifiés auprès des registres judiciaires compétents avant de publier le détail des peines ou d'indiquer le statut définitif de l'affaire.",
+              "verifiedFacts": [
+                  "Interne (house surgeon) à l'hôpital Taluk de Kottarakkara, Kerala ; diplômée MBBS de l'Azeezia Medical College.",
+                  "Mortellement attaquée le 10 mai 2023 avec des ciseaux chirurgicaux alors qu'elle soignait un patient amené par la police aux urgences ; décédée à l'hôpital KIMS de Thiruvananthapuram.",
+                  "En mars 2026, le tribunal de Kollam a reconnu G. Sandeep coupable et l'a condamné à la prison à perpétuité (décision frappée d'appel devant la Haute Cour du Kerala).",
+                  "Le Kerala a amendé sa législation en 2023 pour renforcer la protection des personnels et établissements de santé.",
+                  "Ses parents ont créé la Clinique commémorative Dre Vandana Das à Thrikkunnappuzha (district d'Alappuzha), inaugurée le 10 octobre 2024 par le gouverneur Arif Mohammed Khan."
+              ],
+              "societalImpact": "Réponse législative : Protection des professionnels de santé\n\nLe décès de la Dre Vandana Das a accru l'inquiétude publique face aux violences contre les soignants.\nEn 2023, le Kerala a amendé sa législation protégeant le personnel et les établissements de santé contre la violence et les dégradations.\nToutefois, l'adoption de lois plus strictes ne garantit pas à elle seule la sécurité : une mise en œuvre effective, des mécanismes de signalement, la formation du personnel et des dispositifs d'intervention d'urgence demeurent essentiels.",
+              "actionableLesson": "Le cas de la Dre Vandana Das souligne la nécessité de garanties pratiques dans les services d'urgence :\n1. Évaluation des risques aux urgences\n2. Intervention rapide de sécurité\n3. Sécurité de la zone d'accueil des urgences (issues, alertes)\n4. Formation à la désescalade\n5. Signalement des incidents et responsabilité institutionnelle\n6. Soutien médical, psychologique et juridique après un incident.\n\nIl s'agit de mesures de protection institutionnelles proposées, et non d'affirmations selon lesquelles un hôpital particulier les aurait mises en œuvre.",
+              "memorialPublication": {
+                  "title": "La perspective d'UltimateHealth : Protéger les soignants et poursuivre le service communautaire",
+                  "focus": "Mesures de sécurité aux urgences et soins de santé communautaires portés par la famille",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "L'histoire de la Dre Vandana Das incarne deux dimensions liées des soins de santé :\n• La responsabilité de protéger les travailleurs de la santé.\n• La responsabilité de continuer à servir les communautés : la clinique commémorative créée par ses parents montre comment l'initiative d'une famille peut prolonger une contribution médicale au-delà d'une vie individuelle.\n\nSe souvenir de la Dre Vandana Das signifie reconnaître à la fois le besoin de lieux de travail hospitaliers plus sûrs et la contribution continue apportée par ses parents."
+              }
+          },
+          "de": {
+              "name": "Dr. Vandana Das",
+              "roleAndField": "Assistenzärztin im Praktikum (House Surgeon) · Kottarakkara Taluk Hospital, Kerala",
+              "categoryLabel": "Notfallmedizin & Klinischer Arbeitsschutz",
+              "coreMessage": "Medizinisches Personal muss bei der Patientenversorgung geschützt werden, insbesondere in Notaufnahmen. Der Beitrag eines Menschen zur Gesundheitsversorgung kann auch durch jene weiterleben, die seine Werte fortführen.",
+              "whoWasThisPerson": "Dr. Vandana Das war eine junge Ärztin, die als House Surgeon am Kottarakkara Taluk Hospital in Kerala arbeitete. Ihr MBBS-Studium hatte sie am Azeezia Medical College abgeschlossen.\nSie stand am Beginn ihrer medizinischen Laufbahn und übernahm im Rahmen ihrer klinischen Ausbildung Verantwortung in einem Umfeld, in dem medizinisches Personal regelmäßig Patienten unter dringenden und unvorhersehbaren Umständen versorgt.",
+              "contributions": "Ein fortgeführtes Vermächtnis — Der Beitrag ihrer Eltern (Ein eigenständiger und bedeutsamer Beitrag zur kommunalen Gesundheitsversorgung)\n\nDie Geschichte von Dr. Vandana Das endete nicht mit der Tragödie. Ihre Eltern entschieden sich, zu ihrem Gedenken eine Gedächtnisklinik zu gründen und damit einen fortlaufenden Beitrag zur Gesundheitsversorgung über das Krankenhaus hinaus zu schaffen, in dem sie gearbeitet hatte.\nSie gründeten die Dr. Vandana Das Memorial Clinic in Thrikkunnappuzha im Distrikt Alappuzha, Kerala. Die Klinik wurde am 10. Oktober 2024 vom damaligen Gouverneur von Kerala, Arif Mohammed Khan, eingeweiht, um wirtschaftlich benachteiligten Menschen medizinische Hilfe zu bieten.\n\nWarum dies für UltimateHealth wichtig ist:\n• Es würdigt den Beitrag von Familienangehörigen, die eine gemeinnützige Gesundheitsinitiative weiterführen.\n• Es hebt die gemeindeorientierte Gesundheitsversorgung jenseits institutioneller Einrichtungen hervor.\n• Es zeigt, wie Gedenkinitiativen praktischen Nutzen stiften, wenn sie mit zugänglicher medizinischer Hilfe verbunden sind.\n• Es gibt ihren Eltern eine eigenständige Anerkennung als Träger dieses fortlaufenden Engagements.\n\nRedaktionelle Abgrenzung: Die Gründung und Einweihung der Klinik sind dokumentiert. Ihr aktueller Betriebsstatus, die Öffnungszeiten, Patientenzahlen und das genaue Leistungsspektrum sollten separat überprüft werden, bevor Aussagen über den laufenden Betrieb getroffen werden.",
+              "factualContext": "Am 10. Mai 2023 behandelte Dr. Vandana Das einen Mann, der nach einer Auseinandersetzung von der Polizei zur medizinischen Versorgung ins Krankenhaus gebracht worden war.\nWährend sie seine Verletzungen in der Notaufnahme versorgte, griff der Mann sie mit einer chirurgischen Schere an. Auch weitere Personen im Krankenhaus wurden verletzt.\nDr. Vandana Das erlitt lebensgefährliche Verletzungen und wurde in das KIMS Hospital in Thiruvananthapuram gebracht, wo sie später verstarb.\nDer Beschuldigte wurde als G. Sandeep identifiziert. Frühe Spekulationen über eine Intoxikation sollten nicht als gesicherte Tatsache behandelt werden.\n\nGerichtsverfahren:\nIm März 2026 sprach das Kollam Additional Sessions Court G. Sandeep im Zusammenhang mit dem Mord an Dr. Vandana Das und weiteren Straftaten schuldig und verhängte eine lebenslange Freiheitsstrafe sowie weitere Strafen.\nAnschließend wurde Berufung beim Kerala High Court eingelegt. Das Urteil ist daher als Ergebnis der ersten Instanz zu beschreiben, wobei das Berufungsverfahren gesondert zu vermerken ist.",
+              "editorialNotes": "Das erstinstanzliche Urteil und das anschließende Berufungsverfahren sollten anhand der Gerichtsakten überprüft werden, bevor detaillierte Strafmaße veröffentlicht oder Aussagen zum endgültigen Verfahrensstand getroffen werden.",
+              "verifiedFacts": [
+                  "House Surgeon am Kottarakkara Taluk Hospital, Kerala; MBBS-Abschluss am Azeezia Medical College.",
+                  "Am 10. Mai 2023 in der Notaufnahme bei der Behandlung eines von der Polizei gebrachten Patienten mit einer chirurgischen Schere tödlich angegriffen; verstarb später im KIMS Hospital, Thiruvananthapuram.",
+                  "Im März 2026 verurteilte das Kollam Additional Sessions Court G. Sandeep wegen Mordes zu lebenslanger Haft (Berufung beim Kerala High Court anhängig).",
+                  "Kerala verschärfte 2023 sein Gesetz zum Schutz von Gesundheitspersonal und medizinischen Einrichtungen.",
+                  "Ihre Eltern gründeten die Dr. Vandana Das Memorial Clinic in Thrikkunnappuzha (Distrikt Alappuzha), die am 10. Oktober 2024 von Gouverneur Arif Mohammed Khan eingeweiht wurde."
+              ],
+              "societalImpact": "Gesetzgeberische Reaktion: Schutz von Gesundheitspersonal\n\nDer Tod von Dr. Vandana Das verstärkte die öffentliche Besorgnis über Gewalt gegen medizinisches Fachpersonal.\nKerala änderte 2023 seine Gesetzgebung zum Schutz des Gesundheitspersonals und der Gesundheitseinrichtungen vor Gewalt und Sachbeschädigung.\nStrengere Gesetze allein garantieren jedoch noch keine Sicherheit: Eine wirksame Umsetzung, Meldesysteme, Personalschulungen und Notfallmaßnahmen bleiben unerlässlich.",
+              "actionableLesson": "Der Fall von Dr. Vandana Das verdeutlicht die Notwendigkeit praktischer Schutzmaßnahmen in Notaufnahmen:\n1. Risikobewertung in der Notaufnahme\n2. Schnelle Sicherheitsreaktion\n3. Sicherheit im Behandlungsbereich (Fluchtwege, Notrufknöpfe)\n4. Deeskalationstraining\n5. Vorfallmeldung und institutionelle Rechenschaftspflicht\n6. Medizinische, psychologische und rechtliche Unterstützung nach Vorfällen.\n\nDies sind vorgeschlagene institutionelle Schutzmaßnahmen und keine Behauptungen, dass ein bestimmtes Krankenhaus sie bereits umgesetzt hat.",
+              "memorialPublication": {
+                  "title": "Die UltimateHealth-Perspektive: Schutz des Gesundheitspersonals & Fortführung des Dienstes an der Gemeinschaft",
+                  "focus": "Sicherheitsstandards in der Notaufnahme & familiengeführte kommunale Gesundheitsversorgung",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Die Geschichte von Dr. Vandana Das steht für zwei miteinander verbundene Dimensionen des Gesundheitswesens:\n• Die Verantwortung, medizinisches Personal am Arbeitsplatz vor Gewalt zu schützen.\n• Die Verantwortung, Gemeinschaften weiter zu dienen: Die Gedächtnisklinik ihrer Eltern zeigt, wie eine Familieninitiative einen Beitrag zur Gesundheitsversorgung über ein einzelnes Leben hinaus weiterführen kann.\n\nDr. Vandana Das zu gedenken bedeutet, sowohl die Notwendigkeit sicherer medizinischer Arbeitsplätze als auch den fortlaufenden Beitrag ihrer Eltern anzuerkennen."
+              }
+          },
+          "hr": {
+              "name": "Dr. Vandana Das",
+              "roleAndField": "Liječnica pripravnica (House Surgeon) · Bolnica Kottarakkara Taluk, Kerala",
+              "categoryLabel": "Hitna medicina i klinička zaštita",
+              "coreMessage": "Zdravstveni radnici moraju biti zaštićeni dok pružaju skrb, uključujući i u hitnim službama. Doprinos osobe zdravstvu može se nastaviti i kroz ljude koji odluče dalje nositi njezine vrijednosti.",
+              "whoWasThisPerson": "Dr. Vandana Das bila je mlada liječnica koja je radila kao pripravnica (house surgeon) u bolnici Kottarakkara Taluk u Kerali. Završila je studij medicine (MBBS) na Azeezia Medical Collegeu.\nBila je na početku svoje liječničke karijere, preuzimajući kliničke odgovornosti u okruženju u kojem zdravstveno osoblje redovito zbrinjava pacijente u hitnim i nepredvidivim okolnostima.",
+              "contributions": "Nastavljeno nasljeđe — Doprinos njezinih roditelja (Zaseban i značajan doprinos zdravstvenoj skrbi u zajednici)\n\nPriča dr. Vandane Das nije završila tragedijom. Njezini su roditelji odlučili osnovati memorijalnu kliniku u njezin spomen, stvarajući trajni doprinos zdravstvu izvan bolnice u kojoj je radila.\nOsnovali su Memorijalnu kliniku dr. Vandana Das u Thrikkunnappuzhi, u okrugu Alappuzha u Kerali. Kliniku je 10. listopada 2024. svečano otvorio tadašnji guverner Kerale Arif Mohammed Khan kako bi pružala medicinsku pomoć ekonomski ugroženim osobama.\n\nZašto je ovo važno za UltimateHealth:\n• Priznaje doprinos članova obitelji koji nastavljaju javnozdravstvenu inicijativu.\n• Ističe zdravstvenu skrb usmjerenu na zajednicu izvan institucionalnih okvira.\n• Pokazuje kako memorijalne inicijative mogu stvoriti praktičnu vrijednost kada su povezane s dostupnom medicinskom pomoći.\n• Daje njezinim roditeljima neovisno priznanje kao sudionicima ovog trajnog pothvata.\n\nUrednička napomena: Osnivanje i otvaranje klinike su dokumentirani. Njezin trenutačni radni status, raspored rada, broj pacijenata i puni opseg usluga trebaju se zasebno provjeriti prije iznošenja tvrdnji o tekućim aktivnostima.",
+              "factualContext": "Dana 10. svibnja 2023. dr. Vandana Das pružala je liječničku pomoć muškarcu kojeg je policija dovela u bolnicu nakon sukoba.\nDok mu je obrađivala ozljede na hitnom prijemu, muškarac ju je napao kirurškim škarama. U incidentu su ozlijeđene i druge osobe u bolnici.\nDr. Vandana Das zadobila je teške ozljede te je prevezena u bolnicu KIMS u Thiruvananthapuramu, gdje je kasnije preminula.\nOptuženik je identificiran kao G. Sandeep. Rana nagađanja o intoksikaciji ne bi se trebala tretirati kao utvrđena činjenica.\n\nSudski postupak:\nU ožujku 2026. Dodatni okružni sud u Kollamu proglasio je G. Sandeepa krivim za ubojstvo dr. Vandane Das i druga kaznena djela te mu izrekao kaznu doživotnog zatvora.\nNaknadno je podnesena žalba Visokom sudu u Kerali, stoga se presuda treba opisati kao ishod prvostupanjskog postupka uz zasebno navođenje žalbenog postupka.",
+              "editorialNotes": "Prvostupanjsku presudu i naknadnu žalbu potrebno je provjeriti u odgovarajućim sudskim spisima prije objavljivanja detaljnih opisa kazni ili navođenja konačnog statusa predmeta.",
+              "verifiedFacts": [
+                  "Liječnica pripravnica (house surgeon) u bolnici Kottarakkara Taluk, Kerala; diplomirala MBBS na Azeezia Medical Collegeu.",
+                  "Smrtno napadnuta 10. svibnja 2023. kirurškim škarama dok je liječila pacijenta dovedenog u pratnji policije na hitni prijem; preminula u bolnici KIMS u Thiruvananthapuramu.",
+                  "U ožujku 2026. sud u Kollamu osudio je G. Sandeepa na doživotni zatvor zbog ubojstva (podnesena žalba Visokom sudu u Kerali).",
+                  "Kerala je 2023. izmijenila zakon o zaštiti zdravstvenih djelatnika i zdravstvenih ustanova od nasilja.",
+                  "Njezini roditelji osnovali su Memorijalnu kliniku dr. Vandana Das u Thrikkunnappuzhi (okrug Alappuzha), otvorenu 10. listopada 2024."
+              ],
+              "societalImpact": "Zakonodavni odgovor: Zaštita zdravstvenih radnika\n\nSmrt dr. Vandane Das pojačala je zabrinutost javnosti zbog nasilja nad zdravstvenim djelatnicima.\nKerala je 2023. izmijenila zakonodavstvo kojim se štite zdravstveni radnici i ustanove od nasilja i oštećenja imovine.\nMeđutim, samo donošenje strožih zakona ne jamči sigurnost; učinkovita provedba, mehanizmi prijave, edukacija osoblja i protokoli hitnog reagiranja ostaju ključni.",
+              "actionableLesson": "Slučaj dr. Vandane Das naglašava potrebu za praktičnim zaštitnim mjerama u hitnim službama:\n1. Procjena rizika u hitnom prijemu\n2. Brza reakcija službe sigurnosti\n3. Sigurnost prostora hitnog prijema (izlazi, hitni alarmi)\n4. Edukacija o deeskalaciji sukoba\n5. Prijavljivanje incidenata i odgovornost\n6. Medicinska, psihološka i pravna podrška nakon incidenta.\n\nOvo su predložene institucionalne mjere zaštite, a ne tvrdnje da ih je određena bolnica provela.",
+              "memorialPublication": {
+                  "title": "Perspektiva UltimateHealtha: Zaštita zdravstvenih radnika i nastavak služenja zajednici",
+                  "focus": "Zaštitne mjere u hitnoj službi i obiteljski vođena zdravstvena skrb u zajednici",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Priča dr. Vandane Das predstavlja dvije povezane dimenzije zdravstva:\n• Odgovornost za zaštitu zdravstvenih radnika.\n• Odgovornost za nastavak služenja zajednici: memorijalna klinika njezinih roditelja pokazuje kako obiteljska inicijativa može produžiti zdravstveni doprinos izvan pojedinačnog života.\n\nSjećanje na dr. Vandanu Das znači prepoznavanje potrebe za sigurnijim zdravstvenim radnim mjestima i trajnog doprinosa njezinih roditelja."
+              }
+          }
+      }
+  },
   {
-    id: 3,
+    id: 4,
     slug: "dr-moumita-debnath",
     name: "Dr. Moumita Debnath",
     country: "India",
@@ -622,47 +898,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       { title: "Supreme Court of India Suo Motu Writ Petition (Crl) No. 2/2024 — National Task Force Orders (20 Aug 2024)", url: "https://main.sci.gov.in/supremecourt/2024/37466/37466_2024_1_1_54652_Order_20-Aug-2024.pdf", publisher: "Supreme Court of India", isPrimary: true },
       { title: "National Task Force on Healthcare Workers' Safety — Terms of Reference", url: "https://main.sci.gov.in", publisher: "Ministry of Health and Family Welfare, India" },
       { title: "The Indian Express: RG Kar Hospital Case Timeline", url: "https://indianexpress.com/article/cities/kolkata/kolkata-doctor-rape-murder-case-timeline-rg-kar-hospital-9520979/", publisher: "The Indian Express" },
-    ],
-  },
-  {
-    id: 4,
-    slug: "dr-vandana-das",
-    name: "Dr. Vandana Das",
-    country: "India",
-    countryFlag: "🇮🇳",
-    category: "healthcare",
-    categoryLabel: "Emergency Medicine & Clinical Protection",
-    eraOrYear: "1999–2023",
-    roleAndField: "House Surgeon / Medical Intern · Kottarakkara Taluk Hospital, Kerala",
-    avatarUrl: "https://images.openai.com/static-rsc-4/WmEpQw-lqYO47-p4A7eQQMIWYeFkI4LlmCI17Np-wNnRtq2KyU3UISZoLOnbFm3z8LbgP6EVgVoahv3rvrfUIA1tD5GS9PuiV70pD4N2IxrSAaSc1tEMBfXqPNph8goJVT2Y_KKjjY25HIUsKoBgKybSwqmGd47-XhFbWEulCaM?purpose=inline",
-    whoWasThisPerson:
-      "A 23-year-old house surgeon (medical intern) from Kerala who had completed her medical education and was fulfilling her frontline clinical internship in government emergency casualty care.",
-    contributions:
-      "She served frontline casualty rotations caring for emergency patients. Following her passing, a memorial clinic was established to provide compassionate medical care to underserved communities, sustaining her professional aspirations.",
-    factualContext:
-      "In May 2023, while dressing the wounds of an individual brought to the casualty department under police escort for medical evaluation, the patient turned violent using medical instruments, inflicting fatal injuries on Dr. Das and injuring hospital personnel.",
-    societalImpact:
-      "Her death sparked grief and outrage across the medical community, prompting the state government to promulgate the Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment Ordinance (subsequently enacted as Kerala Act 22 of 2023), imposing stringent prison terms of up to seven years for violence against healthcare workers.",
-    verificationStatus: "Verified",
-    lastVerifiedAt: "2026-11-06",
-    verifiedFacts: [
-      "23-year-old medical intern (house surgeon) on a rotating casualty internship in Kerala",
-      "Fatally attacked on 10 May 2023 at Kottarakkara Taluk Hospital using surgical dressing scissors",
-      "Perpetrator was a patient brought under police custody for wound dressing treatment",
-      "Kerala Government passed the Kerala Healthcare Service Persons Amendment Ordinance / Act 22 of 2023",
-    ],
-    actionableLesson:
-      "Patients brought in under custody or in states of acute intoxication/psychosis must undergo mandatory weapon screening and physical restraint protocols before clinical staff enter examination bays.",
-    coreMessage:
-      "Emergency medical teams need robust institutional triage security. No doctor should ever face physical assault while rendering compassionate care.",
-    memorialPublication: {
-      title: "Emergency Casualty De-escalation & Restraint Protocol",
-      focus: "Emergency Medicine Safety & Police Escort Standards",
-      deliverable: "A standard operating procedure (SOP) for triage units handling intoxicated or belligerent patients in secondary healthcare centers.",
-    },
-    references: [
-      { title: "Kerala Healthcare Service Persons and Healthcare Service Institutions (Amendment) Act, 2023 (Act 22 of 2023)", url: "https://prsindia.org/files/bills_acts/acts_states/kerala/2023/Act%2022%20of%202023%20Kerala.pdf", publisher: "Government of Kerala", isPrimary: true },
-      { title: "The Hindu: Kerala Cabinet Approves Ordinance Amending Hospital Protection Act (May 2023)", url: "https://www.thehindu.com/news/national/kerala/kerala-cabinet-approves-ordinance-amending-hospital-protection-act/article66858908.ece", publisher: "The Hindu" },
     ],
   },
   {
@@ -2051,6 +2286,7 @@ export function getLocalizedProfile(profile: TributeProfile, locale?: string): T
     societalImpact: t.societalImpact ?? profile.societalImpact,
     actionableLesson: t.actionableLesson ?? profile.actionableLesson,
     verifiedFacts: t.verifiedFacts ?? profile.verifiedFacts,
+    editorialNotes: t.editorialNotes ?? profile.editorialNotes,
     memorialPublication: t.memorialPublication
       ? {
           ...profile.memorialPublication,
