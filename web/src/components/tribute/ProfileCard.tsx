@@ -84,6 +84,22 @@ export default function ProfileCard({ profile: rawProfile, onOpenModal }: Profil
                   : `⚠ ${t("qualifiedBadge")}`}
               </span>
             )}
+            {profile.caseStatus && (
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  fontWeight: 700,
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  background: "rgba(245, 158, 11, 0.12)",
+                  color: "#d97706",
+                  border: "1px solid rgba(245, 158, 11, 0.25)",
+                }}
+                title={`Case Inquiry Status: ${profile.caseStatus}`}
+              >
+                ⚖ {profile.caseStatus}
+              </span>
+            )}
           </div>
           <span style={{ fontSize: "0.78rem", color: "var(--explorer-text-secondary, #64748b)" }}>
             {profile.countryFlag} {profile.country}

@@ -247,6 +247,28 @@ export default function ProfileDetailModal({
                     </span>
                   </>
                 )}
+                {profile.caseStatus && (
+                  <>
+                    <span style={{ color: "#cbd5e1" }}>·</span>
+                    <span
+                      style={{
+                        fontSize: "0.7rem",
+                        fontWeight: 700,
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        background: "rgba(245, 158, 11, 0.12)",
+                        color: "#d97706",
+                        border: "1px solid rgba(245, 158, 11, 0.3)",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                      title={`Case / Inquiry Status: ${profile.caseStatus}`}
+                    >
+                      ⚖ Inquiry: {profile.caseStatus}
+                    </span>
+                  </>
+                )}
               </div>
 
               <h2

@@ -63,6 +63,7 @@ export interface TributeProfile {
 
   // Editorial Verification Layer (Audit & Fact-Checking) – added 2026-11-06
   verificationStatus?: VerificationStatus;  // "Verified" | "Partially Verified" | "Under Review" | "Disputed"
+  caseStatus?: "Ongoing / Unresolved" | "Under Judicial Review" | "Resolved" | "Historical" | string;
   lastVerifiedAt?: string;                  // ISO date of last editorial review, e.g. "2026-11-06"
   verifiedFacts?: string[];                 // Claims confirmed against primary/secondary sources
   disputedFacts?: string[];                 // Claims with conflicting accounts or unresolved investigations
@@ -94,6 +95,7 @@ export interface TributeProfileTranslation {
   actionableLesson?: string;
   verifiedFacts?: string[];
   editorialNotes?: string;
+  caseStatus?: string;
   memorialPublication?: {
     title?: string;
     focus?: string;
