@@ -6733,7 +6733,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
   },
   {
     "id": 27,
-    "slug": "asifa-bano",
+    "slug": "the-kathua-child",
     "name": "The Kathua Child",
     "country": "India",
     "countryFlag": "🇮🇳",
@@ -6741,7 +6741,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     "categoryLabel": "Child Rights, Marginalized Communities & Equal Protection",
     "eraOrYear": "2018",
     "roleAndField": "Child of the Nomadic Bakarwal Community · Jammu and Kashmir",
-    "avatarUrl": "https://images.openai.com/static-rsc-4/sRW9TmWVIa8KrExWW2RI1gfgdlKDM5r51ryP6DQNQNdJC7fOEYZLrVtwy6l8SPR1uzO0halMKYp8J7cGXGiXCtkpOnpN1ndF0r9BpWp2YElwFUjzUuKJgXyzd7axXqYvecSFkxXPDALNCTDj7w2Eqaxkp1IAE08L7fLUfdKnwH0?purpose=inline",
     "verificationStatus": "Verified",
     "caseStatus": "Convictions Imposed / Separate Adult Trial Unresolved",
     "lastVerifiedAt": "2026-11-07",
@@ -7166,7 +7165,7 @@ export const SOCIETAL_LESSONS: SocietalLesson[] = [
       "Safe community recreational spaces and rapid child welfare outreach in marginalized areas",
       "Fast-track judicial resolution with complete child witness protection",
     ],
-    profilesRef: ["Asifa Bano", "Anene Booysen", "Anne Frank"],
+    profilesRef: ["The Kathua Child", "Anene Booysen", "Anne Frank"],
   },
   {
     theme: "Education & Literacy",
