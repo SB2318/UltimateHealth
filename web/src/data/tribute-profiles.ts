@@ -2133,47 +2133,306 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
           }
       }
   },
-  {
-    id: 9,
-    slug: "reeva-steenkamp",
-    name: "Reeva Steenkamp",
-    country: "South Africa",
-    countryFlag: "🇿🇦",
-    category: "safety-and-justice",
-    categoryLabel: "Law, Advocacy & Anti-Abuse Education",
-    eraOrYear: "1983–2013",
-    roleAndField: "Law Graduate (LLB), Model & Emerging Anti-Abuse Campaigner",
-    avatarUrl: "https://images.openai.com/static-rsc-4/hzeyU8Iua_FaPgOtqTcib-tzJP2Lg4OKfZK_JFVLpjkFtceiT5-KA0kOvsYEw5z1Q1WN3cdunGHkpK1Hl9k8ldCquQSQZMnJmbS8HwNt-LM0nzKw3IyvZpixzVZT1b2bwiyySBnzICeKErtQsBnACokSMPdrFOfZ54kUdAKlum4?purpose=inline",
-    whoWasThisPerson:
-      "A 29-year-old law graduate (LLB, Nelson Mandela Metropolitan University, Port Elizabeth), professional model, and television personality. Highly regarded for her intellect and empathy, she was preparing to apply for admission to the legal bar.",
-    contributions:
-      "In the weeks before her death, she was using her public platform to speak out against domestic violence and abuse, planning educational school talks on the subject. Her mother June Steenkamp's victim impact statement confirms she had begun active anti-abuse advocacy.",
-    factualContext:
-      "On Valentine's Day in February 2013, she was shot through a closed bathroom door in the home of her boyfriend, paralympian Oscar Pistorius. Following multiple court trials and appeals, Pistorius was convicted of murder.",
-    societalImpact:
-      "Her family established the Reeva Rebecca Steenkamp Foundation, campaigning tirelessly against domestic abuse, educating teenagers on healthy relationships, and offering support for abused women.",
-    verificationStatus: "Verified",
-    lastVerifiedAt: "2026-11-06",
-    verifiedFacts: [
-      "29-year-old law graduate and model, shot on 14 February 2013 in Pretoria by Oscar Pistorius",
-      "Supreme Court of Appeal of South Africa overturned culpable homicide to murder conviction in December 2015",
-      "June Steenkamp's victim impact statement confirms Reeva's emerging public advocacy against domestic abuse",
-      "Reeva Rebecca Steenkamp Foundation established by her parents",
-    ],
-    actionableLesson:
-      "Educate young people on recognizing early indicators of coercive control, possessiveness, and domestic intimidation before they escalate into lethal violence.",
-    coreMessage:
-      "Recognize the complete person beyond the sensationalized circumstances of their death. Reeva was a brilliant legal thinker and passionate defender of others.",
-    memorialPublication: {
-      title: "Coercive Control Recognition & Safe Relationship Education Curriculum",
-      focus: "Intimate Partner Violence Prevention & Legal Literacy",
-      deliverable: "A curriculum for high schools and universities on identifying coercive control and establishing safe exit pathways.",
-    },
-    references: [
-      { title: "Supreme Court of Appeal of South Africa: DPP, Gauteng v. Pistorius (96/2015) [2015] ZASCA 204", url: "https://www.saflii.org/za/cases/ZASCA/2015/204.html", publisher: "Supreme Court of Appeal of South Africa", isPrimary: true },
-      { title: "Victim Impact Statement of June Steenkamp (High Court of South Africa, Pretoria, 2016)", url: "https://www.saflii.org", publisher: "Judiciary of South Africa", isPrimary: true },
-      { title: "Reeva Rebecca Steenkamp Foundation Official Mission", url: "https://reevasfoundation.org", publisher: "Reeva Steenkamp Foundation" },
-    ],
+    {
+      "id": 9,
+      "slug": "reeva-steenkamp",
+      "name": "Reeva Steenkamp",
+      "country": "South Africa",
+      "countryFlag": "🇿🇦",
+      "category": "safety-and-justice",
+      "categoryLabel": "Law, Advocacy & Anti-Abuse Education",
+      "eraOrYear": "1983–2013",
+      "roleAndField": "Law Graduate (LLB) · Professional Model · Emerging Advocate Against Domestic Abuse",
+      "avatarUrl": "https://images.openai.com/static-rsc-4/hzeyU8Iua_FaPgOtqTcib-tzJP2Lg4OKfZK_JFVLpjkFtceiT5-KA0kOvsYEw5z1Q1WN3cdunGHkpK1Hl9k8ldCquQSQZMnJmbS8HwNt-LM0nzKw3IyvZpixzVZT1b2bwiyySBnzICeKErtQsBnACokSMPdrFOfZ54kUdAKlum4?purpose=inline",
+      "verificationStatus": "Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "coreMessage": "A person's identity should never be reduced to the violence that ended their life. Reeva Steenkamp was a law graduate, a successful model, a media personality, and a young woman who had begun using her public platform to speak against domestic abuse and rape.",
+      "whoWasThisPerson": "Reeva Rebecca Steenkamp was born on 19 August 1983 in Cape Town, South Africa, and grew up in Port Elizabeth.\n\nShe studied law at Nelson Mandela Metropolitan University, graduating with a Bachelor of Laws degree in 2005. Alongside her education, she developed a successful modelling career, which she had begun pursuing as a teenager.\n\nHer professional work extended beyond modelling. She appeared as a presenter on Fashion TV and participated in the reality television programme Tropika Island of Treasure, filmed in Jamaica and broadcast shortly after her death.\n\nReeva had not abandoned her legal ambitions. A contemporary BBC profile reported that she had applied to the bar in late 2011 and hoped to become a legal advocate. Her interest in law and her modelling career were both important parts of her identity.",
+      "contributions": "Reeva had begun using her public profile to raise awareness about domestic abuse and rape.\n\nHer mother, June Steenkamp, later confirmed in a victim impact statement that Reeva had started speaking up for people affected by these forms of violence.\n\nOne particularly meaningful example was a school talk Reeva had prepared for 14 February 2013. She intended to speak to young students about self-worth, relationships, and the importance of valuing people for who they are rather than their physical appearance.\n\nShe never delivered that talk.\n\nHer planned appearance and the speech she had prepared provide a documented example of her intention to use her visibility to encourage young people and speak about issues affecting women.\n\nIt is important to distinguish this emerging advocacy from a long-established formal campaign. Reeva was beginning this work when her life was taken.",
+      "factualContext": "In the early hours of 14 February 2013, Reeva was fatally shot at the Pretoria home of her boyfriend, Oscar Pistorius.\n\nPistorius fired four shots through the closed door of a toilet cubicle in the bathroom. Reeva, who was inside, was struck and died from her injuries.\n\nThe case received extraordinary international attention and proceeded through multiple stages of criminal proceedings and appeals.\n\nThe Supreme Court of Appeal later overturned Pistorius's culpable-homicide conviction and substituted a conviction for murder.\n\nThis profile does not need graphic descriptions of her injuries to communicate the seriousness of the crime.\n\nJudicial Proceedings and Legal Outcome:\nThe legal proceedings developed over several years:\n• September 2014: Pistorius was convicted of culpable homicide by the Pretoria High Court.\n• December 2015: The Supreme Court of Appeal set aside that conviction and substituted a murder conviction, finding that the legal requirements for dolus eventualis had been met.\n• July 2016: The High Court sentenced him to six years' imprisonment for murder.\n• November 2017: Following further appeal proceedings, the sentence was increased to 13 years and five months.\n• January 2024: South Africa's Department of Correctional Services confirmed that Pistorius was placed on parole, effective 5 January 2024.\n\nThe distinction between the original culpable-homicide conviction and the later murder conviction matters. The Supreme Court of Appeal's December 2015 judgment is the central legal record establishing that change.",
+      "editorialNotes": "Important editorial qualifications: The claim that Reeva had begun anti-abuse advocacy is supported by her mother's statement and contemporary reporting; she is accurately described as an emerging advocate rather than having led a long-established formal campaign. The school speech is documented by contemporary reporting. The Reeva Rebecca Steenkamp Foundation's official website describes its programmes and mission as continued by her mother, June Steenkamp, without claiming unverified current beneficiary numbers. June Steenkamp's 24 November 2023 Victim Impact Statement also records that Reeva had written about feeling afraid of Pistorius's anger at times, which provides relevant historical context without being presented as a separate legal finding.",
+      "verifiedFacts": [
+          "Reeva Rebecca Steenkamp (born 19 August 1983 in Cape Town, raised in Port Elizabeth) graduated with a Bachelor of Laws (LLB) degree from Nelson Mandela Metropolitan University in 2005 and built a professional modelling and media career.",
+          "Contemporary BBC reporting documented that she had applied to the bar in late 2011 with the ambition to become a legal advocate, and her mother June Steenkamp's 2023 Victim Impact Statement confirmed she had begun using her public voice to advocate for people affected by domestic abuse and rape.",
+          "She had prepared a school talk for 14 February 2013 on self-worth and relationships that she never had the opportunity to deliver.",
+          "In the early hours of 14 February 2013, Oscar Pistorius fired four shots through the closed door of a toilet cubicle in the bathroom of his Pretoria home, fatally striking Reeva.",
+          "On 3 December 2015, the Supreme Court of Appeal of South Africa (DPP, Gauteng v Pistorius [2015] ZASCA 204) overturned the September 2014 culpable-homicide conviction and substituted a conviction for murder under dolus eventualis; his sentence was increased in November 2017 to 13 years and five months, with parole effective 5 January 2024.",
+          "Her mother, June Steenkamp, continued Reeva's work through the Reeva Rebecca Steenkamp Foundation (registered in November 2015 and officially launched in August 2016), focused on abuse education, victim support, legal assistance, and a yearly law bursary."
+      ],
+      "societalImpact": "A Legacy Continued — The Reeva Rebecca Steenkamp Foundation:\nAfter Reeva's death, her mother, June Steenkamp, took forward the work Reeva had begun.\n\nThe Reeva Rebecca Steenkamp Foundation was registered in November 2015 and officially launched in August 2016.\n\nIts stated mission is to educate and empower women and children against violence and abuse. Its work has included:\n• Abuse education: Helping people recognise physical, sexual, emotional, verbal, psychological and economic abuse, as well as intimidation, stalking and isolation.\n• Victim support and advocacy: Providing support to people who approach the foundation for assistance.\n• Legal assistance: Developing a pilot project with attorneys in Port Elizabeth.\n• Education and empowerment: Promoting education and skills development to help women become self-supporting.\n• Reeva Bursary: Providing a yearly bursary to a third-year law student with an interest in Family Law.\n• REEVA Pack: An educational resource intended to help prevent domestic violence and abuse.\n\nThe foundation also developed the #BluePurpleBlack campaign, using the symbolism of bruising to draw attention to different forms of abuse, including those that leave no visible physical injury.\n\nThis is an important part of Reeva's continuing legacy: her name is associated not only with remembrance, but with practical education, victim support and opportunities for future legal professionals.",
+      "actionableLesson": "Reeva's story highlights the importance of recognising that abuse is not limited to physical violence.\n\nEducation should help young people understand:\n• Coercive and controlling behaviour.\n• Possessiveness, intimidation and repeated humiliation.\n• Emotional and psychological abuse.\n• Isolation from friends, family and support networks.\n• How to seek help safely and access legal protections.\n• How friends, schools and institutions can respond without blaming or pressuring someone experiencing abuse.\n\nEducation must also avoid placing the responsibility for preventing violence solely on the person experiencing it. Responsibility belongs to perpetrators, institutions and the wider community.",
+      "memorialPublication": {
+          "title": "Coercive Control Recognition & Safe Relationship Education Curriculum",
+          "focus": "Intimate Partner Violence Prevention · Youth Education · Legal Literacy",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "A proposed educational curriculum for schools, colleges and universities.\n\nPotential modules:\n• Understanding Abuse: Recognising physical, emotional, psychological, sexual and economic abuse.\n• Recognising Coercive Control: Understanding intimidation, isolation, monitoring, possessiveness and patterns of controlling behaviour.\n• Healthy Relationships: Consent, respect, boundaries, communication and personal autonomy.\n• Safe Support Pathways: How to approach trusted people, professional support services and emergency assistance.\n• Legal Literacy: Understanding relevant domestic-violence protections, reporting options and support resources.\n• Bystander Responsibility: Helping friends and peers without judgement, victim-blaming or unsafe intervention.\n\nThe curriculum should be developed with domestic-violence specialists, legal professionals, educators and survivor-support organisations. It is a proposed UltimateHealth initiative, not an existing programme of the Reeva Rebecca Steenkamp Foundation.\n\nUltimateHealth Editorial Perspective:\nReeva Steenkamp was more than a headline in an internationally publicised criminal case.\n\nShe had completed a law degree, built a professional modelling career, worked in media, and was beginning to use her public visibility to speak against domestic abuse and rape.\n\nHer mother continued that work through a foundation that supports education, legal assistance and people affected by abuse.\n\nA meaningful memorial should preserve both parts of this history: the life Reeva built and the work that others have continued in her name.\n\nRemember the person. Understand the failures. Support the work that protects others."
+      },
+      "references": [
+          {
+              "title": "Director of Public Prosecutions, Gauteng v Pistorius (96/2015), [2015] ZASCA 204, 3 December 2015 — The primary legal record for the substitution of the culpable-homicide conviction with murder",
+              "url": "https://www3.saflii.org/za/cases/ZASCA/2015/204.html",
+              "publisher": "Supreme Court of Appeal of South Africa (SAFLII)",
+              "isPrimary": true
+          },
+          {
+              "title": "June Steenkamp — Victim Impact Statement, 24 November 2023 — Confirms Reeva's law degree, modelling career and emerging advocacy against domestic abuse and rape",
+              "url": "https://cdn.24.co.za/files/Cms/General/d/9955/69282ae973db4f8f9cfc6e8a566a4951.pdf",
+              "publisher": "June Steenkamp (Victim Impact Statement PDF)",
+              "isPrimary": true
+          },
+          {
+              "title": "Reeva Rebecca Steenkamp Foundation — Official website documenting its stated mission, history, bursary, victim-support work, legal assistance and campaigns",
+              "url": "https://reevasteenkampfoundation.org/",
+              "publisher": "Reeva Rebecca Steenkamp Foundation",
+              "isPrimary": true
+          },
+          {
+              "title": "Profile: Reeva Steenkamp, the victim (5 March 2014) — Biographical reporting on her birth, education, modelling and media career",
+              "url": "https://www.sabcnews.com/sabcnews/profile-reeva-steenkamp-the-victim/",
+              "publisher": "South African Broadcasting Corporation (SABC News)"
+          },
+          {
+              "title": "Reeva Steenkamp: 1983–2013 — Contemporary biographical reporting on her legal ambitions, modelling career and plans to help abused women",
+              "url": "https://www.bbc.com/news/world-africa-28349666",
+              "publisher": "BBC News"
+          },
+          {
+              "title": "Reeva Steenkamp was to speak out against domestic abuse hours after shooting death — Reporting on the school speech she had prepared and her intended message to young students",
+              "url": "https://www.cbsnews.com/news/48-hours-the-advice-reeva-steenkamp-never-got-to-give/",
+              "publisher": "CBS News"
+          },
+          {
+              "title": "June Steenkamp announces foundation to honour the memory of Reeva (10 March 2015) — Documents June's stated intention to fulfil Reeva's dream of creating a foundation for women and children affected by domestic abuse",
+              "url": "https://news.uj.ac.za/news/uj-june-steenkamp-announces-foundation-to-honour-the-memory-of-reeva-2/",
+              "publisher": "University of Johannesburg (UJ News)"
+          },
+          {
+              "title": "Anti-abuse foundation in honour of Reeva (21 August 2016) — Reports on the foundation's official launch in Port Elizabeth",
+              "url": "https://www.news24.com/citypress/news/anti-abuse-foundation-in-honour-of-reeva-20160821",
+              "publisher": "News24"
+          },
+          {
+              "title": "Correctional Services on Oscar Pistorius placed on parole (24 November 2023) — Official confirmation of the 13-year-and-five-month sentence and parole effective 5 January 2024",
+              "url": "https://www.gov.za/news/media-statements/correctional-services-oscar-pistorius-placed-parole-24-nov-2023",
+              "publisher": "South African Government (Department of Correctional Services)",
+              "isPrimary": true
+          },
+          {
+              "title": "June launches Reeva Steenkamp foundation (21 October 2015) — Contemporary reporting on the foundation's early establishment and its intended support for abused women",
+              "url": "https://iol.co.za/news/south-africa/eastern-cape/2015-10-21-june-launches-reeva-steenkamp-foundation/",
+              "publisher": "IOL"
+          }
+      ],
+      "translations": {
+          "hi": {
+              "country": "दक्षिण अफ्रीका",
+              "categoryLabel": "कानून, वकालत एवं दुर्व्यवहार-विरोधी शिक्षा",
+              "roleAndField": "विधि स्नातक (LLB) · पेशेवर मॉडल · घरेलू दुर्व्यवहार के विरुद्ध उभरती अधिवक्ता",
+              "coreMessage": "किसी व्यक्ति की पहचान को कभी भी उस हिंसा तक सीमित नहीं किया जाना चाहिए जिसने उसका जीवन समाप्त कर दिया। रीवा स्टीनकैंप एक कानून स्नातक, एक सफल मॉडल, एक मीडिया व्यक्तित्व और एक ऐसी युवा महिला थीं जिन्होंने घरेलू दुर्व्यवहार और बलात्कार के खिलाफ बोलने के लिए अपने सार्वजनिक मंच का उपयोग करना शुरू कर दिया था।",
+              "whoWasThisPerson": "रीवा रेबेका स्टीनकैंप (Reeva Rebecca Steenkamp) का जन्म 19 अगस्त 1983 को केप टाउन, दक्षिण अफ्रीका में हुआ था और उनका पालन-पोषण पोर्ट एलिज़ाबेथ में हुआ।\n\nउन्होंने नेल्सन मंडेला मेट्रोपॉलिटन यूनिवर्सिटी में कानून की पढ़ाई की और 2005 में बैचलर ऑफ लॉज़ (LLB) की डिग्री के साथ स्नातक किया। अपनी शिक्षा के साथ-साथ, उन्होंने एक सफल मॉडलिंग करियर विकसित किया, जिसे उन्होंने किशोरावस्था में शुरू किया था।\n\nउनका पेशेवर काम मॉडलिंग से आगे भी बढ़ा। वह फ़ैशन टीवी (Fashion TV) पर एक प्रस्तोता के रूप में दिखाई दीं और जमैका में फिल्माए गए रियलिटी टेलीविजन कार्यक्रम 'ट्रॉपिका आइलैंड ऑफ ट्रेज़र' (Tropika Island of Treasure) में भाग लिया, जिसका प्रसारण उनकी मृत्यु के कुछ समय बाद हुआ।\n\nरीवा ने अपनी कानूनी महत्वाकांक्षाओं को नहीं छोड़ा था। एक समकालीन बीबीसी (BBC) प्रोफ़ाइल में बताया गया कि उन्होंने 2011 के अंत में बार (Bar) के लिए आवेदन किया था और एक कानूनी अधिवक्ता (Advocate) बनने की उम्मीद रखती थीं। कानून में उनकी रुचि और उनका मॉडलिंग करियर दोनों ही उनकी पहचान के महत्वपूर्ण हिस्से थे।",
+              "contributions": "रीवा ने घरेलू दुर्व्यवहार और बलात्कार के बारे में जागरूकता बढ़ाने के लिए अपनी सार्वजनिक प्रोफ़ाइल का उपयोग करना शुरू कर दिया था।\n\nउनकी माँ, जून स्टीनकैंप (June Steenkamp) ने बाद में एक पीड़ित प्रभाव बयान (Victim Impact Statement) में पुष्टि की कि रीवा ने हिंसा के इन रूपों से प्रभावित लोगों के लिए बोलना शुरू कर दिया था।\n\nएक विशेष रूप से सार्थक उदाहरण वह स्कूल भाषण था जिसे रीवा ने 14 फरवरी 2013 के लिए तैयार किया था। वह युवा छात्रों से आत्म-सम्मान, रिश्तों और लोगों को उनके शारीरिक रूप के बजाय उनके वास्तविक व्यक्तित्व के लिए महत्व देने के बारे में बात करने का इरादा रखती थीं। वह कभी वह भाषण नहीं दे सकीं।\n\nइस उभरती हुई वकालत को किसी लंबे समय से स्थापित औपचारिक अभियान से अलग समझना महत्वपूर्ण है। जब रीवा का जीवन छीन लिया गया, तब वह इस कार्य की शुरुआत कर रही थीं।",
+              "factualContext": "14 फरवरी 2013 के शुरुआती घंटों में, रीवा को उनके प्रेमी ऑस्कर पिस्टोरियस (Oscar Pistorius) के प्रिटोरिया स्थित घर में गोली मार दी गई।\n\nपिस्टोरियस ने बाथरूम के भीतर शौचालय कक्ष (toilet cubicle) के बंद दरवाजे से चार गोलियाँ चलाईं। रीवा, जो अंदर थीं, को गोलियाँ लगीं और उनकी चोटों के कारण मृत्यु हो गई।\n\nअपील की सर्वोच्च अदालत (Supreme Court of Appeal) ने बाद में पिस्टोरियस की गैर-इरादतन हत्या (culpable homicide) की दोषसिद्धि को पलट दिया और हत्या (murder) की दोषसिद्धि को प्रतिस्थापित किया।\n\nन्यायिक कार्यवाही और कानूनी परिणाम:\n• सितंबर 2014: प्रिटोरिया हाई कोर्ट द्वारा पिस्टोरियस को गैर-इरादतन हत्या (culpable homicide) का दोषी ठहराया गया।\n• दिसंबर 2015: सुप्रीम कोर्ट ऑफ अपील ने उस दोषसिद्धि को रद्द कर दिया और हत्या (murder) की दोषसिद्धि को प्रतिस्थापित किया, यह पाते हुए कि डॉलस इवेंटुअलिस (dolus eventualis) की कानूनी आवश्यकताएँ पूरी हुई थीं।\n• जुलाई 2016: हाई कोर्ट ने उन्हें हत्या के लिए छह साल के कारावास की सजा सुनाई।\n• नवंबर 2017: आगे की अपील कार्यवाही के बाद, सजा को बढ़ाकर 13 साल और पाँच महीने कर दिया गया।\n• जनवरी 2024: दक्षिण अफ्रीका के सुधारात्मक सेवा विभाग ने पुष्टि की कि पिस्टोरियस को 5 जनवरी 2024 से पैरोल पर रखा गया।",
+              "editorialNotes": "महत्वपूर्ण संपादकीय योग्यताएँ: यह तथ्य कि रीवा ने दुर्व्यवहार-विरोधी वकालत शुरू कर दी थी, उनकी माँ के बयान और समकालीन रिपोर्टिंग द्वारा समर्थित है; उन्हें किसी लंबे औपचारिक अभियान के बजाय एक उभरती हुई अधिवक्ता के रूप में वर्णित करना सटीक है। रीवा रेबेका स्टीनकैंप फाउंडेशन का कार्य उनकी माँ जून स्टीनकैंप द्वारा आगे बढ़ाया गया है।",
+              "verifiedFacts": [
+                  "रीवा रेबेका स्टीनकैंप (जन्म 19 अगस्त 1983, केप टाउन) ने 2005 में नेल्सन मंडेला मेट्रोपॉलिटन यूनिवर्सिटी से बैचलर ऑफ लॉज़ (LLB) की डिग्री प्राप्त की और मॉडलिंग व मीडिया में सफल करियर बनाया।",
+                  "समकालीन बीबीसी रिपोर्टिंग के अनुसार उन्होंने 2011 के अंत में कानूनी अधिवक्ता बनने की महत्वाकांक्षा के साथ बार में आवेदन किया था, और उनकी माँ जून स्टीनकैंप के 2023 के बयान ने पुष्टि की कि उन्होंने घरेलू दुर्व्यवहार के खिलाफ अपनी सार्वजनिक आवाज़ उठाना शुरू कर दिया था।",
+                  "उन्होंने 14 फरवरी 2013 के लिए आत्म-सम्मान और रिश्तों पर एक स्कूल भाषण तैयार किया था जिसे वह कभी नहीं दे सकीं।",
+                  "14 फरवरी 2013 की सुबह ऑस्कर पिस्टोरियस ने बाथरूम के बंद शौचालय-कक्ष (toilet-cubicle) के दरवाजे से चार गोलियाँ चलाईं, जिससे रीवा की मृत्यु हो गई।",
+                  "3 दिसंबर 2015 को दक्षिण अफ्रीका के सुप्रीम कोर्ट ऑफ अपील ([2015] ZASCA 204) ने गैर-इरादतन हत्या की दोषसिद्धि को बदलकर हत्या (murder) कर दिया; नवंबर 2017 में सजा बढ़ाकर 13 वर्ष 5 माह की गई और 5 जनवरी 2024 से पैरोल प्रभावी हुई।",
+                  "उनकी माँ जून स्टीनकैंप ने नवंबर 2015 में पंजीकृत और अगस्त 2016 में आधिकारिक रूप से शुरू किए गए 'रीवा रेबेका स्टीनकैंप फाउंडेशन' के माध्यम से उनके कार्य को आगे बढ़ाया।"
+              ],
+              "societalImpact": "एक निरंतर विरासत — रीवा रेबेका स्टीनकैंप फाउंडेशन (The Reeva Rebecca Steenkamp Foundation):\nरीवा की मृत्यु के बाद, उनकी माँ जून स्टीनकैंप ने उस काम को आगे बढ़ाया जो रीवा ने शुरू किया था। फाउंडेशन नवंबर 2015 में पंजीकृत हुआ और अगस्त 2016 में आधिकारिक रूप से शुरू किया गया।\n\nइसका घोषित मिशन हिंसा और दुर्व्यवहार के खिलाफ महिलाओं और बच्चों को शिक्षित और सशक्त बनाना है:\n• दुर्व्यवहार शिक्षा (Abuse education): शारीरिक, यौन, भावनात्मक, मौखिक, मनोवैज्ञानिक और आर्थिक दुर्व्यवहार के साथ-साथ डराने-धमकाने, पीछा करने और अलगाव को पहचानने में मदद करना।\n• पीड़ित सहायता और वकालत (Victim support and advocacy)।\n• कानूनी सहायता (Legal assistance): पोर्ट एलिज़ाबेथ में वकीलों के साथ एक पायलट प्रोजेक्ट विकसित करना।\n• शिक्षा और सशक्तिकरण (Education and empowerment)।\n• रीवा बर्सरी (Reeva Bursary): पारिवारिक कानून (Family Law) में रुचि रखने वाले तीसरे वर्ष के कानून के छात्र को वार्षिक छात्रवृत्ति प्रदान करना।\n• REEVA Pack और #BluePurpleBlack अभियान: उन विभिन्न प्रकार के दुर्व्यवहारों की ओर ध्यान आकर्षित करना जो कोई दृश्यमान शारीरिक चोट नहीं छोड़ते।",
+              "actionableLesson": "रीवा की कहानी यह पहचानने के महत्व को रेखांकित करती है कि दुर्व्यवहार केवल शारीरिक हिंसा तक सीमित नहीं है।\n\nशिक्षा को युवाओं को यह समझने में मदद करनी चाहिए:\n• बलपूर्वक और नियंत्रित करने वाला व्यवहार (Coercive and controlling behaviour)।\n• अधिकार जताने की प्रवृत्ति, डराना-धमकाना और बार-बार अपमानित करना।\n• भावनात्मक और मनोवैज्ञानिक दुर्व्यवहार।\n• मित्रों, परिवार और सहायता नेटवर्क से अलगाव।\n• सुरक्षित रूप से सहायता कैसे प्राप्त करें और कानूनी सुरक्षा तक कैसे पहुँचें।\n• मित्र, स्कूल और संस्थाएँ बिना दोषारोपण या दबाव डाले कैसे प्रतिक्रिया दे सकते हैं।\n\nशिक्षा को हिंसा रोकने की जिम्मेदारी केवल पीड़ित व्यक्ति पर डालने से बचना चाहिए; जिम्मेदारी अपराधियों, संस्थाओं और व्यापक समुदाय की है।",
+              "memorialPublication": {
+                  "title": "बलपूर्वक नियंत्रण की पहचान और सुरक्षित संबंध शिक्षा पाठ्यक्रम",
+                  "focus": "अंतरंग साथी हिंसा की रोकथाम · युवा शिक्षा · कानूनी साक्षरता",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "स्कूलों, कॉलेजों और विश्वविद्यालयों के लिए एक प्रस्तावित शैक्षिक पाठ्यक्रम:\n• दुर्व्यवहार को समझना (Understanding Abuse)\n• बलपूर्वक नियंत्रण को पहचानना (Recognising Coercive Control)\n• स्वस्थ संबंध (Healthy Relationships)\n• सुरक्षित सहायता मार्ग (Safe Support Pathways)\n• कानूनी साक्षरता (Legal Literacy)\n• प्रत्यक्षदर्शी जिम्मेदारी (Bystander Responsibility)\n\nUltimateHealth का संपादकीय दृष्टिकोण: रीवा स्टीनकैंप अंतरराष्ट्रीय स्तर पर प्रचारित आपराधिक मामले की एक सुर्खी से कहीं अधिक थीं। व्यक्ति को याद रखें, विफलताओं को समझें, और दूसरों की रक्षा करने वाले कार्यों का समर्थन करें।"
+              }
+          },
+          "bn": {
+              "country": "দক্ষিণ আফ্রিকা",
+              "categoryLabel": "আইন, ওকালতি ও নির্যাতন-বিরোধী শিক্ষা",
+              "roleAndField": "আইন স্নাতক (LLB) · পেশাদার মডেল · পারিবারিক নির্যাতনের বিরুদ্ধে উদীয়মান প্রবক্তা",
+              "coreMessage": "কোনো ব্যক্তির পরিচয় কখনোই সেই সহিংসতার মধ্যে সীমাবদ্ধ করা উচিত নয় যা তাঁর জীবন কেড়ে নিয়েছে। রিভা স্টিনক্যাম্প ছিলেন একজন আইন স্নাতক, একজন সফল মডেল, একজন মিডিয়া ব্যক্তিত্ব এবং একজন তরুণী যিনি পারিবারিক নির্যাতন ও ধর্ষণের বিরুদ্ধে কথা বলার জন্য তাঁর পাবলিক প্ল্যাটফর্ম ব্যবহার করতে শুরু করেছিলেন।",
+              "whoWasThisPerson": "রিভা রেবেকা স্টিনক্যাম্প (Reeva Rebecca Steenkamp) ১৯৮৩ সালের ১৯ আগস্ট দক্ষিণ আফ্রিকার কেপ টাউনে জন্মগ্রহণ করেন এবং পোর্ট এলিজাবেথে বেড়ে ওঠেন।\n\nতিনি নেলসন ম্যান্ডেলা মেট্রোপলিটন ইউনিভার্সিটিতে আইন বিষয়ে পড়াশোনা করেন এবং ২০০৫ সালে ব্যাচেলর অফ লজ (LLB) ডিগ্রি অর্জন করেন। শিক্ষার পাশাপাশি তিনি কৈশোর থেকে শুরু করা একটি সফল মডেলিং ক্যারিয়ার গড়ে তোলেন এবং ফ্যাশন টিভি (Fashion TV) ও 'ট্রপিকা আইল্যান্ড অফ ট্রেজার' অনুষ্ঠানে অংশ নেন।\n\nসমসাময়িক বিবিসি (BBC) প্রতিবেদন অনুযায়ী, তিনি ২০১১ সালের শেষের দিকে বারে (Bar) আবেদন করেছিলেন এবং একজন আইনজীবী (Advocate) হওয়ার স্বপ্ন দেখতেন।",
+              "contributions": "রিভা পারিবারিক নির্যাতন এবং ধর্ষণ সম্পর্কে সচেতনতা বাড়াতে তাঁর পাবলিক প্রোফাইল ব্যবহার করতে শুরু করেছিলেন, যা তাঁর মা জুন স্টিনক্যাম্প (June Steenkamp) পরবর্তীতে ভিকটিম ইমপ্যাক্ট স্টেটমেন্টে নিশ্চিত করেন।\n\n২০১৩ সালের ১৪ ফেব্রুয়ারির জন্য তিনি তরুণ শিক্ষার্থীদের উদ্দেশ্যে আত্মমর্যাদা এবং সুস্থ সম্পর্ক নিয়ে একটি স্কুল বক্তৃতা প্রস্তুত করেছিলেন, যা তিনি আর কখনো দিতে পারেননি। এই উদীয়মান ওকালতিকে একটি দীর্ঘস্থায়ী আনুষ্ঠানিক প্রচারাভিযান থেকে আলাদা করে দেখা গুরুত্বপূর্ণ।",
+              "factualContext": "২০১৩ সালের ১৪ ফেব্রুয়ারি ভোরে প্রিটোরিয়ায় তাঁর প্রেমিক অস্কার পিস্টোরিয়াস (Oscar Pistorius)-এর বাড়িতে রিভাকে গুলি করে হত্যা করা হয়। পিস্টোরিয়াস বাথরুমের ভেতরে টয়লেট কিউবিকলের বন্ধ দরজার মধ্য দিয়ে চারটি গুলি চালান।\n\nবিচারিক কার্যক্রম ও আইনি ফলাফল:\n• সেপ্টেম্বর ২০১৪: প্রিটোরিয়া হাই কোর্ট পিস্টোরিয়াসকে অনিচ্ছাকৃত নরহত্যার (culpable homicide) দায়ে দোষী সাব্যস্ত করে।\n• ডিসেম্বর ২০১৫: সুপ্রিম কোর্ট অফ আপিল সেই রায় বাতিল করে এবং ডোলাস ইভেনচুয়ালিস (dolus eventualis)-এর অধীনে হত্যার (murder) দায়ে দোষী সাব্যস্ত করে।\n• জুলাই ২০১৬: হাই কোর্ট তাঁকে হত্যার দায়ে ছয় বছরের কারাদণ্ড দেয়।\n• নভেম্বর ২০১৭: আপিলের পর সাজা বাড়িয়ে ১৩ বছর ৫ মাস করা হয়।\n• জানুয়ারি ২০২৪: দক্ষিণ আফ্রিকার সংশোধনাগার পরিষেবা বিভাগ নিশ্চিত করে যে ৫ জানুয়ারি ২০২৪ থেকে পিস্টোরিয়াসকে প্যারোলে মুক্তি দেওয়া হয়েছে।",
+              "editorialNotes": "গুরুত্বপূর্ণ সম্পাদকীয় যোগ্যতা: রিভা যে নির্যাতন-বিরোধী সচেতনতার কাজ শুরু করেছিলেন তা তাঁর মায়ের বিবৃতি এবং সমসাময়িক প্রতিবেদনে সমর্থিত। রিভা রেবেকা স্টিনক্যাম্প ফাউন্ডেশনটি তাঁর মা জুন স্টিনক্যাম্প এগিয়ে নিয়ে গেছেন।",
+              "verifiedFacts": [
+                  "রিভা রেবেকা স্টিনক্যাম্প (জন্ম ১৯ আগস্ট ১৯৮৩, কেপ টাউন) ২০০৫ সালে নেলসন ম্যান্ডেলা মেট্রোপলিটন ইউনিভার্সিটি থেকে LLB ডিগ্রি অর্জন করেন।",
+                  "বিবিসি প্রতিবেদন অনুযায়ী তিনি ২০১১ সালের শেষে আইনজীবী হওয়ার লক্ষ্যে বারে আবেদন করেছিলেন এবং পারিবারিক নির্যাতনের বিরুদ্ধে কথা বলতে শুরু করেছিলেন।",
+                  "১৪ ফেব্রুয়ারি ২০১৩ তারিখে তিনি আত্মমর্যাদা ও সম্পর্ক বিষয়ে একটি স্কুল বক্তৃতা প্রস্তুত করেছিলেন যা তাঁর আর দেওয়া হয়নি।",
+                  "১৪ ফেব্রুয়ারি ২০১৩ ভোরে অস্কার পিস্টোরিয়াস বাথরুমের বন্ধ টয়লেট-কিউবিকল দরজার মধ্য দিয়ে চারটি গুলি চালিয়ে রিভাকে হত্যা করেন।",
+                  "৩ ডিসেম্বর ২০১৫ তারিখে দক্ষিণ আফ্রিকার সুপ্রিম কোর্ট অফ আপিল ([2015] ZASCA 204) অনিচ্ছাকৃত নরহত্যার রায় পরিবর্তন করে হত্যার রায় দেয়; নভেম্বর ২০১৭ সালে সাজা ১৩ বছর ৫ মাস করা হয় এবং ৫ জানুয়ারি ২০২৪ থেকে প্যারোল কার্যকর হয়।",
+                  "তাঁর মা জুন স্টিনক্যাম্প নভেম্বর ২০১৫ সালে নিবন্ধিত এবং আগস্ট ২০১৬ সালে আনুষ্ঠানিকভাবে চালু হওয়া 'রিভা রেবেকা স্টিনক্যাম্প ফাউন্ডেশন'-এর মাধ্যমে রিভার কাজ এগিয়ে নিয়ে যান।"
+              ],
+              "societalImpact": "রিভা রেবেকা স্টিনক্যাম্প ফাউন্ডেশন (নভেম্বর ২০১৫-এ নিবন্ধিত, আগস্ট ২০১৬-এ আনুষ্ঠানিকভাবে চালু):\nরিভার মৃত্যুর পর তাঁর মা জুন স্টিনক্যাম্প এই ফাউন্ডেশন প্রতিষ্ঠা করেন। এর কাজের মধ্যে রয়েছে:\n• নির্যাতন বিষয়ক শিক্ষা (Abuse education)\n• ভুক্তভোগী সহায়তা ও ওকালতি (Victim support and advocacy)\n• আইনি সহায়তা (Legal assistance — পোর্ট এলিজাবেথে আইনজীবীদের সাথে পাইলট প্রকল্প)\n• শিক্ষা ও ক্ষমতায়ন\n• রিভা বৃত্তি (Reeva Bursary — পারিবারিক আইনে আগ্রহী তৃতীয় বর্ষের আইন শিক্ষার্থীর জন্য বার্ষিক বৃত্তি)\n• REEVA Pack এবং #BluePurpleBlack প্রচারাভিযান।",
+              "actionableLesson": "নির্যাতন কেবল শারীরিক সহিংসতার মধ্যে সীমাবদ্ধ নয়। তরুণদের শেখানো উচিত:\n• জবরদস্তিমূলক এবং নিয়ন্ত্রণমূলক আচরণ (Coercive and controlling behaviour) চেনা।\n• অধিকারবোধ, ভীতি প্রদর্শন এবং বারবার অপমান।\n• মানসিক ও মনস্তাত্ত্বিক নির্যাতন এবং বন্ধু ও পরিবার থেকে বিচ্ছিন্নকরণ।\n• নিরাপদে সাহায্য চাওয়া এবং আইনি সুরক্ষা লাভের উপায়।",
+              "memorialPublication": {
+                  "title": "জবরদস্তিমূলক নিয়ন্ত্রণ শনাক্তকরণ ও নিরাপদ সম্পর্ক শিক্ষা পাঠ্যক্রম",
+                  "focus": "অন্তরঙ্গ সঙ্গীর সহিংসতা প্রতিরোধ · যুব শিক্ষা · আইনি সাক্ষরতা",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "স্কুল, কলেজ ও বিশ্ববিদ্যালয়ের জন্য প্রস্তাবিত পাঠ্যক্রম: নির্যাতন বোঝা, জবরদস্তিমূলক নিয়ন্ত্রণ শনাক্ত করা, সুস্থ সম্পর্ক, নিরাপদ সহায়তা পথ, আইনি সাক্ষরতা এবং প্রত্যক্ষদর্শীর দায়িত্ব।"
+              }
+          },
+          "ta": {
+              "country": "தென்னாப்பிரிக்கா",
+              "categoryLabel": "சட்டம், வकालத்து மற்றும் வன்கொடுமை எதிர்ப்பு கல்வி",
+              "roleAndField": "சட்டப் பட்டதாரி (LLB) · தொழில்முறை மாடல் · குடும்ப வன்கொடுமைக்கு எதிரான வளர்ந்து வந்த ஆதரவாளர்",
+              "coreMessage": "ஒரு நபரின் அடையாளம் அவரது வாழ்க்கையை முடிவுக்குக் கொண்டுவந்த வன்முறைக்குள் சுருக்கப்படக் கூடாது. ரீவா ஸ்டீன்காம்ப் ஒரு சட்டப் பட்டதாரி, வெற்றிகரமான மாடல், ஊடக ஆளுமை மற்றும் குடும்ப வன்கொடுமைக்கு எதிராகக் குரல் கொடுக்கத் தொடங்கிய இளம் பெண்.",
+              "whoWasThisPerson": "ரீவா ரெபேக்கா ஸ்டீன்காம்ப் (Reeva Rebecca Steenkamp) 19 ஆகஸ்ட் 1983 அன்று தென்னாப்பிரிக்காவின் கேப் டவுனில் பிறந்து போர்ட் எலிசபெத்தில் வளர்ந்தார்.\n\n2005 ஆம் ஆண்டு நெல்சன் மண்டேலா மெட்ரோபாலிட்டன் பல்கலைக்கழகத்தில் சட்டப் பட்டம் (LLB) பெற்றார். மாடலிங் மற்றும் தொலைக்காட்சித் துறையிலும் பணியாற்றிய அவர், 2011 ஆம் ஆண்டின் இறுதியில் வழக்கறிஞராகப் (Advocate) பதிவு செய்ய விண்ணப்பித்திருந்தார்.",
+              "contributions": "குடும்ப வன்கொடுமை மற்றும் பாலியல் வன்கொடுமை குறித்து விழிப்புணர்வு ஏற்படுத்த ரீவா தனது பொதுத் தளத்தைப் பயன்படுத்தத் தொடங்கியிருந்தார் என்பதை அவரது தாயார் ஜூன் ஸ்டீன்காம்ப் (June Steenkamp) உறுதிப்படுத்தியுள்ளார். 14 பிப்ரவரி 2013 அன்று பள்ளி மாணவர்களிடையே சுயமரியாதை மற்றும் உறவுகள் குறித்துப் பேச அவர் உரை தயாரித்திருந்தார், ஆனால் அந்த உரையை அவரால் நிகழ்த்த முடியவில்லை.",
+              "factualContext": "14 பிப்ரவரி 2013 அதிகாலையில் பிரிட்டோரியாவில் உள்ள அவரது ஆண் நண்பர் ஆஸ்கார் பிஸ்டோரியஸின் இல்லத்தில், குளியலறையின் மூடிய கழிப்பறை அறைக் கதவு (toilet-cubicle door) வழியாக பிஸ்டோரியஸ் சுட்ட நான்கு தோட்டாக்களால் ரீவா உயிரிழந்தார்.\n\nநீதித்துறை நிகழ்வுகள்:\n• செப்டம்பர் 2014: பிரிட்டோரியா உயர் நீதிமன்றம் பிஸ்டோரியஸை 'culpable homicide' குற்றவாளியாகத் தீர்ப்பளித்தது.\n• டிசம்பர் 2015: மேல்முறையீட்டு உச்ச நீதிமன்றம் ([2015] ZASCA 204) அதனை ரத்து செய்து கொலைக் குற்றவாளியாக (murder) அறிவித்தது.\n• ஜூலை 2016: 6 ஆண்டுகள் சிறைத்தண்டனை விதிக்கப்பட்டது.\n• நவம்பர் 2017: தண்டனை 13 ஆண்டுகள் மற்றும் 5 மாதங்களாக உயர்த்தப்பட்டது.\n• ஜனவரி 2024: 5 ஜனவரி 2024 முதல் பரோல் வழங்கப்பட்டது.",
+              "editorialNotes": "முக்கிய ஆசிரியர் குறிப்பு: ரீவா வன்கொடுமை எதிர்ப்பு விழிப்புணர்வைத் தொடங்கியிருந்தார் என்பது அவரது தாயாரின் வாக்குமூலம் மற்றும் செய்தி அறிக்கைகளால் உறுதிப்படுத்தப்பட்டுள்ளது. ரீவா ரெபேக்கா ஸ்டீன்காம்ப் அறக்கட்டளை அவரது தாயார் ஜூன் ஸ்டீன்காம்ப் அவர்களால் முன்னெடுக்கப்படுகிறது.",
+              "verifiedFacts": [
+                  "ரீவா ரெபேக்கா ஸ்டீன்காம்ப் (பிறப்பு 19 ஆகஸ்ட் 1983) 2005 இல் நெல்சன் மண்டேலா மெட்ரோபாலிட்டன் பல்கலைக்கழகத்தில் LLB பட்டம் பெற்றார்.",
+                  "2011 இறுதியில் வழக்கறிஞராக விண்ணப்பித்திருந்தார் மற்றும் குடும்ப வன்கொடுமைக்கு எதிராகக் குரல் கொடுக்கத் தொடங்கியிருந்தார்.",
+                  "14 பிப்ரவரி 2013 அன்று பள்ளி மாணவர்களுக்காக சுயமரியாதை மற்றும் உறவுகள் குறித்த உரையைத் தயாரித்திருந்தார்.",
+                  "14 பிப்ரவரி 2013 அதிகாலையில் ஆஸ்கார் பிஸ்டோரியஸ் மூடிய கழிப்பறை அறைக் கதவு வழியாக நான்கு முறை சுட்டதில் ரீவா உயிரிழந்தார்.",
+                  "3 டிசம்பர் 2015 அன்று தென்னாப்பிரிக்க மேல்முறையீட்டு உச்ச நீதிமன்றம் ([2015] ZASCA 204) கொலைக் குற்றத்தை உறுதி செய்தது; நவம்பர் 2017 இல் தண்டனை 13 ஆண்டுகள் 5 மாதங்களாக உயர்த்தப்பட்டது; 5 ஜனவரி 2024 முதல் பரோல் வழங்கப்பட்டது.",
+                  "அவரது தாயார் ஜூன் ஸ்டீன்காம்ப் நவம்பர் 2015 இல் பதிவு செய்யப்பட்டு ஆகஸ்ட் 2016 இல் தொடங்கப்பட்ட 'ரீவா ரெபேக்கா ஸ்டீன்காம்ப் அறக்கட்டளை' மூலம் அவரது பணியைத் தொடர்ந்தார்."
+              ],
+              "societalImpact": "ரீவா ரெபேக்கா ஸ்டீன்காம்ப் அறக்கட்டளை (நவம்பர் 2015 இல் பதிவு செய்யப்பட்டு ஆகஸ்ட் 2016 இல் தொடங்கப்பட்டது):\nஜூன் ஸ்டீன்காம்ப் அவர்களால் தொடங்கப்பட்ட இந்த அறக்கட்டளை வன்கொடுமை கல்வி, பாதிக்கப்பட்டோருக்கான ஆதரவு, போர்ட் எலிசபெத்தில் சட்ட உதவி, குடும்பச் சட்டத்தில் ஆர்வமுள்ள மூன்றாம் ஆண்டு சட்ட மாணவருக்கான 'Reeva Bursary', 'REEVA Pack' மற்றும் #BluePurpleBlack பிரச்சாரத்தை முன்னெடுத்துள்ளது.",
+              "actionableLesson": "வன்கொடுமை என்பது உடல் ரீதியான வன்முறை மட்டுமல்ல; கட்டாயக் கட்டுப்பாடு (coercive control), மிரட்டல், உணர்ச்சி மற்றும் உளவியல் ரீதியான துன்புறுத்தல், தனிமைப்படுத்துதல் ஆகியவற்றை இளைஞர்கள் அடையாளம் காணவும் பாதுகாப்பாக சட்ட உதவியை நாடவும் கல்வி உதவ வேண்டும்.",
+              "memorialPublication": {
+                  "title": "கட்டாயக் கட்டுப்பாடு கண்டறிதல் மற்றும் பாதுகாப்பான உறவுக் கல்விப் பாடத்திட்டம்",
+                  "focus": "நெருக்கமான இணையர் வன்முறைத் தடுப்பு · இளைஞர் கல்வி · சட்ட விழிப்புணர்வு",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "பள்ளிகள் மற்றும் பல்கலைக்கழகங்களுக்கான முன்மொழியப்பட்ட பாடத்திட்டம்: வன்கொடுமையைப் புரிந்துகொள்ளுதல், கட்டாயக் கட்டுப்பாட்டைக் கண்டறிதல், ஆரோக்கியமான உறவுகள், பாதுகாப்பான ஆதரவு வழிகள் மற்றும் சட்ட விழிப்புணர்வு."
+              }
+          },
+          "or": {
+              "country": "ଦକ୍ଷିଣ ଆଫ୍ରିକା",
+              "categoryLabel": "ଆଇନ, ଓକାଲତି ଏବଂ ନିର୍ଯାତନା-ବିରୋଧୀ ଶିକ୍ଷା",
+              "roleAndField": "ଆଇନ ସ୍ନାତକ (LLB) · ପେଶାଦାର ମଡେଲ୍ · ଘରୋଇ ନିର୍ଯାତନା ବିରୁଦ୍ଧରେ ଉଦୀୟମାନ ପ୍ରବକ୍ତା",
+              "coreMessage": "ଜଣେ ବ୍ୟକ୍ତିଙ୍କ ପରିଚୟ କେବେବି সেই ହିଂସା ମଧ୍ୟରେ ସୀମିତ ହେବା ଉଚିତ୍ ନୁହେଁ ଯାହା ତାଙ୍କର ଜୀବନ ନେଇଗଲା। ରିভা ଷ୍ଟିନক୍ୟାମ୍ପ ଜଣେ ଆଇନ ସ୍ନାତକ, ସଫଳ ମଡେଲ୍, ମିଡିଆ ବ୍ୟକ୍ତିତ୍ୱ ଏବଂ ଜଣେ ଯୁବତୀ ଥିଲେ ଯିଏ ଘରୋଇ ନିର୍ଯାତନା ଓ ଦୁଷ୍କର୍ମ ବିରୁଦ୍ଧରେ ସ୍ୱର ଉତ୍ତୋଳନ କରିବାକୁ ଆରମ୍ଭ କରିଥିଲେ।",
+              "whoWasThisPerson": "ରିভা ରେବେକା ଷ୍ଟିନক୍ୟାମ୍ପ (Reeva Rebecca Steenkamp) ୧୯ ଅଗଷ୍ଟ ୧୯୮୩ ରେ ଦକ୍ଷିଣ ଆଫ୍ରିକାର କେପ୍ ଟାଉନରେ ଜନ୍ମଗ୍ରହଣ କରିଥିଲେ ଏବଂ ପୋର୍ଟ ଏଲିଜାବେଥରେ ବଢ଼ିଥିଲେ। ସେ ୨୦୦୫ ମସିହାରେ ନେଲସନ୍ ମାଣ୍ଡେଲା ମେଟ୍ରୋପଲିଟାନ୍ ୟୁନିଭର୍ସିଟିରୁ ଆଇନରେ ସ୍ନାତକ (LLB) ডিগ୍ରୀ ହାସଲ କରିଥିଲେ ଏବଂ ୨୦୧୧ ଶେଷভাଗରେ ଜଣେ ଆଇନଜୀବୀ (Advocate) ହେବା ପାଇଁ ଆବେଦନ କରିଥିଲେ।",
+              "contributions": "ରିভা ଘରୋଇ ନିର୍ଯାତନା ବିରୁଦ୍ଧରେ ସଚେତନତା ସୃଷ୍ଟି କରିବା ଆରମ୍ଭ କରିଥିଲେ, ଯାହା ତାଙ୍କ ମା’ ଜୁନ୍ ଷ୍ଟିନক୍ୟାମ୍ପ (June Steenkamp) ନିଶ୍ଚିତ করেছেন। ୧୪ ଫେବୃଆରୀ ୨୦୧୩ ପାଇଁ ସେ ଛାତ୍ରଛାତ୍ରୀଙ୍କ ଉଦ୍ଦେଶ୍ୟରେ ଆତ୍ମ-ସମ୍ମାନ ଏବଂ ସୁସ୍ଥ ସମ୍ପର୍କ ବିଷୟରେ ଏକ ଭାଷଣ ପ୍ରସ୍ତୁତ କରିଥିଲେ, ଯାହା ସେ କେବେ ଦେଇপାରିଲେ ନାହିଁ।",
+              "factualContext": "୧୪ ଫେବୃଆରୀ ୨୦୧୩ ଭୋର ସମୟରେ প্রିଟୋରିଆରେ ତାଙ୍କ ପ୍ରେମିକ ଅସ୍କାର ପିଷ୍ଟୋରିଅସଙ୍କ ଘରେ ବାଥରୁମର ବନ୍ଦ ଟଏଲେଟ୍-କ୍ୟୁବିକଲ୍ କବାଟ ମଧ୍ୟ ଦେଇ ଚାରିটি ଗୁଳି ଚଳାଇବାରୁ ରିভাଙ୍କର ମୃତ୍ୟୁ ଘଟିଥିଲା।\n\nନ୍ୟାୟିକ କାର୍ଯ୍ୟାନୁଷ୍ଠାନ:\n• ସେପ୍ଟେମ୍ବର ୨୦୧୪: ପ୍ରିଟୋରିଆ ହାଇକୋର୍ଟ ପିଷ୍ଟୋରିଅସଙ୍କୁ 'culpable homicide' ରେ ଦୋଷୀ ସାବ୍ୟସ୍ତ କଲେ।\n• ଡିସେମ୍ବର ୨୦୧୫: ସୁପ୍ରିମ୍ କୋର୍ଟ ଅଫ୍ ଅପିଲ୍ ([2015] ZASCA 204) ଏହାକୁ ପରିବର୍ତ୍ତନ କରି ହତ୍ୟା (murder) ପାଇଁ ଦୋଷୀ ସାବ୍ୟସ୍ତ କଲେ।\n• ଜୁଲାଇ ୨୦୧୬: ୬ ବର୍ଷ କାରାଦଣ୍ଡ।\n• ନଭେମ୍ବର ୨୦୧୭: ଦଣ୍ଡ ୧୩ ବର୍ଷ ୫ ମାସକୁ ବୃଦ୍ଧି କରାଗଲା।\n• ଜାନୁଆରୀ ୨୦୨୪: ୫ ଜାନୁଆରୀ ୨୦୨୪ ରୁ ପ্যারୋଲ୍ ପ୍ରଦାନ କରାଗଲା।",
+              "editorialNotes": "ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ସମ୍ପାଦକୀୟ ଟିପ୍ପଣୀ: ରିভা ଜଣେ ଉଦୀୟମାନ ନିର୍ଯାତନା-ବିରୋଧୀ ପ୍ରବକ୍ତା ଥିଲେ ଏବଂ ତାଙ୍କ ମୃତ୍ୟୁ ପରେ ତାଙ୍କ ମା’ ଜୁନ୍ ଷ୍ଟିନক୍ୟାମ୍ପ 'Reeva Rebecca Steenkamp Foundation' ମାଧ୍ୟମରେ ତାଙ୍କର କାର୍ଯ୍ୟକୁ ଆଗେଇ ନେଇଛନ୍ତି।",
+              "verifiedFacts": [
+                  "ରିভা ରେବେକା ଷ୍ଟିନক୍ୟାମ୍ପ (ଜନ୍ମ ୧୯ ଅଗଷ୍ଟ ୧୯୮୩) ୨୦୦୫ ରେ ନେଲସନ୍ ମାଣ୍ଡେଲା ମେଟ୍ରୋପଲିଟାନ୍ ୟୁନିଭର୍ସିଟିରୁ LLB ଡିଗ୍ରୀ ହାସଲ କରିଥିଲେ।",
+                  "୨୦୧୧ ଶେଷରେ ସେ ଆଇନଜୀବୀ ହେବାକୁ ଆବେଦନ କରିଥିଲେ ଏବଂ ଘରୋଇ ନିର୍ଯାତନା ବିରୁଦ୍ଧରେ ସ୍ୱର ଉତ୍ତୋଳନ କରିବା ଆରମ୍ଭ କରିଥିଲେ।",
+                  "୧୪ ଫେବୃଆରୀ ୨୦୧୩ ପାଇଁ ସେ ଏକ ବିଦ୍ୟାଳୟ ଭାଷଣ ପ୍ରସ୍ତୁତ କରିଥିଲେ ଯାହା ସେ ଦେଇପାରିନଥିଲେ।",
+                  "୧୪ ଫେବୃଆରୀ ୨୦୧୩ ଭୋରରେ ଅସ୍କାର ପିଷ୍ଟୋରିଅସ୍ ବନ୍ଦ ଟଏଲେଟ୍-କ୍ୟୁବିକଲ୍ କବାଟ ଦେଇ ଚାରିଟି ଗୁଳି ଚଳାଇବାରୁ ରିভাଙ୍କର ମୃତ୍ୟୁ ହୋଇଥିଲା।",
+                  "୩ ଡିସେମ୍ବର ୨୦୧୫ ରେ ସୁପ୍ରିମ୍ କୋର୍ଟ ଅଫ୍ ଅପିଲ୍ ([2015] ZASCA 204) ହତ୍ୟା ଦୋଷ ସାବ୍ୟସ୍ତ କରିଥିଲେ; ନଭେମ୍ବର ୨୦୧୭ ରେ ଦଣ୍ଡ ୧୩ ବର୍ଷ ୫ ମାସ କରାଯାଇଥିଲା ଏବଂ ୫ ଜାନୁଆରୀ ୨୦୨୪ ରୁ ପ্যারୋଲ୍ ଲାଗୁ ହୋଇଥିଲା।",
+                  "ତାଙ୍କ ମା’ ଜୁନ୍ ଷ୍ଟିନক୍ୟାମ୍ପ ନଭେମ୍ବର ୨୦୧୫ ରେ ପଞ୍ଜୀକୃତ ଏବଂ ଅଗଷ୍ଟ ୨୦୧୬ ରେ ଉଦଘାଟିତ 'ରିভা ରେବେକା ଷ୍ଟିନক୍ୟାମ୍ପ ଫାଉଣ୍ଡେସନ୍' ମାଧ୍ୟମରେ ତାଙ୍କ କାର୍ଯ୍ୟ ଜାରି ରଖିଛନ୍ତି।"
+              ],
+              "societalImpact": "ରିভা ରେବେକା ଷ୍ଟିନক୍ୟାମ୍ପ ଫାଉଣ୍ଡେସନ୍ (ନଭେମ୍ବର ୨୦୧୫ ରେ ପଞ୍ଜୀକୃତ, ଅଗଷ୍ଟ ୨୦୧୬ ରେ ଆରମ୍ଭ):\nଜୁନ୍ ଷ୍ଟିନক୍ୟାମ୍ପଙ୍କ ଦ୍ୱାରା ପରିଚାଳିତ ଏହି ଅନୁଷ୍ଠାନ ନିର୍ଯାତନା ଶିକ୍ଷା, ପୀଡ଼ିତା ସହାୟତା, ପୋର୍ଟ ଏଲିଜାବେଥରେ ଆଇନଗତ ସହାୟତା, ତୃତୀୟ ବର୍ଷର ଆଇନ ଛାତ୍ରଛାତ୍ରୀଙ୍କ ପାଇଁ 'Reeva Bursary', 'REEVA Pack' ଏବଂ #BluePurpleBlack ଅଭିଯାନ ପରିଚାଳନା କରିଆସିଛି।",
+              "actionableLesson": "ନିର୍ଯାତନା କେବଳ ଶାରୀରିକ ହିଂସା ନୁହେଁ; ବାଧ୍ୟତାମୂଳକ ନିୟନ୍ତ୍ରଣ (coercive control), ଭୟଭୀତ କରିବା, ମାନସିକ ନିର୍ଯାତନା ଏବଂ ଏକଘରିକିଆ କରିଦେବା ଭଳି ଆଚରଣକୁ ଚିହ୍ନିବା ଏବଂ ସୁରକ୍ଷିତ ଆଇନଗତ ସହାୟତା ପାଇବା ପାଇଁ ଶିକ୍ଷା ଅତ୍ୟନ୍ତ ଜରୁରୀ।",
+              "memorialPublication": {
+                  "title": "ବାଧ୍ୟତାମୂଳକ ନିୟନ୍ତ୍ରଣ ଚିହ୍ନଟ ଏବଂ ସୁରକ୍ଷିତ ସମ୍ପର୍କ ଶିକ୍ଷା ପାଠ୍ୟକ୍ରମ",
+                  "focus": "ଅନ୍ତରଙ୍ଗ ସାଥୀ ହିଂସା ପ୍ରତିରୋଧ · ଯୁବ ଶିକ୍ଷା · ଆଇନଗତ ସାକ୍ଷରତା",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ବିଦ୍ୟାଳୟ ଓ ବିଶ୍ୱବିଦ୍ୟାଳୟ ପାଇଁ ପ୍ରସ୍ତାବିତ ପାଠ୍ୟକ୍ରମ: ନିର୍ଯାତନା ବୁଝିବା, ବାଧ୍ୟତାମୂଳକ ନିୟନ୍ତ୍ରଣ ଚିହ୍ନିବା, ସୁସ୍ଥ ସମ୍ପର୍କ, ସୁରକ୍ଷିତ ସହାୟତା ମାର୍ଗ ଏବଂ ଆଇନଗତ ସାକ୍ଷରତା।"
+              }
+          },
+          "de": {
+              "country": "Südafrika",
+              "categoryLabel": "Recht, Fürsprache & Aufklärung gegen Missbrauch",
+              "roleAndField": "Juristin (LLB) · Professionelles Model · Angehende Fürsprecherin gegen häusliche Gewalt",
+              "coreMessage": "Die Identität eines Menschen darf niemals auf die Gewalt reduziert werden, die sein Leben beendet hat. Reeva Steenkamp war eine Juristin, ein erfolgreiches Model, eine Medienpersönlichkeit und eine junge Frau, die begonnen hatte, ihre öffentliche Plattform zu nutzen, um sich gegen häusliche Gewalt und Vergewaltigung einzusetzen.",
+              "whoWasThisPerson": "Reeva Rebecca Steenkamp wurde am 19. August 1983 in Kapstadt, Südafrika, geboren und wuchs in Port Elizabeth auf.\n\nSie studierte Rechtswissenschaften an der Nelson Mandela Metropolitan University und schloss ihr Studium 2005 mit dem Bachelor of Laws (LLB) ab. Parallel zu ihrer Ausbildung baute sie eine erfolgreiche Modelkarriere auf, die sie bereits als Teenager begonnen hatte. Darüber hinaus arbeitete sie als Moderatorin bei Fashion TV und nahm an der Reality-TV-Sendung Tropika Island of Treasure teil.\n\nReeva hatte ihre juristischen Ambitionen nicht aufgegeben. Einem zeitgenössischen BBC-Porträt zufolge hatte sie sich Ende 2011 um die Zulassung zur Rechtsanwaltschaft (Bar) beworben und hoffte, als Prozessanwältin (Advocate) tätig zu werden.",
+              "contributions": "Reeva hatte begonnen, ihre Bekanntheit zu nutzen, um das Bewusstsein für häusliche Gewalt und Vergewaltigung zu schärfen. Ihre Mutter June Steenkamp bestätigte später in ihrer Opfer-Auswirkungserklärung (Victim Impact Statement), dass Reeva begonnen hatte, sich für Betroffene dieser Gewaltformen einzusetzen.\n\nEin besonders bedeutsames Beispiel war ein Schulvortrag, den Reeva für den 14. Februar 2013 vorbereitet hatte. Sie wollte vor jungen Schülerinnen und Schülern über Selbstwertgefühl, Beziehungen und die Bedeutung innerer Werte sprechen. Sie konnte diesen Vortrag nie halten.\n\nEs ist wichtig, dieses beginnende Engagement von einer langjährigen formellen Kampagne zu unterscheiden: Reeva stand am Anfang dieser Arbeit, als ihr das Leben genommen wurde.",
+              "factualContext": "In den frühen Morgenstunden des 14. Februar 2013 wurde Reeva im Haus ihres Freundes Oscar Pistorius in Pretoria tödlich angeschossen. Pistorius feuerte vier Schüsse durch die geschlossene Tür einer Toilettenkabine (toilet cubicle) im Badezimmer ab. Reeva, die sich darin befand, wurde getroffen und erlag ihren Verletzungen.\n\nGerichtsverfahren und rechtliches Ergebnis:\n• September 2014: Pistorius wurde vom High Court in Pretoria wegen fahrlässiger Tötung (culpable homicide) verurteilt.\n• Dezember 2015: Der Supreme Court of Appeal hob dieses Urteil auf und ersetzte es durch eine Verurteilung wegen Mordes (murder), da die rechtlichen Voraussetzungen für dolus eventualis erfüllt waren.\n• Juli 2016: Das High Court verurteilte ihn wegen Mordes zu sechs Jahren Freiheitsstrafe.\n• November 2017: Nach weiteren Berufungsverfahren wurde das Strafmaß auf 13 Jahre und fünf Monate erhöht.\n• Januar 2024: Die südafrikanische Strafvollzugsbehörde bestätigte, dass Pistorius mit Wirkung vom 5. Januar 2024 auf Bewährung (Parole) entlassen wurde.",
+              "editorialNotes": "Wichtige redaktionelle Differenzierungen: Dass Reeva begonnen hatte, sich gegen Missbrauch einzusetzen, wird durch die Erklärung ihrer Mutter und zeitgenössische Berichte gestützt; sie wird präzise als angehende Fürsprecherin beschrieben. Die Arbeit der Reeva Rebecca Steenkamp Foundation wurde von ihrer Mutter June Steenkamp fortgeführt.",
+              "verifiedFacts": [
+                  "Reeva Rebecca Steenkamp (geb. 19. August 1983 in Kapstadt, aufgewachsen in Port Elizabeth) schloss 2005 ihr Jurastudium (LLB) an der Nelson Mandela Metropolitan University ab und arbeitete erfolgreich als Model und im Medienbereich.",
+                  "Laut BBC-Berichten hatte sie sich Ende 2011 um die Zulassung als Rechtsanwältin (Advocate) beworben, und die Victim Impact Statement ihrer Mutter June Steenkamp (2023) bestätigt ihr beginnendes Engagement gegen häusliche Gewalt.",
+                  "Für den 14. Februar 2013 hatte sie eine Schulrede über Selbstwertgefühl und Beziehungen vorbereitet, die sie nicht mehr halten konnte.",
+                  "Am frühen Morgen des 14. Februar 2013 feuerte Oscar Pistorius vier Schüsse durch die geschlossene Toilettenkabinentür im Badezimmer seines Hauses in Pretoria ab und tötete Reeva.",
+                  "Am 3. Dezember 2015 wandelte der Supreme Court of Appeal ([2015] ZASCA 204) das Urteil wegen fahrlässiger Tötung in eine Verurteilung wegen Mordes um; im November 2017 wurde die Strafe auf 13 Jahre und 5 Monate erhöht, mit Bewährung ab dem 5. Januar 2024.",
+                  "Ihre Mutter June Steenkamp führte Reevas Arbeit durch die Reeva Rebecca Steenkamp Foundation (registriert im November 2015, offiziell eröffnet im August 2016) fort."
+              ],
+              "societalImpact": "Ein fortgeführtes Vermächtnis — Die Reeva Rebecca Steenkamp Foundation:\nNach Reevas Tod führte ihre Mutter June Steenkamp die Arbeit fort, die Reeva begonnen hatte. Die Stiftung wurde im November 2015 registriert und im August 2016 offiziell ins Leben gerufen. Zu ihren Aufgaben gehören:\n• Aufklärung über Missbrauch (physischer, sexueller, emotionaler, verbaler, psychologischer und ökonomischer Missbrauch sowie Einschüchterung, Stalking und Isolation).\n• Opferunterstützung und Fürsprache.\n• Rechtshilfe (Pilotprojekt mit Anwälten in Port Elizabeth).\n• Bildung und Stärkung von Frauen.\n• Reeva Bursary: Ein jährliches Stipendium für Studierende der Rechtswissenschaften im dritten Studienjahr mit Schwerpunkt Familienrecht.\n• REEVA Pack sowie die Kampagne #BluePurpleBlack.",
+              "actionableLesson": "Reevas Geschichte verdeutlicht, dass Missbrauch nicht auf körperliche Gewalt beschränkt ist. Bildung sollte jungen Menschen helfen, Folgendes zu erkennen:\n• Zwanghaftes und kontrollierendes Verhalten (Coercive Control).\n• Besitzergreifendes Verhalten, Einschüchterung und wiederholte Demütigung.\n• Emotionalen und psychologischen Missbrauch sowie soziale Isolation.\n• Sichere Wege zur Hilfesuche und den Zugang zu rechtlichem Schutz.\nDie Verantwortung für die Verhinderung von Gewalt liegt bei den Tätern, den Institutionen und der Gesellschaft – niemals allein bei den Betroffenen.",
+              "memorialPublication": {
+                  "title": "Lehrplan zur Erkennung von Zwangskontrolle und für sichere Beziehungen",
+                  "focus": "Prävention von Partnerschaftsgewalt · Jugendbildung · Rechtliche Grundbildung",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Ein vorgeschlagener Lehrplan für Schulen, Hochschulen und Universitäten mit Modulen zu Missbrauchserkennung, Zwangskontrolle (Coercive Control), gesunden Beziehungen, sicheren Unterstützungswegen, rechtlicher Grundbildung und Zivilcourage."
+              }
+          },
+          "es": {
+              "country": "Sudáfrica",
+              "categoryLabel": "Derecho, Defensa y Educación contra el Abuso",
+              "roleAndField": "Licenciada en Derecho (LLB) · Modelo Profesional · Defensora Emergente contra el Abuso Doméstico",
+              "coreMessage": "La identidad de una persona nunca debe reducirse a la violencia que puso fin a su vida. Reeva Steenkamp era licenciada en Derecho, una modelo de éxito, una personalidad de los medios y una joven que había comenzado a utilizar su plataforma pública para hablar en contra del abuso doméstico y la violación.",
+              "whoWasThisPerson": "Reeva Rebecca Steenkamp nació el 19 de agosto de 1983 en Ciudad del Cabo, Sudáfrica, y creció en Port Elizabeth.\n\nEstudió Derecho en la Universidad Metropolitana Nelson Mandela, donde se graduó con una licenciatura en Derecho (LLB) en 2005. Junto con su formación académica, desarrolló una exitosa carrera como modelo y trabajó como presentadora en Fashion TV y participante en el programa Tropika Island of Treasure.\n\nReeva no había abandonado sus ambiciones jurídicas. Un perfil contemporáneo de la BBC informó que había solicitado el ingreso al colegio de abogados a finales de 2011 con la esperanza de ejercer como abogada defensora (advocate).",
+              "contributions": "Reeva había comenzado a utilizar su perfil público para concienciar sobre el abuso doméstico y la violación, según confirmó posteriormente su madre, June Steenkamp, en su declaración de impacto de la víctima.\n\nUn ejemplo especialmente significativo fue una charla escolar que Reeva había preparado para el 14 de febrero de 2013, en la que tenía previsto hablar a jóvenes estudiantes sobre la autoestima, las relaciones y la importancia de valorar a las personas por quienes son. Nunca llegó a pronunciar esa charla.\n\nEs importante distinguir esta defensa emergente de una campaña formal consolidada: Reeva estaba iniciando esta labor cuando le arrebataron la vida.",
+              "factualContext": "En la madrugada del 14 de febrero de 2013, Reeva murió tiroteada en el domicilio de su novio, Oscar Pistorius, en Pretoria. Pistorius efectuó cuatro disparos a través de la puerta cerrada del cubículo del inodoro (toilet cubicle) dentro del cuarto de baño.\n\nProcedimientos judiciales y resultado legal:\n• Septiembre de 2014: Pistorius fue declarado culpable de homicidio culposo (culpable homicide) por el Tribunal Superior de Pretoria.\n• Diciembre de 2015: El Tribunal Supremo de Apelación anuló esa condena y la sustituyó por una condena por asesinato (murder), al determinar que se cumplían los requisitos legales de dolus eventualis.\n• Julio de 2016: El Tribunal Superior lo condenó a seis años de prisión por asesinato.\n• Noviembre de 2017: Tras nuevos recursos de apelación, la pena fue aumentada a 13 años y cinco meses.\n• Enero de 2024: El Departamento de Servicios Correccionales de Sudáfrica confirmó su puesta en libertad condicional efectiva el 5 de enero de 2024.",
+              "editorialNotes": "Precisiones editoriales importantes: El compromiso emergente de Reeva contra el abuso está respaldado por la declaración de su madre y los informes de prensa contemporáneos. La Fundación Reeva Rebecca Steenkamp fue impulsada y continuada por su madre, June Steenkamp.",
+              "verifiedFacts": [
+                  "Reeva Rebecca Steenkamp (nacida el 19 de agosto de 1983 en Ciudad del Cabo y criada en Port Elizabeth) se graduó en Derecho (LLB) por la Universidad Metropolitana Nelson Mandela en 2005.",
+                  "Según informes de la BBC, solicitó el ingreso a la abogacía a finales de 2011 y, como confirmó su madre June Steenkamp en su declaración de 2023, había empezado a alzar su voz contra el abuso doméstico y la violación.",
+                  "Había preparado una charla escolar para el 14 de febrero de 2013 sobre autoestima y relaciones que nunca pudo pronunciar.",
+                  "En la madrugada del 14 de febrero de 2013, Oscar Pistorius disparó cuatro veces a través de la puerta cerrada del cubículo del inodoro en el baño de su casa de Pretoria, causando la muerte de Reeva.",
+                  "El 3 de diciembre de 2015, el Tribunal Supremo de Apelación de Sudáfrica ([2015] ZASCA 204) sustituyó la condena de homicidio culposo por la de asesinato; en noviembre de 2017 la pena se elevó a 13 años y 5 meses, con libertad condicional efectiva el 5 de enero de 2024.",
+                  "Su madre, June Steenkamp, continuó su labor a través de la Fundación Reeva Rebecca Steenkamp (registrada en noviembre de 2015 e inaugurada oficialmente en agosto de 2016)."
+              ],
+              "societalImpact": "Un legado continuado — La Fundación Reeva Rebecca Steenkamp:\nTras la muerte de Reeva, su madre, June Steenkamp, llevó adelante el trabajo que Reeva había comenzado. Registrada en noviembre de 2015 y lanzada oficialmente en agosto de 2016, su labor incluye:\n• Educación sobre el abuso (físico, sexual, emocional, verbal, psicológico y económico, así como intimidación, acoso y aislamiento).\n• Apoyo y defensa de las víctimas.\n• Asistencia jurídica (proyecto piloto con abogados en Port Elizabeth).\n• Educación y empoderamiento femenino.\n• Beca Reeva (Reeva Bursary): Beca anual para un estudiante de tercer año de Derecho interesado en Derecho de Familia.\n• REEVA Pack y la campaña #BluePurpleBlack.",
+              "actionableLesson": "La historia de Reeva subraya la importancia de reconocer que el abuso no se limita a la violencia física. La educación debe ayudar a los jóvenes a comprender:\n• El comportamiento coercitivo y controlador.\n• La posesividad, la intimidación y la humillación repetida.\n• El abuso emocional y psicológico y el aislamiento de amigos y familiares.\n• Cómo buscar ayuda de forma segura y acceder a la protección legal sin culpar a la víctima.",
+              "memorialPublication": {
+                  "title": "Currículo de Reconocimiento del Control Coercitivo y Educación sobre Relaciones Seguras",
+                  "focus": "Prevención de la Violencia de Pareja · Educación Juvenil · Alfabetización Jurídica",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Un currículo educativo propuesto para escuelas, colegios y universidades con módulos sobre comprensión del abuso, reconocimiento del control coercitivo, relaciones saludables, vías seguras de apoyo, alfabetización jurídica y responsabilidad de los testigos."
+              }
+          },
+          "fr": {
+              "country": "Afrique du Sud",
+              "categoryLabel": "Droit, Plaidoyer et Éducation contre les Violences",
+              "roleAndField": "Diplômée en droit (LLB) · Mannequin professionnelle · Défenseure émergente contre les violences conjugales",
+              "coreMessage": "L'identité d'une personne ne doit jamais être réduite à la violence qui a mis fin à ses jours. Reeva Steenkamp était diplômée en droit, mannequin accomplie, personnalité des médias et une jeune femme qui commençait à utiliser sa notoriété publique pour dénoncer les violences conjugales et le viol.",
+              "whoWasThisPerson": "Reeva Rebecca Steenkamp est née le 19 août 1983 au Cap, en Afrique du Sud, et a grandi à Port Elizabeth.\n\nElle a étudié le droit à l'Université métropolitaine Nelson Mandela, où elle a obtenu une licence en droit (Bachelor of Laws, LLB) en 2005. Parallèlement à ses études, elle a mené une brillante carrière de mannequin, travaillant également comme présentatrice sur Fashion TV et participant à l'émission Tropika Island of Treasure.\n\nReeva n'avait pas renoncé à ses ambitions juridiques. Un portrait contemporain de la BBC rapportait qu'elle avait postulé au barreau fin 2011 dans l'espoir de devenir avocate plaidante (advocate).",
+              "contributions": "Reeva avait commencé à utiliser sa notoriété publique pour sensibiliser aux violences conjugales et au viol, comme l'a confirmé sa mère, June Steenkamp, dans sa déclaration de victime (Victim Impact Statement).\n\nUn exemple particulièrement significatif était une intervention scolaire que Reeva avait préparée pour le 14 février 2013 afin de parler aux jeunes élèves de l'estime de soi, des relations et de l'importance d'apprécier les personnes pour ce qu'elles sont. Elle n'a jamais pu prononcer ce discours.\n\nIl importe de distinguer cet engagement émergent d'une campagne formelle établie de longue date : Reeva commençait ce travail lorsque sa vie lui a été ôtée.",
+              "factualContext": "Aux premières heures du 14 février 2013, Reeva a été mortellement touchée par balles au domicile de son compagnon, Oscar Pistorius, à Pretoria. Pistorius a tiré quatre coups de feu à travers la porte fermée d'une cabine de toilettes (toilet cubicle) située dans la salle de bain.\n\nProcédures judiciaires et issue juridique :\n• Septembre 2014 : Pistorius est reconnu coupable d'homicide involontaire (culpable homicide) par la Haute Cour de Pretoria.\n• Décembre 2015 : La Cour suprême d'appel annule cette condamnation et lui substitue une condamnation pour meurtre (murder), jugeant que les critères juridiques du dolus eventualis étaient réunis.\n• Juillet 2016 : La Haute Cour le condamne à six ans de prison pour meurtre.\n• Novembre 2017 : À la suite d'un nouvel appel, la peine est portée à 13 ans et cinq mois.\n• Janvier 2024 : Le Département des services correctionnels d'Afrique du Sud confirme sa libération conditionnelle à compter du 5 janvier 2024.",
+              "editorialNotes": "Précisions éditoriales importantes : L'engagement émergent de Reeva contre les violences est attesté par la déclaration de sa mère et les reportages de l'époque. La Fondation Reeva Rebecca Steenkamp a été créée et poursuivie par sa mère, June Steenkamp.",
+              "verifiedFacts": [
+                  "Reeva Rebecca Steenkamp (née le 19 août 1983 au Cap, ayant grandi à Port Elizabeth) a obtenu son diplôme de droit (LLB) à l'Université métropolitaine Nelson Mandela en 2005.",
+                  "Selon la BBC, elle avait postulé au barreau fin 2011 avec l'ambition de devenir avocate, et la déclaration de sa mère June Steenkamp (2023) confirme qu'elle avait commencé à s'exprimer publiquement contre les violences conjugales.",
+                  "Elle avait préparé un discours scolaire pour le 14 février 2013 sur l'estime de soi et les relations qu'elle n'a jamais pu prononcer.",
+                  "Au matin du 14 février 2013, Oscar Pistorius a tiré quatre coups de feu à travers la porte fermée de la cabine de toilettes de sa salle de bain à Pretoria, tuant Reeva.",
+                  "Le 3 décembre 2015, la Cour suprême d'appel d'Afrique du Sud ([2015] ZASCA 204) a requalifié l'homicide involontaire en meurtre ; en novembre 2017, la peine a été portée à 13 ans et 5 mois, avec libération conditionnelle le 5 janvier 2024.",
+                  "Sa mère, June Steenkamp, a poursuivi son engagement à travers la Fondation Reeva Rebecca Steenkamp (enregistrée en novembre 2015 et lancée officiellement en août 2016)."
+              ],
+              "societalImpact": "Un héritage poursuivi — La Fondation Reeva Rebecca Steenkamp :\nAprès la mort de Reeva, sa mère, June Steenkamp, a poursuivi l'œuvre que Reeva avait amorcée. Enregistrée en novembre 2015 et officiellement lancée en août 2016, la fondation œuvre dans les domaines suivants :\n• Éducation sur les violences (physiques, sexuelles, émotionnelles, verbales, psychologiques et économiques, ainsi que l'intimidation, le harcèlement et l'isolement).\n• Soutien et accompagnement des victimes.\n• Assistance juridique (projet pilote avec des avocats à Port Elizabeth).\n• Bourse Reeva (Reeva Bursary) : Bourse annuelle attribuée à un étudiant en troisième année de droit s'intéressant au droit de la famille.\n• REEVA Pack et campagne #BluePurpleBlack.",
+              "actionableLesson": "L'histoire de Reeva rappelle que la maltraitance ne se limite pas à la violence physique. L'éducation doit aider les jeunes à identifier :\n• Les comportements coercitifs et de contrôle.\n• La possessivité, l'intimidation et l'humiliation répétée.\n• Les violences émotionnelles et psychologiques ainsi que l'isolement.\n• Les moyens de demander de l'aide en toute sécurité et d'accéder aux protections juridiques.",
+              "memorialPublication": {
+                  "title": "Programme d'éducation à la reconnaissance du contrôle coercitif et aux relations saines",
+                  "focus": "Prévention des violences entre partenaires intimes · Éducation des jeunes · Culture juridique",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Un programme éducatif proposé pour les écoles, collèges et universités comprenant des modules sur la compréhension des violences, le contrôle coercitif, les relations respectueuses, les parcours d'aide sécurisés, la culture juridique et la responsabilité des témoins."
+              }
+          },
+          "hr": {
+              "country": "Južnoafrička Republika",
+              "categoryLabel": "Pravo, zagovaranje i edukacija protiv zlostavljanja",
+              "roleAndField": "Diplomirana pravnica (LLB) · Profesionalni model · Nova zagovornica borbe protiv obiteljskog nasilja",
+              "coreMessage": "Identitet osobe nikada se ne smije svesti na nasilje koje je prekinulo njezin život. Reeva Steenkamp bila je diplomirana pravnica, uspješan model, medijska ličnost i mlada žena koja je počela koristiti svoju javnu platformu kako bi govorila protiv obiteljskog zlostavljanja i silovanja.",
+              "whoWasThisPerson": "Reeva Rebecca Steenkamp rođena je 19. kolovoza 1983. u Cape Townu u Južnoafričkoj Republici, a odrasla je u Port Elizabethu.\n\nStudirala je pravo na Sveučilištu Nelson Mandela Metropolitan, gdje je 2005. godine diplomirala kao prvostupnica prava (Bachelor of Laws, LLB). Uz obrazovanje izgradila je uspješnu manekensku karijeru te radila kao voditeljica na Fashion TV-u i sudjelovala u televizijskoj emisiji Tropika Island of Treasure.\n\nReeva nije odustala od svojih pravnih ambicija. Prema tadašnjem profilu BBC-ja, krajem 2011. prijavila se u odvjetničku komoru s nadom da će postati odvjetnica (advocate).",
+              "contributions": "Reeva je počela koristiti svoju javnu prepoznatljivost za podizanje svijesti o obiteljskom zlostavljanju i silovanju, što je njezina majka June Steenkamp kasnije potvrdila u svojoj izjavi o učinku kaznenog djela na žrtvu.\n\nPosebno značajan primjer bio je školski govor koji je Reeva pripremila za 14. veljače 2013., u kojem je namjeravala govoriti mladim učenicima o samopoštovanju, odnosima i važnosti vrednovanja ljudi prema tome tko su, a ne prema fizičkom izgledu. Taj govor nikada nije održala.\n\nVažno je razlikovati ovo početno zagovaranje od dugotrajne formalne kampanje: Reeva je tek započinjala taj rad kada joj je oduzet život.",
+              "factualContext": "U ranim jutarnjim satima 14. veljače 2013. Reeva je smrtno nastrijeljena u domu svog dečka Oscara Pistoriusa u Pretoriji. Pistorius je ispalio četiri hica kroz zatvorena vrata toaletne kabine (toilet cubicle) u kupaonici.\n\nSudski postupak i pravni epilog:\n• Rujan 2014.: Visoki sud u Pretoriji osudio je Pistoriusa za ubojstvo iz nehaja (culpable homicide).\n• Prosinac 2015.: Vrhovni žalbeni sud ukinuo je tu presudu i preinačio je u presudu za ubojstvo (murder), utvrdivši da su ispunjeni pravni uvjeti za dolus eventualis.\n• Srpanj 2016.: Visoki sud osudio ga je na šest godina zatvora zbog ubojstva.\n• Studeni 2017.: Nakon daljnjeg žalbenog postupka kazna je povećana na 13 godina i pet mjeseci.\n• Siječanj 2024.: Južnoafrički Odjel za korektivne službe potvrdio je da je Pistorius pušten na uvjetni otpust s učinkom od 5. siječnja 2024.",
+              "editorialNotes": "Važne uredničke napomene: Tvrdnja da je Reeva započela zagovaranje protiv zlostavljanja potkrijepljena je izjavom njezine majke i tadašnjim izvješćima; precizno se opisuje kao nova zagovornica. Rad Zaklade Reeva Rebecca Steenkamp nastavila je njezina majka June Steenkamp.",
+              "verifiedFacts": [
+                  "Reeva Rebecca Steenkamp (rođena 19. kolovoza 1983. u Cape Townu, odrasla u Port Elizabethu) diplomirala je pravo (LLB) na Sveučilištu Nelson Mandela Metropolitan 2005. godine.",
+                  "Prema izvješćima BBC-ja, krajem 2011. prijavila se za odvjetničku komoru, a izjava njezine majke June Steenkamp iz 2023. potvrđuje da je počela javno govoriti protiv obiteljskog zlostavljanja.",
+                  "Za 14. veljače 2013. pripremila je školski govor o samopoštovanju i odnosima koji nikada nije održala.",
+                  "Ujutro 14. veljače 2013. Oscar Pistorius ispalio je četiri hica kroz zatvorena vrata toaletne kabine u kupaonici svog doma u Pretoriji, usmrtivši Reevu.",
+                  "Dana 3. prosinca 2015. Vrhovni žalbeni sud Južnoafričke Republike ([2015] ZASCA 204) preinačio je presudu za ubojstvo iz nehaja u presudu za ubojstvo; u studenome 2017. kazna je povećana na 13 godina i 5 mjeseci, uz uvjetni otpust od 5. siječnja 2024.",
+                  "Njezina majka June Steenkamp nastavila je Reevin rad kroz Zakladu Reeva Rebecca Steenkamp (registriranu u studenome 2015. i službeno pokrenutu u kolovozu 2016.)."
+              ],
+              "societalImpact": "Nastavljeno nasljeđe — Zaklada Reeva Rebecca Steenkamp:\nNakon Reevine smrti njezina majka June Steenkamp nastavila je rad koji je Reeva započela. Zaklada je registrirana u studenome 2015. i službeno predstavljena u kolovozu 2016., a njezin rad obuhvaća:\n• Edukaciju o zlostavljanju (fizičkom, seksualnom, emocionalnom, verbalnom, psihološkom i ekonomskom te zastrašivanju, uhođenju i izolaciji).\n• Podršku i zagovaranje žrtava.\n• Pravnu pomoć (pilot-projekt s odvjetnicima u Port Elizabethu).\n• Stipendiju Reeva (Reeva Bursary): Godišnju stipendiju za studenta treće godine prava zainteresiranog za obiteljsko pravo.\n• REEVA Pack i kampanju #BluePurpleBlack.",
+              "actionableLesson": "Reevina priča naglašava važnost prepoznavanja da zlostavljanje nije ograničeno samo na fizičko nasilje. Obrazovanje treba pomoći mladima razumjeti:\n• Prisilno i kontrolirajuće ponašanje (Coercive Control).\n• Posesivnost, zastrašivanje i opetovano ponižavanje.\n• Emocionalno i psihološko zlostavljanje te izolaciju od prijatelja i obitelji.\n• Kako sigurno potražiti pomoć i ostvariti pravnu zaštitu.",
+              "memorialPublication": {
+                  "title": "Kurikulum za prepoznavanje prisilne kontrole i obrazovanje o sigurnim odnosima",
+                  "focus": "Prevencija nasilja u intimnim vezama · Obrazovanje mladih · Pravna pismenost",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Predloženi obrazovni kurikulum za škole, veleučilišta i sveučilišta s modulima o razumijevanju zlostavljanja, prepoznavanju prisilne kontrole, zdravim odnosima, sigurnim putovima podrške, pravnoj pismenosti i odgovornosti promatrača."
+              }
+          }
+      }
   },
   {
     id: 10,
