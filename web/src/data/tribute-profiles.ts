@@ -1199,38 +1199,299 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
   },
 
   // ── 2. Women Whose Stories Changed Conversations on Safety & Justice ──
-  {
-    id: 6,
-    slug: "jyoti-singh",
-    name: "Jyoti Singh (Nirbhaya)",
-    country: "India",
-    countryFlag: "🇮🇳",
-    category: "safety-and-justice",
-    categoryLabel: "Safety, Freedom & Legal Reform",
-    eraOrYear: "2012",
-    roleAndField: "Physiotherapy Student · Delhi",
-    avatarUrl: "https://images.openai.com/static-rsc-4/_9b-LBXORzakkaP-CpLE4ue7n5b9iHneqVDtug_dU227vP2AXAorSGvEg_bHG_uQAfWmARFkc7YA3l0WT8NOEBWQwEeKbAPExYBBOwDqP3Ww7R3n_zltmW0Ni67iWc5yZPgSJ2lhJiXfQifA8blm-IHBwg7WkR3rjHmPAcivueM?purpose=inline",
-    whoWasThisPerson:
-      "A 23-year-old physiotherapy intern from a hardworking family in Uttar Pradesh and Delhi. Ambitious, energetic, and determined to alleviate physical suffering through rehabilitative medicine, she was preparing to begin her professional career.",
-    contributions:
-      "Her academic determination embodied the aspirations of millions of young Indian women breaking social barriers to achieve professional independence and provide healthcare to their communities.",
-    factualContext:
-      "In December 2012, while returning home from a cinema with a friend, she was brutally attacked on a moving private bus in South Delhi. Despite emergency treatment in Delhi and Singapore, she succumbed to her injuries.",
-    societalImpact:
-      "Her ordeal galvanized historic public protests that led to the appointment of the Justice Verma Committee and the enactment of the Criminal Law (Amendment) Act 2013, fundamentally overhauling Indian laws regarding sexual assault and consent.",
-    actionableLesson:
-      "Public transit systems require verified driver credentials, GPS telemetry, active patrolling, functional streetlights, and zero-tolerance emergency helplines.",
-    coreMessage:
-      "Safety, freedom, and dignity must be everyday fundamental rights. Women should never have to negotiate their right to exist in public spaces.",
-    memorialPublication: {
-      title: "Public Transit Safety & Universal Bystander Intervention Toolkit",
-      focus: "Urban Infrastructure & Community Rapid-Response",
-      deliverable: "An open-source urban transit safety audit protocol and bystander intervention education kit for academic campuses and public transit networks.",
-    },
-    references: [
-      { title: "Justice J.S. Verma Committee Report on Amendments to Criminal Law (2013)", url: "https://prsindia.org", publisher: "PRS Legislative Research" },
-      { title: "Criminal Law (Amendment) Act 2013", url: "https://indiacode.nic.in", publisher: "Ministry of Law and Justice, India" },
-    ],
+    {
+      "id": 6,
+      "slug": "jyoti-singh",
+      "name": "Jyoti Singh (Nirbhaya)",
+      "country": "India",
+      "countryFlag": "🇮🇳",
+      "category": "safety-and-justice",
+      "categoryLabel": "Safety, Freedom & Legal Reform",
+      "eraOrYear": "2012",
+      "roleAndField": "Physiotherapy Student · Delhi, India",
+      "avatarUrl": "https://images.openai.com/static-rsc-4/_9b-LBXORzakkaP-CpLE4ue7n5b9iHneqVDtug_dU227vP2AXAorSGvEg_bHG_uQAfWmARFkc7YA3l0WT8NOEBWQwEeKbAPExYBBOwDqP3Ww7R3n_zltmW0Ni67iWc5yZPgSJ2lhJiXfQifA8blm-IHBwg7WkR3rjHmPAcivueM?purpose=inline",
+      "verificationStatus": "Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "coreMessage": "Safety, freedom, and dignity must be everyday rights. Women should never have to negotiate their right to education, professional independence, or movement through public spaces. Justice requires more than stronger laws: it requires institutions that prevent violence, respond responsibly, and protect survivors.",
+      "whoWasThisPerson": "Jyoti Singh was a 23-year-old student pursuing physiotherapy in Delhi.\nShe came from a family originally from Uttar Pradesh. Her father had moved the family to Delhi in search of better opportunities and worked to support his children's education.\nHer family made considerable sacrifices to support her ambitions. Her father reportedly sold ancestral land to help pay for her education. She also worked to support herself financially, including tutoring children and undertaking other work alongside her studies.\nShe was determined to build a professional career and become the first professional in her family.\nHer aspirations reflected the hopes of many young women seeking education, financial independence, and the opportunity to build meaningful careers.\n\nEditorial distinction: Jyoti was a physiotherapy student, not an established practising physiotherapist. Her professional contribution should be described through her educational journey and aspirations rather than unverified claims about clinical practice.",
+      "contributions": "What She Represented to Society:\nJyoti Singh's life represented the aspirations of young women pursuing education and professional independence despite financial and social barriers.\n\nHer story brought attention to several important realities:\n• The sacrifices families make to educate their daughters.\n• The importance of access to higher education and professional opportunities for women.\n• The right of women to travel independently and participate in public life.\n• The need for public institutions to protect individual safety and dignity.\n\nHer contribution to society should not be measured through an invented professional career. She was still preparing to enter her chosen profession.\nHer story became a powerful reminder of the opportunities that are lost when violence takes away a young person's future.",
+      "factualContext": "On the evening of 16 December 2012, Jyoti Singh and a male friend were returning after watching a film in Delhi.\nAt Munirka bus stand, they boarded a privately operated chartered bus that was not authorised to pick up passengers.\nSix men were on board. During the journey, Jyoti's friend was assaulted, and Jyoti was subjected to a brutal sexual assault. Both were subsequently thrown out of the vehicle near Mahipalpur.\nThey were taken to Safdarjung Hospital in Delhi for emergency treatment.\nDespite intensive medical treatment, her condition remained critical. On 26 December, doctors decided to transfer her to Mount Elizabeth Hospital in Singapore for further treatment.\nJyoti Singh died on 29 December 2012 from complications arising from her injuries.\nThe incident shocked India and generated widespread public outrage. Protests took place across Delhi and other cities, with citizens demanding justice, accountability, and meaningful action to address violence against women.\nThe case became widely known as the Nirbhaya case. The word Nirbhaya means fearless and was used as a pseudonym in accordance with the legal protections surrounding the identity of sexual-assault victims.\nHer parents later publicly called for their daughter's real name to be recognised rather than allowing the pseudonym to define her identity.\n\nJudicial Proceedings and Accountability:\nThe case proceeded through a fast-track trial and subsequent appeals.\nFour adult accused were convicted and sentenced to death. The Delhi High Court upheld the convictions and sentences, and the Supreme Court affirmed the decision in May 2017.\nThe Supreme Court subsequently dismissed review petitions, including a review petition in July 2018.\nThe four adult convicts were executed on 20 March 2020 at Tihar Jail in Delhi.\nOne accused, who was a juvenile at the time of the offence, was tried separately under the juvenile justice system and received the maximum period of institutional custody permitted under the law then in force.\nAnother accused died in custody during the proceedings.\nThe case raised significant questions about criminal accountability, the treatment of sexual-violence cases, juvenile justice, and the responsibilities of public institutions.",
+      "editorialNotes": "Publication note: This profile distinguishes verified biographical facts, the documented criminal case, subsequent legal reforms, and UltimateHealth's proposed initiative. It does not claim that all recommendations of the Justice Verma Committee became law or that the proposed transport-safety measures have been implemented nationwide.",
+      "verifiedFacts": [
+          "23-year-old physiotherapy student in Delhi from a family originally from Uttar Pradesh.",
+          "Brutally assaulted on the evening of 16 December 2012 aboard an unauthorised privately operated chartered bus boarded at Munirka, Delhi; treated at Safdarjung Hospital and Mount Elizabeth Hospital, Singapore, before dying on 29 December 2012.",
+          "Supreme Court of India affirmed the convictions and death sentences of four adult accused in May 2017 and dismissed review petitions in July 2018; the four adult convicts were executed at Tihar Jail on 20 March 2020.",
+          "Government of India constituted the three-member Justice J.S. Verma Committee on 23 December 2012 (report submitted 23 January 2013).",
+          "The Criminal Law (Amendment) Act, 2013 (Act No. 13 of 2013) received presidential assent on 2 April 2013, and the dedicated Nirbhaya Fund was established in 2013."
+      ],
+      "societalImpact": "The incident triggered widespread public demonstrations and an unprecedented national discussion about women's safety, sexual violence, policing, and criminal justice.\nTwo major developments and a dedicated national fund followed.\n\nA. Justice J.S. Verma Committee\nOn 23 December 2012, the Government of India constituted a three-member committee chaired by former Chief Justice of India Justice J.S. Verma.\nThe other members were:\n• Justice Leila Seth, former Chief Justice of the Himachal Pradesh High Court.\n• Gopal Subramanium, former Solicitor General of India.\nThe committee was tasked with recommending amendments to criminal law to address sexual assault and improve the justice system's response. It submitted its report on 23 January 2013.\nThe report addressed a broad range of issues, including:\n• Sexual assault and the legal definition of rape.\n• Sexual harassment and violence against women.\n• Human trafficking and child sexual abuse.\n• Medical examination and treatment of survivors.\n• Police accountability and investigation procedures.\n• Electoral, educational, and institutional reforms.\n• The responsibilities of public authorities in protecting women.\nThe committee also emphasised that sexual violence should be understood as an expression of power, not merely as an act of passion. Its recommendations became an important reference point in India's subsequent criminal-law reform.\n\nB. Criminal Law (Amendment) Act, 2013\nThe Criminal Law (Amendment) Act, 2013 received presidential assent on 2 April 2013. It amended the Indian Penal Code, the Code of Criminal Procedure, the Indian Evidence Act, and the Protection of Children from Sexual Offences Act.\nAmong its important changes were:\n• Recognition of new offences, including acid attacks, stalking, and voyeurism.\n• Introduction of specific provisions addressing sexual harassment.\n• Expansion of the legal definition of rape.\n• Stronger provisions addressing certain forms of sexual violence.\n• Criminal consequences for public servants who fail to follow specified legal duties.\n• Accountability for hospitals that fail to provide treatment to victims of certain sexual offences.\n• Procedural protections intended to reduce humiliation and harassment during investigation and trial.\nImportant editorial distinction: The Act followed the public outcry surrounding the Nirbhaya case and drew on the wider process of criminal-law review. It did not incorporate every recommendation made by the Justice Verma Committee. The committee report and the legislation should therefore be presented as related but distinct developments.\n\nC. Nirbhaya Fund\nThe Government of India established the Nirbhaya Fund in 2013 as a dedicated, non-lapsable corpus to support initiatives intended to improve women's safety and security.\nThe fund is administered by the Department of Economic Affairs, Ministry of Finance. The Ministry of Women and Child Development serves as the nodal ministry for appraising and recommending proposals under the fund's framework.\nIts intended areas of support include initiatives addressing safety in public spaces, transportation, emergency response, and access to protection and support services.\nHowever, the existence of a fund or the approval of a scheme should not automatically be treated as proof that safety has improved everywhere. Implementation, monitoring, accessibility, and measurable outcomes remain essential.",
+      "actionableLesson": "Public Transit Safety and Women's Right to Mobility\nJyoti Singh's case exposed the risks that can arise when unregulated transport operations, inadequate oversight, and unsafe public environments intersect.\n\nThe following measures should be considered by transport authorities, operators, urban planners, and law-enforcement agencies:\n1. Verified driver and operator credentials:\n• Require proper verification of commercial and contract-transport drivers.\n• Maintain accurate records of vehicle ownership, permits, and authorised operators.\n• Conduct periodic checks of driver eligibility and vehicle documentation.\n• Establish accountability for unauthorised passenger pickup.\n\n2. GPS-enabled transport monitoring:\n• Use GPS tracking for applicable commercial and contract-transport services.\n• Maintain reliable trip records and appropriate monitoring arrangements.\n• Provide mechanisms for reporting route deviations or suspicious activity.\n• Establish clear protocols for responding to distress alerts.\n\n3. Safer public transport environments:\n• Improve lighting at bus stops, stations, access roads, and walking routes.\n• Maintain visible emergency contact information.\n• Ensure that public transport vehicles and stations have accessible emergency-reporting mechanisms.\n• Conduct regular safety audits of routes and transport facilities.\n\n4. Emergency response and rapid assistance:\n• Strengthen coordination between transport operators, police, and emergency services.\n• Make emergency assistance accessible through India's ERSS number, 112.\n• Train relevant staff to respond to distress reports.\n• Ensure that complaints are recorded and escalated rather than ignored.\n\n5. Responsible bystander intervention:\n• Educate students and commuters about safe ways to intervene when someone appears to be in danger.\n• Encourage reporting and seeking professional assistance rather than placing untrained bystanders at unnecessary risk.\n• Promote practical awareness of emergency services and available support systems.\n\n6. Institutional accountability:\n• Establish transparent mechanisms for reporting unsafe transport operations.\n• Investigate failures in licensing, vehicle oversight, and emergency response.\n• Publish meaningful safety and implementation indicators.\n• Ensure that safety policies are reviewed regularly and improved using evidence.\n\nThese measures are proposed recommendations for safer public transportation. They should not be presented as a complete list of requirements already mandated by Indian law.",
+      "memorialPublication": {
+          "title": "Public Transit Safety & Universal Bystander Intervention Toolkit",
+          "focus": "Urban Infrastructure · Women's Mobility · Public Transport Safety · Community Rapid Response",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "Purpose:\nDevelop an open-source educational and audit resource that helps academic institutions, transport operators, community organisations, and urban authorities evaluate public-transit safety and understand how to respond responsibly to emergencies.\n\nProposed toolkit components:\nA. Public Transport Safety Audit: Structured checklist to evaluate bus stops and station lighting, passenger information and emergency contacts, vehicle and operator verification, GPS and trip-monitoring arrangements, accessibility of emergency reporting, and coordination with local emergency services.\nB. Bystander Intervention Education: Educational material explaining how to recognise potentially dangerous situations, when and how to seek emergency assistance, how to report incidents safely, how to support someone experiencing harassment, and why survivor dignity and privacy must be respected.\nC. Campus and Community Safety Resources: Resources for colleges and universities, student transport services, women's safety organisations, community volunteers, and public transport operators.\nD. Evidence and Accountability Framework: Framework for recording safety-audit findings, reported infrastructure gaps, availability of emergency assistance, corrective actions, and follow-up assessments.\n\nThe UltimateHealth Perspective:\nJyoti Singh's story represents more than a criminal case or a moment of public outrage. It represents a young woman's pursuit of education, independence, and a professional future. It also represents the responsibility of society to ensure that women can participate in everyday life without fear.\nHer case contributed to a major national conversation about sexual violence and institutional accountability. The Justice Verma Committee, the Criminal Law (Amendment) Act, 2013, and the Nirbhaya Fund became important parts of the subsequent policy response.\nYet laws and funds are only meaningful when they translate into safety, dignity, access to justice, and accountability in everyday life.\nRemembering Jyoti Singh means recognising her aspirations, respecting her identity, and continuing to work towards a society where every woman can study, work, travel, and live freely."
+      },
+      "references": [
+          {
+              "title": "Supreme Court of India — Mukesh v. State (NCT of Delhi), Review Judgment, 9 July 2018",
+              "url": "https://api.sci.gov.in/supremecourt/2017/35383/35383_2017_Judgement_09-Jul-2018.pdf",
+              "publisher": "Supreme Court of India",
+              "isPrimary": true
+          },
+          {
+              "title": "Government of India — India Code — The Criminal Law (Amendment) Act, 2013, Act No. 13 of 2013",
+              "url": "https://www.indiacode.nic.in/bitstream/123456789/15357/1/criminal_law_ammend_act_2013.pdf",
+              "publisher": "Government of India",
+              "isPrimary": true
+          },
+          {
+              "title": "Press Information Bureau, Ministry of Home Affairs — Year End Review 2013: Criminal Law (Amendment) Act",
+              "url": "https://www.pib.gov.in/newsite/PrintRelease.aspx?lang=2&reg=3&relid=102166",
+              "publisher": "Press Information Bureau, Government of India",
+              "isPrimary": true
+          },
+          {
+              "title": "Press Information Bureau, Ministry of Home Affairs — Statement of the Union Home Minister on the South Delhi incident, 18 December 2012",
+              "url": "https://www.pib.gov.in/newsite/erelcontent.aspx?lang=2&reg=48&relid=90911",
+              "publisher": "Press Information Bureau, Government of India",
+              "isPrimary": true
+          },
+          {
+              "title": "PRS Legislative Research — Justice Verma Committee Report Summary (23 January 2013)",
+              "url": "https://prsindia.org/policy/report-summaries/justice-verma-committee-report-summary",
+              "publisher": "PRS Legislative Research",
+              "isPrimary": true
+          },
+          {
+              "title": "Ministry of Women and Child Development — Nirbhaya Fund: Official Government Framework",
+              "url": "https://wcd.gov.in/offerings/nirbhaya",
+              "publisher": "Ministry of Women and Child Development, India",
+              "isPrimary": true
+          },
+          {
+              "title": "The Guardian — Jyoti Singh's parents call for her real name to be used, 16 February 2017",
+              "url": "https://www.theguardian.com/world/2017/feb/16/jyoti-singh-parents-call-for-honorary-museum-nirbhaya-to-use-her-real-name",
+              "publisher": "The Guardian"
+          },
+          {
+              "title": "The Jakarta Post — Q&A: What do we know about the 2012 gang-rape case that rocked India?",
+              "url": "https://www.thejakartapost.com/news/2018/07/09/qa-what-do-we-know-about-2012-gang-rape-case-that-rocked-india",
+              "publisher": "The Jakarta Post"
+          },
+          {
+              "title": "Business Standard / Press Trust of India — Chronology of events in the Nirbhaya case",
+              "url": "https://www.business-standard.com/article/pti-stories/chronology-of-events-in-nirbhaya-case-119121800928_1.html",
+              "publisher": "Business Standard / Press Trust of India"
+          },
+          {
+              "title": "The Guardian — Five years after the gang-rape and murder of Jyoti Singh, what has changed for women in India?",
+              "url": "https://www.theguardian.com/society/2017/dec/03/five-years-after-gang-murder-jyoti-singh-how-has-delhi-changed",
+              "publisher": "The Guardian"
+          }
+      ],
+      "translations": {
+          "hi": {
+              "name": "ज्योति सिंह (निर्भया)",
+              "roleAndField": "फिजियोथेरेपी छात्रा · दिल्ली, भारत",
+              "categoryLabel": "सुरक्षा, स्वतंत्रता एवं कानूनी सुधार",
+              "coreMessage": "सुरक्षा, स्वतंत्रता और गरिमा रोजमर्रा के अधिकार होने चाहिए। महिलाओं को शिक्षा, पेशेवर स्वतंत्रता या सार्वजनिक स्थानों पर आवाजाही के अपने अधिकार के लिए कभी भी समझौता नहीं करना पड़ना चाहिए। न्याय के लिए केवल कड़े कानूनों से अधिक की आवश्यकता है: इसके लिए ऐसे संस्थानों की आवश्यकता है जो हिंसा को रोकें, जिम्मेदारी से प्रतिक्रिया दें और उत्तरजीवियों की रक्षा करें।",
+              "whoWasThisPerson": "ज्योति सिंह दिल्ली में फिजियोथेरेपी की पढ़ाई कर रही 23 वर्षीय छात्रा थीं।\nवे मूल रूप से उत्तर प्रदेश के एक परिवार से थीं। उनके पिता बेहतर अवसरों की तलाश में परिवार को दिल्ली ले आए थे और अपने बच्चों की शिक्षा के लिए कड़ी मेहनत करते थे।\nउनके परिवार ने उनकी महत्वाकांक्षाओं का समर्थन करने के लिए काफी बलिदान दिए। बताया जाता है कि उनके पिता ने उनकी शिक्षा का खर्च उठाने के लिए पैतृक जमीन बेच दी थी। उन्होंने अपनी पढ़ाई के साथ-साथ बच्चों को ट्यूशन पढ़ाने और अन्य कार्य करके खुद को आर्थिक रूप से भी सहारा दिया।\nवे एक पेशेवर करियर बनाने और अपने परिवार में पहली प्रोफेशनल बनने के लिए दृढ़ संकल्पित थीं।\n\nसंपादकीय अंतर: ज्योति फिजियोथेरेपी की छात्रा थीं, न कि एक स्थापित प्रैक्टिसिंग फिजियोथेरेपिस्ट। उनके पेशेवर योगदान को क्लिनिकल प्रैक्टिस के अप्रमाणित दावों के बजाय उनकी शैक्षिक यात्रा और आकांक्षाओं के माध्यम से वर्णित किया जाना चाहिए।",
+              "contributions": "समाज के लिए उनका जीवन क्या दर्शाता था:\nज्योति सिंह का जीवन वित्तीय और सामाजिक बाधाओं के बावजूद शिक्षा और पेशेवर स्वतंत्रता प्राप्त करने वाली युवा महिलाओं की आकांक्षाओं का प्रतिनिधित्व करता था।\n\nउनकी कहानी ने कई महत्वपूर्ण वास्तविकताओं की ओर ध्यान आकर्षित किया:\n• बेटियों को शिक्षित करने के लिए परिवारों द्वारा किए जाने वाले बलिदान।\n• महिलाओं के लिए उच्च शिक्षा और पेशेवर अवसरों तक पहुंच का महत्व।\n• महिलाओं का स्वतंत्र रूप से यात्रा करने और सार्वजनिक जीवन में भाग लेने का अधिकार।\n• व्यक्तिगत सुरक्षा और गरिमा की रक्षा के लिए सार्वजनिक संस्थानों की आवश्यकता।\nउनकी कहानी इस बात की एक सशक्त अनुस्मारक बन गई कि जब हिंसा किसी युवा व्यक्ति का भविष्य छीन लेती है तो कौन से अवसर खो जाते हैं।",
+              "factualContext": "16 दिसंबर 2012 की शाम को, ज्योति सिंह और उनके एक पुरुष मित्र दिल्ली में एक फिल्म देखने के बाद लौट रहे थे।\nमुनिरका बस स्टैंड पर, वे एक निजी रूप से संचालित चार्टर्ड बस में चढ़े जो यात्रियों को बैठाने के लिए अधिकृत नहीं थी।\nबस में छह लोग सवार थे। यात्रा के दौरान, ज्योति के मित्र पर हमला किया गया और ज्योति के साथ क्रूर यौन हिंसा की गई। बाद में दोनों को महिपालपुर के पास वाहन से बाहर फेंक दिया गया।\nउन्हें आपातकालीन उपचार के लिए दिल्ली के सफदरजंग अस्पताल ले जाया गया। 26 दिसंबर को आगे के इलाज के लिए उन्हें सिंगापुर के माउंट एलिजाबेथ अस्पताल में स्थानांतरित किया गया, जहाँ 29 दिसंबर 2012 को चोटों से उत्पन्न जटिलताओं के कारण ज्योति सिंह का निधन हो गया।\nइस मामले को व्यापक रूप से 'निर्भया' मामले के रूप में जाना गया। बाद में उनके माता-पिता ने सार्वजनिक रूप से आह्वान किया कि उनकी बेटी को उसके वास्तविक नाम से पहचाना जाए।\n\nन्यायिक कार्यवाही और जवाबदेही:\nफास्ट-ट्रैक ट्रायल में चार वयस्क आरोपियों को दोषी ठहराया गया और मृत्युदंड की सजा सुनाई गई, जिसे दिल्ली उच्च न्यायालय और मई 2017 में सर्वोच्च न्यायालय ने बरकरार रखा (जुलाई 2018 में पुनर्विचार याचिकाएं खारिज कर दी गईं)। चारों वयस्क दोषियों को 20 मार्च 2020 को तिहाड़ जेल में फांसी दी गई। एक नाबालिग आरोपी पर किशोर न्याय प्रणाली के तहत मुकदमा चलाया गया, और एक अन्य आरोपी की कार्यवाही के दौरान हिरासत में मृत्यु हो गई।",
+              "editorialNotes": "प्रकाशन नोट: यह प्रोफ़ाइल सत्यापित जीवनी तथ्यों, प्रलेखित आपराधिक मामले, बाद के कानूनी सुधारों और UltimateHealth की प्रस्तावित पहल के बीच अंतर करती है। यह दावा नहीं करती कि न्यायमूर्ति वर्मा समिति की सभी सिफारिशें कानून बन गईं या प्रस्तावित परिवहन-सुरक्षा उपाय देश भर में लागू हो चुके हैं।",
+              "verifiedFacts": [
+                  "दिल्ली में फिजियोथेरेपी की पढ़ाई कर रही 23 वर्षीय छात्रा (मूल रूप से उत्तर प्रदेश के परिवार से)।",
+                  "16 दिसंबर 2012 की शाम को मुनिरका से एक अनधिकृत निजी चार्टर्ड बस में क्रूर हमला; सफदरजंग अस्पताल और माउंट एलिजाबेथ अस्पताल, सिंगापुर में उपचार के बाद 29 दिसंबर 2012 को निधन।",
+                  "सर्वोच्च न्यायालय ने मई 2017 में चार वयस्क दोषियों की सजा बरकरार रखी और जुलाई 2018 में पुनर्विचार याचिका खारिज की; 20 मार्च 2020 को तिहाड़ जेल में फांसी दी गई।",
+                  "भारत सरकार ने 23 दिसंबर 2012 को तीन-सदस्यीय न्यायमूर्ति जे.एस. वर्मा समिति का गठन किया (23 जनवरी 2013 को रिपोर्ट प्रस्तुत)।",
+                  "दंड विधि (संशोधन) अधिनियम, 2013 को 2 अप्रैल 2013 को राष्ट्रपति की स्वीकृति मिली और 2013 में निर्भया फंड की स्थापना हुई।"
+              ],
+              "societalImpact": "इस घटना ने महिला सुरक्षा, पुलिसिंग और आपराधिक न्याय पर अभूतपूर्व राष्ट्रीय चर्चा को जन्म दिया।\n\nA. न्यायमूर्ति जे.एस. वर्मा समिति (23 दिसंबर 2012 – 23 जनवरी 2013):\nपूर्व मुख्य न्यायाधीश जे.एस. वर्मा की अध्यक्षता में (न्यायमूर्ति लीला सेठ और गोपाल सुब्रमण्यम के साथ) गठित समिति ने यौन अपराधों, पुलिस जवाबदेही, उत्तरजीवियों की चिकित्सा जांच और संस्थागत सुधारों पर व्यापक सिफारिशें दीं।\n\nB. दंड विधि (संशोधन) अधिनियम, 2013 (2 अप्रैल 2013):\nइस अधिनियम ने भारतीय दंड संहिता, दंड प्रक्रिया संहिता, भारतीय साक्ष्य अधिनियम और POCSO अधिनियम में संशोधन किया—जिसमें एसिड अटैक, पीछा करना (stalking), ताक-झांक (voyeurism), यौन उत्पीड़न, बलात्कार की विस्तारित परिभाषा, और इलाज से इनकार करने वाले अस्पतालों व कर्तव्य में विफल लोक सेवकों की जवाबदेही शामिल थी।\nमहत्वपूर्ण संपादकीय अंतर: इस अधिनियम में वर्मा समिति की हर सिफारिश शामिल नहीं थी; इसलिए समिति की रिपोर्ट और कानून को संबंधित लेकिन अलग-अलग विकास के रूप में देखा जाना चाहिए।\n\nC. निर्भया फंड (2013):\nमहिलाओं की सुरक्षा के लिए वित्त मंत्रालय (आर्थिक कार्य विभाग) द्वारा प्रशासित और महिला एवं बाल विकास मंत्रालय की नोडल भूमिका वाला एक समर्पित फंड। हालांकि, केवल फंड या कानून का होना ही हर जगह सुरक्षा में सुधार का प्रमाण नहीं है; प्रभावी कार्यान्वयन और निगरानी अनिवार्य हैं।",
+              "actionableLesson": "सार्वजनिक परिवहन सुरक्षा और महिलाओं की गतिशीलता का अधिकार:\n1. सत्यापित ड्राइवर और ऑपरेटर क्रेडेंशियल (वाहन परमिट और अनधिकृत यात्री पिकअप पर रोक)।\n2. जीपीएस-सक्षम परिवहन निगरानी और मार्ग विचलन या संकट अलर्ट पर त्वरित प्रोटोकॉल।\n3. सुरक्षित सार्वजनिक परिवहन वातावरण (बस स्टॉप और सड़कों पर पर्याप्त रोशनी व नियमित सुरक्षा ऑडिट)।\n4. आपातकालीन प्रतिक्रिया और ERSS नंबर 112 के माध्यम से त्वरित सहायता।\n5. जिम्मेदार बाईस्टैंडर (राहगीर) हस्तक्षेप शिक्षा।\n6. संस्थागत जवाबदेही और पारदर्शी सुरक्षा संकेतक।",
+              "memorialPublication": {
+                  "title": "सार्वजनिक परिवहन सुरक्षा और सार्वभौमिक बाईस्टैंडर हस्तक्षेप टूलकिट",
+                  "focus": "शहरी बुनियादी ढांचा · महिलाओं की गतिशीलता · सार्वजनिक परिवहन सुरक्षा · सामुदायिक त्वरित प्रतिक्रिया",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "उद्देश्य: शैक्षणिक संस्थानों, परिवहन ऑपरेटरों और शहरी प्राधिकरणों के लिए सार्वजनिक-परिवहन सुरक्षा का मूल्यांकन करने हेतु एक ओपन-सोर्स शैक्षिक और ऑडिट संसाधन विकसित करना।\n\nUltimateHealth दृष्टिकोण:\nज्योति सिंह को याद करने का अर्थ है उनकी आकांक्षाओं को पहचानना, उनकी पहचान का सम्मान करना और एक ऐसे समाज के निर्माण की दिशा में काम करना जहाँ हर महिला बिना किसी डर के पढ़ सके, काम कर सके, यात्रा कर सके और स्वतंत्र रूप से जी सके।"
+              }
+          },
+          "bn": {
+              "name": "জ্যোতি সিং (নির্ভয়া)",
+              "roleAndField": "ফিজিওথেরাপি শিক্ষার্থী · দিল্লি, ভারত",
+              "categoryLabel": "নিরাপত্তা, স্বাধীনতা ও আইনি সংস্কার",
+              "coreMessage": "নিরাপত্তা, স্বাধীনতা এবং মর্যাদা প্রতিদিনের মৌলিক অধিকার হতে হবে। শিক্ষা, পেশাগত স্বাধীনতা বা জনসমাগমস্থলে চলাচলের অধিকারের জন্য নারীদের কখনোই আপস করতে হওয়া উচিত নয়। ন্যায়বিচারের জন্য কেবল কঠোর আইনই যথেষ্ট নয়—প্রয়োজন সহিংসতা প্রতিরোধকারী ও দায়িত্বশীল প্রতিষ্ঠান।",
+              "whoWasThisPerson": "জ্যোতি সিং ছিলেন দিল্লিতে ফিজিওথেরাপি অধ্যয়নরত ২৩ বছর বয়সী এক তরুণী। তাঁর পরিবার মূলত উত্তরপ্রদেশের বাসিন্দা ছিল। তাঁর শিক্ষার খরচ জোগাতে তাঁর বাবা পৈতৃক জমি বিক্রি করেছিলেন এবং জ্যোতি নিজেও টিউশনি ও খণ্ডকালীন কাজ করে নিজের পড়াশোনার খরচ চালাতেন।\nসম্পাদকীয় পার্থক্য: জ্যোতি ছিলেন একজন ফিজিওথেরাপি শিক্ষার্থী, প্রতিষ্ঠিত ফিজিওথেরাপিস্ট নন। তাঁর অবদানকে তাঁর শিক্ষাগত সংগ্রাম ও আকাঙ্ক্ষার মাধ্যমেই তুলে ধরা হয়েছে।",
+              "contributions": "সমাজের কাছে তাঁর জীবন যা তুলে ধরেছিল:\nআর্থিক ও সামাজিক বাধা পেরিয়ে উচ্চশিক্ষা ও পেশাগত স্বাবলম্বিতা অর্জনের লক্ষ্যে তরুণীদের সংগ্রামের প্রতীক ছিলেন জ্যোতি সিং। তাঁর ঘটনা নারীদের নিরাপদ চলাচল এবং প্রাতিষ্ঠানিক সুরক্ষার প্রয়োজনীয়তাকে সামনে নিয়ে আসে।",
+              "factualContext": "১৬ ডিসেম্বর ২০১২ সন্ধ্যায় দিল্লির মুনিরকা বাস স্ট্যান্ড থেকে জ্যোতি সিং ও তাঁর এক বন্ধু একটি অননুমোদিত বেসরকারি চার্টার্ড বাসে ওঠেন। চলন্ত বাসে ছয়জন ব্যক্তি তাঁর বন্ধুকে মারধর করে এবং জ্যোতির ওপর নৃশংস যৌন সহিংসতা চালায়। সফদরজং হাসপাতাল এবং পরে সিঙ্গাপুরের মাউন্ট এলিজাবেথ হাসপাতালে চিকিৎসাধীন অবস্থায় ২৯ ডিসেম্বর ২০১২-এ তাঁর মৃত্যু হয়।\n\nবিচারিক প্রক্রিয়া:\nচারজন প্রাপ্তবয়স্ক আসামিকে মৃত্যুদণ্ড দেওয়া হয়, যা সুপ্রিম কোর্ট মে ২০১৭ ও জুলাই ২০১৮-তে বহাল রাখে। ২০ মার্চ ২০২০ তারিখে তিহার জেলে চার আসামির মৃত্যুদণ্ড কার্যকর করা হয়।",
+              "editorialNotes": "প্রকাশনা নোট: এই প্রোফাইলটি যাচাইকৃত জীবনীমূলক তথ্য, বিচারিক নথি, পরবর্তী আইনি সংস্কার এবং UltimateHealth-এর প্রস্তাবিত উদ্যোগের মধ্যে স্পষ্ট পার্থক্য বজায় রাখে।",
+              "verifiedFacts": [
+                  "দিল্লিতে ফিজিওথেরাপি অধ্যয়নরত ২৩ বছর বয়সী শিক্ষার্থী।",
+                  "১৬ ডিসেম্বর ২০১২ সন্ধ্যায় মুনিরকা থেকে অননুমোদিত চার্টার্ড বাসে নৃশংস হামলার শিকার; ২৯ ডিসেম্বর ২০১২-এ সিঙ্গাপুরের মাউন্ট এলিজাবেথ হাসপাতালে মৃত্যু।",
+                  "সুপ্রিম কোর্ট মে ২০১৭ ও জুলাই ২০১৮-এ রায় বহাল রাখার পর ২০ মার্চ ২০২০-এ তিহার জেলে চার প্রাপ্তবয়স্ক আসামির মৃত্যুদণ্ড কার্যকর হয়।",
+                  "২৩ ডিসেম্বর ২০১২-এ বিচারপতি জে.এস. ভার্মা কমিটি গঠিত হয় (প্রতিবেদন দাখিল ২৩ জানুয়ারি ২০১৩)।",
+                  "ফৌজদারি আইন (সংশোধনী) আইন, ২০১৩ (২ এপ্রিল ২০১৩) এবং নির্ভয়া তহবিল (২০১৩) প্রতিষ্ঠিত হয়।"
+              ],
+              "societalImpact": "A. বিচারপতি জে.এস. ভার্মা কমিটি (২৩ ডিসেম্বর ২০১২ – ২৩ জানুয়ারি ২০১৩): যৌন সহিংসতা রোধ ও পুলিশি জবাবদিহিতার ওপর ঐতিহাসিক সুপারিশমালা পেশ করে।\nB. ফৌজদারি আইন (সংশোধনী) আইন, ২০১৩: অ্যাসিড হামলা, স্টকিং, ভয়ারিজম এবং ধর্ষণের বিস্তৃত সংজ্ঞাসহ কঠোর বিধান যুক্ত হয় (যদিও ভার্মা কমিটির সব সুপারিশ এতে অন্তর্ভুক্ত হয়নি)।\nC. নির্ভয়া তহবিল (২০১৩): নারীদের নিরাপত্তার জন্য গঠিত বিশেষ সরকারি তহবিল।",
+              "actionableLesson": "গণপরিবহন নিরাপত্তা ও নারীদের চলাচলের অধিকার:\n১. চালক ও অপারেটরের নথি যাচাই\n২. জিপিএস ট্র্যাকিং ও রুট নজরদারি\n৩. বাস স্টপ ও রাস্তায় পর্যাপ্ত আলোর ব্যবস্থা\n৪. জরুরি নম্বর ১১২ (ERSS)-এর মাধ্যমে দ্রুত সহায়তা\n৫. নিরাপদ ও দায়িত্বশীল পথচারী (bystander) হস্তক্ষেপ শিক্ষা\n৬. প্রাতিষ্ঠানিক জবাবদিহিতা।",
+              "memorialPublication": {
+                  "title": "গণপরিবহন নিরাপত্তা ও সার্বজনীন বাইস্ট্যান্ডার ইন্টারভেনশন টুলকিট",
+                  "focus": "নগর অবকাঠামো · নারীর চলাচল · গণপরিবহন নিরাপত্তা · কমিউনিটি র‍্যাপিড রেসপন্স",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "জ্যোতি সিংকে স্মরণ করার অর্থ হলো তাঁর শিক্ষার স্বপ্নকে সম্মান জানানো এবং এমন এক সমাজ গড়ে তোলা যেখানে প্রতিটি নারী নির্ভয়ে পড়াশোনা, কাজ ও চলাচল করতে পারেন।"
+              }
+          },
+          "ta": {
+              "name": "ஜோதி சிங் (நிர்பயா)",
+              "roleAndField": "பிசியோதெரபி மாணவி · டெல்லி, இந்தியா",
+              "categoryLabel": "பாதுகாப்பு, சுதந்திரம் மற்றும் சட்டச் சீர்திருத்தம்",
+              "coreMessage": "பாதுகாப்பு, சுதந்திரம் மற்றும் கண்ணியம் ஆகியவை அன்றாட அடிப்படை உரிமைகளாக இருக்க வேண்டும். பெண்கள் கல்வி, தொழில் சுதந்திரம் அல்லது பொது இடங்களில் நடமாடும் உரிமைக்காக ஒருபோதும் சமரசம் செய்யக் கூடாது.",
+              "whoWasThisPerson": "ஜோதி சிங் டெல்லியில் பிசியோதெரபி பயின்று வந்த 23 வயது மாணவி. உத்தரப் பிரதேசத்தைப் பூர்வீகமாகக் கொண்ட அவரது குடும்பம், அவரது கல்விக்காகப் பெரும் தியாகங்களைச் செய்தது. அவரும் குழந்தைகளுக்கு டியூஷன் எடுத்தும் பகுதிநேர வேலை செய்தும் தனது கல்விச் செலவுகளுக்கு உதவினார்.\nஆசிரியர் குறிப்பு: ஜோதி ஒரு பிசியோதெரபி மாணவி; அவரது பங்களிப்பு அவரது கல்விப் பயணம் மற்றும் கனவுகள் வழியாகவே விவரிக்கப்படுகிறது.",
+              "contributions": "நிதி மற்றும் சமூகத் தடைகளைத் தாண்டி உயர்கல்வி மற்றும் சுயசார்பை நோக்கிப் பயணிக்கும் இளம் பெண்களின் கனவுகளை அவரது வாழ்க்கை பிரதிபலித்தது.",
+              "factualContext": "டிசம்பர் 16, 2012 மாலை, டெல்லி முனிர்கா பேருந்து நிறுத்தத்தில் ஜோதி சிங்கும் அவரது நண்பரும் அங்கீகரிக்கப்படாத தனியார் பேருந்தில் ஏறினர். பேருந்தில் இருந்த ஆறு பேரால் அவர் கொடூரமாகத் தாக்கப்பட்டார். சப்தர்ஜங் மருத்துவமனை மற்றும் சிங்கப்பூர் மவுண்ட் எலிசபெத் மருத்துவமனையில் சிகிச்சை பெற்றும், டிசம்பர் 29, 2012 அன்று உயிரிழந்தார்.\n\nநீதித்துறை நடவடிக்கைகள்:\nநான்கு குற்றவாளிகளுக்கு விதிக்கப்பட்ட மரண தண்டனையை மே 2017 மற்றும் ஜூலை 2018 இல் உச்ச நீதிமன்றம் உறுதி செய்தது. மார்ச் 20, 2020 அன்று திகார் சிறையில் தண்டனை நிறைவேற்றப்பட்டது.",
+              "editorialNotes": "வெளியீட்டுக் குறிப்பு: நீதிபதி வர்மா குழுவின் அனைத்துப் பரிந்துரைகளும் சட்டமாகவில்லை என்பதையும், முன்மொழியப்பட்ட போக்குவரத்துப் பாதுகாப்பு நடவடிக்கைகள் UltimateHealth-இன் பரிந்துரைகள் என்பதையும் இப்பதிவு தெளிவுபடுத்துகிறது.",
+              "verifiedFacts": [
+                  "டெல்லியில் பிசியோதெரபி பயின்ற 23 வயது மாணவி.",
+                  "டிசம்பர் 16, 2012 அன்று முனிர்காவில் தனியார் பேருந்தில் தாக்கப்பட்டு, டிசம்பர் 29, 2012 அன்று சிங்கப்பூர் மருத்துவமனையில் உயிரிழந்தார்.",
+                  "உச்ச நீதிமன்றத் தீர்ப்பைத் தொடர்ந்து மார்ச் 20, 2020 அன்று திகார் சிறையில் நான்கு குற்றவாளிகளின் மரண தண்டனை நிறைவேற்றப்பட்டது.",
+                  "டிசம்பர் 23, 2012 அன்று நீதிபதி ஜே.எஸ். வர்மா குழு அமைக்கப்பட்டது (ஜனவரி 23, 2013 இல் அறிக்கை சமர்ப்பிப்பு).",
+                  "குற்றவியல் சட்டத் திருத்தச் சட்டம் 2013 (ஏப்ரல் 2, 2013) மற்றும் நிர்பயா நிதி (2013) உருவாக்கப்பட்டன."
+              ],
+              "societalImpact": "A. நீதிபதி ஜே.எஸ். வர்மா குழு (2012–2013): பாலியல் வன்கொடுமைத் தடுப்பு மற்றும் காவல்துறை சீர்திருத்தங்களுக்கான பரிந்துரைகளை வழங்கியது.\nB. குற்றவியல் சட்ட (திருத்த) சட்டம், 2013: அமில வீச்சு, பின்தொடர்தல் (stalking) மற்றும் பாலியல் குற்றங்களுக்குக் கடுமையான தண்டனைகளை அறிமுகப்படுத்தியது.\nC. நிர்பயா நிதி (2013): பெண்களின் பாதுகாப்புத் திட்டங்களுக்காக உருவாக்கப்பட்ட மத்திய அரசு நிதி.",
+              "actionableLesson": "பொதுப் போக்குவரத்துப் பாதுகாப்பு நடைமுறைகள்:\n1. ஓட்டுநர் மற்றும் வாகன உரிமச் சரிபார்ப்பு\n2. ஜிபிஎஸ் கண்காணிப்பு\n3. பேருந்து நிறுத்தங்களில் போதிய வெளிச்சம் மற்றும் அவசரத் தொடர்பு வசதி\n4. அவசர எண் 112 (ERSS) மூலம் விரைவான உதவி\n5. பொறுப்பான பொதுமக்கள் தலையீடு குறித்த விழிப்புணர்வு\n6. நிறுவனப் பொறுப்புக்கூறல்.",
+              "memorialPublication": {
+                  "title": "பொதுப் போக்குவரத்துப் பாதுகாப்பு மற்றும் விழிப்புணர்வு கையேடு",
+                  "focus": "நகர்ப்புற உள்கட்டமைப்பு · பெண்களின் பாதுகாப்பான பயணம் · சமூகப் பாதுகாப்பு",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ஜோதி சிங்கை நினைவுகூர்வது என்பது அவரது கல்வி கனவுகளை மதிப்பதும், ஒவ்வொரு பெண்ணும் அச்சமின்றிப் படிக்கவும் பணியாற்றவும் பயணம் செய்யவும் கூடிய சமுதாயத்தை உருவாக்குவதுமாகும்."
+              }
+          },
+          "or": {
+              "name": "ଜ୍ୟୋତି ସିଂହ (ନିର୍ଭୟା)",
+              "roleAndField": "ଫିଜିଓଥେରାପି ଛାତ୍ରୀ · ଦିଲ୍ଲୀ, ଭାରତ",
+              "categoryLabel": "ସୁରକ୍ଷା, ସ୍ୱାଧୀନତା ଓ ଆଇନଗତ ସଂସ୍କାର",
+              "coreMessage": "ସୁରକ୍ଷା, ସ୍ୱାଧୀନତା ଏବଂ ମର୍ଯ୍ୟାଦା ପ୍ରତ୍ୟେକ ଦିନର ମୌଳିକ ଅଧିକାର ହେବା ଉଚିତ। ଶିକ୍ଷା, ବୃତ୍ତିଗତ ସ୍ୱାଧୀନତା କିମ୍ବା ସାର୍ବଜନୀନ ସ୍ଥାନରେ ଯାତାୟାତ ପାଇଁ ମହିଳାମାନଙ୍କୁ କେବେବି ବୁଝାମଣା କରିବାକୁ ପଡ଼ିବା ଉଚିତ ନୁହେଁ।",
+              "whoWasThisPerson": "ଜ୍ୟୋତି ସିଂହ ଦିଲ୍ଲୀରେ ଫିଜିଓଥେରାପି ପଢ଼ୁଥିବା ଜଣେ ୨୩ ବର୍ଷୀୟା ଛାତ୍ରୀ ଥିଲେ। ତାଙ୍କ ପিতা ତାଙ୍କ ଶିକ୍ଷା ପାଇଁ ପৈତୃକ ଜମି ବିକ୍ରି କରିଥିଲେ ଏବଂ ଜ୍ୟୋତି ନିଜେ ମଧ୍ୟ ଟ୍ୟୁସନ କରି ନିଜ ପଢ଼ା ଖର୍ଚ୍ଚ ତୁଲାଉଥିଲେ।\nସମ୍ପାଦକୀୟ ସ୍ପଷ୍ଟীকରଣ: ଜ୍ୟୋତି ଜଣେ ଫିଜିଓଥେରାପି ଛାତ୍ରୀ ଥିଲେ; ତାଙ୍କର ଅବଦାନକୁ ତାଙ୍କର ଶିକ୍ଷାଗତ ସଂଘର୍ଷ ଓ ଆକାଂକ୍ଷା ମାଧ୍ୟମରେ ବର୍ଣ୍ଣନା କରାଯାଇଛି।",
+              "contributions": "ଆର୍ଥିକ ଓ ସାମାଜିକ ପ୍ରତିବନ୍ଧକ সତ୍ତ୍ୱେ ଉଚ୍ଚଶିକ୍ଷା ଏବଂ ସ୍ୱಾವଲମ୍বୀ ହେવા ପାଇଁ ଯୁବତୀମାନଙ୍କ ସ୍ୱପ୍ନର ପ୍ରତୀକ ଥିଲେ ଜ୍ୟୋତି ସିଂହ।",
+              "factualContext": "୧୬ ଡିସେମ୍ବର ୨୦୧୨ ସନ୍ଧ୍ୟାରେ ଦିଲ୍ଲୀର ମୁନିରକା ବସ୍ ଷ୍ଟାଣ୍ଡରୁ ଜ୍ୟୋତି ସିଂହ ଓ ତାଙ୍କର ଜଣେ ବନ୍ଧୁ ଏକ ଅନଧିକୃତ ଘରୋଇ ବସରେ ଚଢ଼ିଥିଲେ, ଯେଉଁଠାରେ ଛଅ ଜଣ ବ୍ୟକ୍ତିଙ୍କ ଦ୍ୱାରା ସେ ନିର୍ମମ ଆକ୍ରମଣର ଶିକାର ହୋଇଥିଲେ। ସଫଦରଜଙ୍ଗ ହସ୍ପିଟାଲ ଏବଂ ପରେ ସିଙ୍ଗାପୁରର ମାଉଣ୍ଟ ଏଲିଜାବେଥ ହସ୍ପିଟାଲରେ ଚିକିତ୍ସାଧୀନ ଅବସ୍ଥାରେ ୨୯ ଡିସେମ୍ବର ୨୦୧୨ରେ ତାଙ୍କର ମୃତ୍ୟୁ ଘଟିଥିଲା।\n\nନ୍ୟାୟିକ ପ୍ରକ୍ରିୟା:\nସୁପ୍ରିମକୋର୍ଟ ମଇ ୨୦୧୭ ଓ ଜୁଲାଇ ୨୦୧୮ରେ ଚାରି ଦୋଷୀଙ୍କ ମୃତ୍ୟୁଦଣ୍ଡ କାଏମ ରଖିଥିଲେ ଏବଂ ୨୦ ମାର୍ଚ୍ଚ ୨୦୨୦ରେ ତିହାର ଜେଲରେ ଦଣ୍ଡ কার্যকর କରାଯାଇଥିଲା।",
+              "editorialNotes": "ପ୍ରକାଶନ ଟିପ୍ପଣୀ: ଏହି ପ୍ରୋଫାଇଲ୍ ପ୍ରମାଣିତ ଜୀବନୀ ତଥ୍ୟ, ଅଦାଲତ ରେକର୍ଡ, ଆଇନଗତ ସଂସ୍କାର ଏବଂ UltimateHealth ର ପ୍ରସ୍ତାବିତ ପଦକ୍ଷେପ ମଧ୍ୟରେ ପାର୍ଥକ୍ୟ ବজାୟ ରଖେ।",
+              "verifiedFacts": [
+                  "ଦିଲ୍ଲୀରେ ଫିଜିଓଥେରାପି ପଢ଼ୁଥିବା ୨୩ ବର୍ଷୀୟା ଛାତ୍ରୀ।",
+                  "୧୬ ଡିସେମ୍ବର ୨୦୧୨ରେ ଅନଧିକୃତ ବସରେ ଆକ୍ରମଣର ଶିକାର; ୨୯ ଡିସେମ୍ବର ୨୦୧୨ରେ ସିଙ୍ଗାପୁରରେ ପରଲୋକ।",
+                  "୨୦ ମାର୍ଚ୍ଚ ୨୦୨୦ରେ ତିହାର ଜେଲରେ ଚାରି ଦୋଷୀଙ୍କ ମୃତ୍ୟୁଦଣ୍ଡ କାର୍ଯ୍ୟକାରୀ।",
+                  "୨୩ ଡିସେମ୍ବର ୨୦୧୨ରେ ଜଷ୍ଟିସ୍ ଜେ.ଏସ୍. ବର୍ମା କମିଟି ଗଠন (୨୩ ଜାନୁଆରୀ ୨୦୧୩ରେ ରିପୋର୍ଟ ପ୍ରଦାନ)।",
+                  "ଫୌଜଦାରୀ ଆଇନ (ସଂଶୋଧନ) ଅଧିନିୟମ, ୨୦୧୩ (୨ ଏପ୍ରିଲ ୨୦୧୩) ଏବଂ ନିର୍ଭୟା ପାଣ୍ଠି (୨୦୧୩) ଗଠିତ।"
+              ],
+              "societalImpact": "A. ଜଷ୍ଟିସ୍ ଜେ.ଏସ୍. ବର୍ମା କମିଟି (୨୦୧୨–୨୦୧୩): ଯୌନ ହିଂସା ନିରୋଧ ଓ ପୋଲିସ ଉତ୍ତରଦାୟିତ୍ୱ ଉପରେ ଐତିହାସିକ ସୁପାରିଶ।\nB. ଫୌଜଦାରୀ ଆଇନ (ସଂଶୋଧନ) ଅଧିନିୟମ, ୨୦୧୩: ଏସିଡ୍ ଆକ୍ରମଣ, ପିଛା କରିବା (stalking) ଆଦି ନୂତନ ଅପରାଧ ଓ କଠୋର ଦଣ୍ଡବିଧାନ।\nC. ନିର୍ଭୟା ପାଣ୍ଠି (୨୦୧୩): ମହିଳା ସୁରକ୍ଷା ପ୍ରକଳ୍ପ ପାଇଁ ସମର୍ପିତ ସରକାରୀ ପାଣ୍ଠି।",
+              "actionableLesson": "ସାର୍ବଜନୀନ ପରିବହନ ସୁରକ୍ଷା:\n୧. ଡ୍ରାଇଭର ଓ ଅପରେଟରଙ୍କ ଯାଞ୍ଚ\n୨. ଜିପିଏସ୍ ଟ୍ରାକିଂ\n୩. ବସ୍ ଷ୍ଟପ୍ ଓ ରାସ୍ତାରେ ଆଲୋକୀକରଣ\n୪. ଜରୁରୀକାଳୀନ ନମ୍ବର ୧୧୨ (ERSS) ମାଧ୍ୟମରେ ତ୍ୱରିତ ସହାୟତା\n୫. ଦାୟିତ୍ୱশীল ନାଗରିକ ହସ୍ତକ୍ଷେପ ଶିକ୍ଷା\n୬. ଆନୁଷ୍ଠାନିକ ଉତ୍ତରଦାୟିତ୍ୱ।",
+              "memorialPublication": {
+                  "title": "ସାର୍ବଜନୀନ ପରିବହନ ସୁରକ୍ଷା ଓ ନାଗରିକ ସଚେତନତା ଟୁଲକିଟ୍",
+                  "focus": "ସହରୀ ଭିତ୍ତିଭୂମି · ମହିଳାଙ୍କ ଯାତାୟାତ ସୁରକ୍ଷା · ଗୋଷ୍ଠୀ ତ୍ୱରିତ ପ୍ରତିକ୍ରିୟା",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ଜ୍ୟୋତି ସିଂହଙ୍କୁ ସ୍ମରଣ କରିବାର ଅର୍ଥ ହେଉଛି ତାଙ୍କର ଶିକ୍ଷାଗତ ସ୍ୱପ୍ନକୁ ସମ୍ମାନ ଦେବା ଏବଂ ପ୍ରତ୍ୟେକ ମହିଳାଙ୍କ ପାଇଁ ଏକ ସୁରକ୍ଷିତ ସମାଜ ଗଠନ କରିବା।"
+              }
+          },
+          "es": {
+              "name": "Jyoti Singh (Nirbhaya)",
+              "roleAndField": "Estudiante de Fisioterapia · Delhi, India",
+              "categoryLabel": "Seguridad, Libertad y Reforma Legal",
+              "coreMessage": "La seguridad, la libertad y la dignidad deben ser derechos cotidianos. Las mujeres nunca deberían tener que negociar su derecho a la educación, la independencia profesional o la libre circulación por los espacios públicos. La justicia requiere más que leyes más estrictas: exige instituciones que prevengan la violencia, respondan con responsabilidad y protejan a las sobrevivientes.",
+              "whoWasThisPerson": "Jyoti Singh era una estudiante de 23 años que cursaba fisioterapia en Delhi.\nProvenía de una familia originaria de Uttar Pradesh que se había mudado a Delhi en busca de mejores oportunidades. Su familia hizo considerables sacrificios para apoyar sus ambiciones; su padre vendió tierras ancestrales para financiar su educación, y ella misma daba clases particulares y trabajaba mientras estudiaba.\nEstaba decidida a construir una carrera profesional y convertirse en la primera profesional de su familia.\n\nDistinción editorial: Jyoti era estudiante de fisioterapia, no una fisioterapeuta en ejercicio establecido. Su contribución debe describirse a través de su trayectoria educativa y sus aspiraciones en lugar de afirmaciones no verificadas sobre práctica clínica.",
+              "contributions": "Lo que representó para la sociedad:\nLa vida de Jyoti Singh representó las aspiraciones de las mujeres jóvenes que buscan educación e independencia profesional a pesar de las barreras económicas y sociales.\nSu historia visibilizó:\n• Los sacrificios que hacen las familias para educar a sus hijas.\n• La importancia del acceso a la educación superior y a las oportunidades profesionales para las mujeres.\n• El derecho de las mujeres a viajar de forma independiente y participar en la vida pública.\n• La necesidad de que las instituciones públicas protejan la seguridad y la dignidad individuales.",
+              "factualContext": "En la tarde del 16 de diciembre de 2012, Jyoti Singh y un amigo regresaban después de ver una película en Delhi. En la parada de Munirka abordaron un autobús privado fletado que no estaba autorizado para recoger pasajeros.\nSeis hombres iban a bordo. Durante el trayecto, su amigo fue agredido y Jyoti sufrió una brutal agresión sexual. Ambos fueron arrojados del vehículo cerca de Mahipalpur y trasladados al Hospital Safdarjung en Delhi.\nEl 26 de diciembre fue trasladada al Hospital Mount Elizabeth en Singapur, donde falleció el 29 de diciembre de 2012 debido a complicaciones derivadas de sus heridas.\nEl caso fue ampliamente conocido como el caso Nirbhaya («sin miedo»), seudónimo utilizado conforme a la protección legal de identidad. Sus padres pidieron posteriormente que se reconociera el nombre real de su hija.\n\nProcedimientos judiciales:\nCuatro acusados adultos fueron declarados culpables y condenados a muerte; el Tribunal Superior de Delhi y la Corte Suprema de la India (mayo de 2017 y julio de 2018) confirmaron las sentencias, y fueron ejecutados el 20 de marzo de 2020 en la prisión de Tihar. Un acusado menor de edad fue juzgado bajo el sistema de justicia juvenil y otro murió bajo custodia durante el proceso.",
+              "editorialNotes": "Nota de publicación: Este perfil distingue los hechos biográficos verificados, el caso penal documentado, las reformas legales posteriores y la iniciativa propuesta por UltimateHealth. No afirma que todas las recomendaciones del Comité Verma se convirtieran en ley ni que las medidas de seguridad en el transporte propuestas se hayan implementado en todo el país.",
+              "verifiedFacts": [
+                  "Estudiante de fisioterapia de 23 años en Delhi, de una familia originaria de Uttar Pradesh.",
+                  "Agredida brutalmente el 16 de diciembre de 2012 en un autobús privado no autorizado abordado en Munirka, Delhi; falleció el 29 de diciembre de 2012 en el Hospital Mount Elizabeth de Singapur.",
+                  "La Corte Suprema de la India confirmó las condenas de cuatro adultos en mayo de 2017 y rechazó las peticiones de revisión en julio de 2018; las ejecuciones tuvieron lugar el 20 de marzo de 2020.",
+                  "El Gobierno de la India constituyó el Comité del Juez J.S. Verma el 23 de diciembre de 2012 (informe presentado el 23 de enero de 2013).",
+                  "La Ley de Enmienda del Derecho Penal de 2013 (Ley N.º 13 de 2013) recibió sanción presidencial el 2 de abril de 2013, y en 2013 se creó el Fondo Nirbhaya."
+              ],
+              "societalImpact": "A. Comité del Juez J.S. Verma (23 de diciembre de 2012 – 23 de enero de 2013):\nPresidido por el expresidente de la Corte Suprema J.S. Verma, junto con la jueza Leila Seth y Gopal Subramanium, recomendó reformas profundas sobre agresión sexual, trata, atención médica a sobrevivientes y responsabilidad policial, subrayando que la violencia sexual es una expresión de poder.\n\nB. Ley de Enmienda del Derecho Penal de 2013 (2 de abril de 2013):\nModificó el Código Penal Indio, el Código de Procedimiento Penal, la Ley de Pruebas y la Ley POCSO, tipificando ataques con ácido, acoso (stalking) y voyeurismo, ampliando la definición de violación y estableciendo sanciones para funcionarios y hospitales que incumplan sus deberes legales.\nDistinción editorial importante: La ley no incorporó todas las recomendaciones del Comité Verma; ambos deben presentarse como desarrollos relacionados pero distintos.\n\nC. Fondo Nirbhaya (2013):\nFondo gubernamental dedicado a proyectos de seguridad para las mujeres administrado por el Ministerio de Finanzas con el Ministerio de Desarrollo de la Mujer y el Niño como ministerio nodal.",
+              "actionableLesson": "Seguridad en el transporte público y derecho de las mujeres a la movilidad:\n1. Credenciales verificadas de conductores y operadores comerciales.\n2. Monitoreo de transporte mediante GPS y protocolos ante desvíos de ruta.\n3. Entornos de transporte público más seguros (iluminación en paradas, auditorías periódicas).\n4. Respuesta de emergencia y asistencia rápida a través del número único 112 (ERSS).\n5. Educación para la intervención responsable de testigos (bystanders).\n6. Rendición de cuentas institucional y transparencia en indicadores de seguridad.",
+              "memorialPublication": {
+                  "title": "Kit de Herramientas de Seguridad en el Transporte Público e Intervención Responsable de Testigos",
+                  "focus": "Infraestructura Urbana · Movilidad de las Mujeres · Seguridad en el Transporte · Respuesta Comunitaria",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Propósito: Desarrollar un recurso educativo y de auditoría de código abierto para evaluar la seguridad del transporte público y promover respuestas responsables ante emergencias.\n\nLa perspectiva de UltimateHealth:\nRecordar a Jyoti Singh significa reconocer sus aspiraciones educativas, respetar su identidad y seguir trabajando por una sociedad donde cada mujer pueda estudiar, trabajar, viajar y vivir libremente."
+              }
+          },
+          "fr": {
+              "name": "Jyoti Singh (Nirbhaya)",
+              "roleAndField": "Étudiante en Kinésithérapie · Delhi, Inde",
+              "categoryLabel": "Sécurité, Liberté et Réforme Juridique",
+              "coreMessage": "La sécurité, la liberté et la dignité doivent être des droits quotidiens. Les femmes ne devraient jamais avoir à négocier leur droit à l'éducation, à l'indépendance professionnelle ou à la libre circulation dans l'espace public. La justice exige plus que des lois renforcées : elle nécessite des institutions qui préviennent la violence, agissent de manière responsable et protègent les survivantes.",
+              "whoWasThisPerson": "Jyoti Singh était une étudiante en kinésithérapie âgée de 23 ans à Delhi.\nIssue d'une famille originaire de l'Uttar Pradesh installée à Delhi, elle bénéficiait des lourds sacrifices de ses parents—son père ayant vendu des terres familiales pour financer ses études—tout en donnant elle-même des cours particuliers et en travaillant parallèlement à ses études.\nElle était déterminée à bâtir une carrière professionnelle et à devenir la première diplômée de sa famille.\n\nDistinction éditoriale : Jyoti était étudiante en kinésithérapie et non kinésithérapeute déjà en exercice. Sa contribution doit être décrite à travers son parcours d'études et ses aspirations plutôt que par des affirmations non vérifiées sur une pratique clinique.",
+              "contributions": "Ce qu'elle représentait pour la société :\nLa vie de Jyoti Singh incarnait les aspirations des jeunes femmes poursuivant des études supérieures et l'indépendance professionnelle malgré les obstacles financiers et sociaux.\nSon histoire a mis en lumière :\n• Les sacrifices consentis par les familles pour instruire leurs filles.\n• L'importance de l'accès des femmes à l'enseignement supérieur.\n• Le droit des femmes de se déplacer librement et de participer à la vie publique.\n• Le devoir des institutions publiques de protéger la sécurité et la dignité de chacun.",
+              "factualContext": "Le soir du 16 décembre 2012, Jyoti Singh et un ami rentraient après avoir vu un film à Delhi. À l'arrêt de bus de Munirka, ils sont montés à bord d'un bus privé affrété qui n'était pas autorisé à prendre des passagers.\nSix hommes se trouvaient à bord. Au cours du trajet, son ami a été agressé et Jyoti a subi une violente agression sexuelle avant qu'ils ne soient tous deux jetés hors du véhicule près de Mahipalpur.\nPrise en charge à l'hôpital Safdarjung de Delhi puis transférée le 26 décembre à l'hôpital Mount Elizabeth de Singapour, Jyoti Singh est décédée le 29 décembre 2012 des suites de ses blessures.\nConnue sous le pseudonyme légal de « Nirbhaya » (« Sans peur »), ses parents ont par la suite demandé publiquement que son vrai nom soit reconnu.\n\nProcédures judiciaires :\nQuatre accusés majeurs ont été condamnés à mort, peine confirmée par la Haute Cour de Delhi et la Cour suprême de l'Inde (mai 2017 et juillet 2018), puis exécutés le 20 mars 2020 à la prison de Tihar. Un mineur au moment des faits a été jugé par la justice des mineurs et un sixième accusé est décédé en détention.",
+              "editorialNotes": "Note de publication : Ce profil distingue les faits biographiques vérifiés, la procédure judiciaire documentée, les réformes législatives ultérieures et l'initiative proposée par UltimateHealth. Il n'affirme pas que toutes les recommandations de la Commission Verma ont force de loi ni que les mesures de sécurité des transports proposées ont été appliquées à l'échelle nationale.",
+              "verifiedFacts": [
+                  "Étudiante en kinésithérapie de 23 ans à Delhi, issue d'une famille originaire de l'Uttar Pradesh.",
+                  "Violemment agressée le 16 décembre 2012 dans un bus privé non autorisé pris à Munirka (Delhi) ; décédée le 29 décembre 2012 à l'hôpital Mount Elizabeth de Singapour.",
+                  "Condamnations confirmées par la Cour suprême de l'Inde en mai 2017 et juillet 2018 ; exécution des quatre condamnés majeurs le 20 mars 2020 à la prison de Tihar.",
+                  "Création de la Commission du juge J.S. Verma le 23 décembre 2012 (rapport remis le 23 janvier 2013).",
+                  "Promulgation de la loi d'amendement du droit pénal de 2013 (2 avril 2013) et création du Fonds Nirbhaya en 2013."
+              ],
+              "societalImpact": "A. Commission du juge J.S. Verma (23 décembre 2012 – 23 janvier 2013) :\nPrésidée par l'ancien président de la Cour suprême J.S. Verma aux côtés de la juge Leila Seth et de Gopal Subramanium, elle a formulé des recommandations majeures sur les violences sexuelles, la responsabilité policière et la prise en charge médicale des survivantes.\n\nB. Loi d'amendement du droit pénal de 2013 (2 avril 2013) :\nElle a modifié le Code pénal indien, le Code de procédure pénale, la Loi sur la preuve et la loi POCSO, incriminant les attaques à l'acide, le harcèlement (stalking) et le voyeurisme, élargissant la définition du viol et sanctionnant le refus de soins hospitaliers.\nDistinction éditoriale importante : La loi n'a pas repris l'intégralité des recommandations de la Commission Verma ; le rapport et la loi doivent donc être présentés comme deux développements liés mais distincts.\n\nC. Fonds Nirbhaya (2013) :\nFonds public dédié au financement de projets améliorant la sécurité des femmes dans les espaces publics et les transports.",
+              "actionableLesson": "Sécurité des transports publics et droit des femmes à la mobilité :\n1. Vérification des permis et antécédents des conducteurs et opérateurs.\n2. Suivi GPS des véhicules commerciaux et protocoles d'alerte.\n3. Éclairage sécurisé des arrêts de bus et audits réguliers des infrastructures.\n4. Coordination des secours via le numéro d'urgence national 112 (ERSS).\n5. Sensibilisation à l'intervention responsable des témoins.\n6. Responsabilité institutionnelle et publication d'indicateurs de suivi.",
+              "memorialPublication": {
+                  "title": "Boîte à Outils pour la Sécurité des Transports Publics et l'Intervention Responsable des Témoins",
+                  "focus": "Infrastructures Urbaines · Mobilité des Femmes · Sécurité des Transports · Réponse Communautaire",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Objectif : Développer une ressource éducative et d'audit en libre accès permettant d'évaluer la sécurité des transports en commun et de promouvoir des réactions responsables face aux urgences.\n\nLa perspective d'UltimateHealth :\nSe souvenir de Jyoti Singh signifie reconnaître ses aspirations, respecter son identité et œuvrer pour une société où chaque femme peut étudier, travailler, voyager et vivre librement."
+              }
+          },
+          "de": {
+              "name": "Jyoti Singh (Nirbhaya)",
+              "roleAndField": "Physiotherapie-Studentin · Delhi, Indien",
+              "categoryLabel": "Sicherheit, Freiheit & Rechtsreform",
+              "coreMessage": "Sicherheit, Freiheit und Würde müssen alltägliche Grundrechte sein. Frauen sollten niemals um ihr Recht auf Bildung, berufliche Unabhängigkeit oder freie Bewegung im öffentlichen Raum verhandeln müssen. Gerechtigkeit erfordert mehr als strengere Gesetze: Sie braucht Institutionen, die Gewalt verhindern, verantwortungsvoll handeln und Überlebende schützen.",
+              "whoWasThisPerson": "Jyoti Singh war eine 23-jährige Physiotherapie-Studentin in Delhi.\nSie stammte aus einer Familie aus Uttar Pradesh, die auf der Suche nach besseren Bildungschancen nach Delhi gezogen war. Ihre Familie brachte große Opfer für ihre Ausbildung—ihr Vater verkaufte Berichten zufolge familieneigenes Land—, und Jyoti finanzierte ihr Studium durch Nachhilfeunterricht und Nebentätigkeiten mit.\nSie war entschlossen, eine berufliche Laufbahn einzuschlagen.\n\nRedaktionelle Abgrenzung: Jyoti war Physiotherapie-Studentin und noch keine praktizierende Physiotherapeutin. Ihr Beitrag wird daher anhand ihres Bildungswegs und ihrer Ziele beschrieben, nicht durch unbelegte Angaben über eine klinische Berufspraxis.",
+              "contributions": "Was sie für die Gesellschaft verkörperte:\nJyoti Singhs Leben stand für das Streben junger Frauen nach Bildung und beruflicher Selbstständigkeit trotz finanzieller und sozialer Hürden.\nIhre Geschichte lenkte den Blick auf:\n• Die Opfer, die Familien für die Bildung ihrer Töchter aufbringen.\n• Die Bedeutung des Zugangs von Frauen zu Hochschulbildung und Berufen.\n• Das Recht von Frauen, sich frei und sicher im öffentlichen Raum zu bewegen.\n• Die Pflicht öffentlicher Institutionen, Sicherheit und Würde zu schützen.",
+              "factualContext": "Am Abend des 16. Dezember 2012 kehrten Jyoti Singh und ein Freund nach einem Kinobesuch in Delhi zurück. An der Bushaltestelle Munirka stiegen sie in einen privat betriebenen Charterbus, der nicht zur Fahrgastbeförderung zugelassen war.\nSechs Männer befanden sich an Bord. Während der Fahrt wurde ihr Freund zusammengeschlagen und Jyoti Opfer schwerster сексуeller Gewalt; beide wurden anschließend nahe Mahipalpur aus dem fahrenden Bus geworfen.\nNach einer Notfallbehandlung im Safdarjung Hospital in Delhi wurde sie am 26. Dezember in das Mount Elizabeth Hospital nach Singapur verlegt, wo sie am 29. Dezember 2012 an den Folgen ihrer Verletzungen starb.\nDer Fall wurde unter dem Schutzpseudonym „Nirbhaya“ („Furchtlose“) bekannt; später sprachen sich ihre Eltern öffentlich dafür aus, ihre Tochter bei ihrem wirklichen Namen Jyoti Singh zu nennen.\n\nGerichtsverfahren:\nVier erwachsene Angeklagte wurden zum Tode verurteilt; der Delhi High Court und der Oberste Gerichtshof Indiens (Mai 2017 und Juli 2018) bestätigten die Urteile, die am 20. März 2020 im Tihar-Gefängnis vollstreckt wurden. Ein zur Tatzeit jugendlicher Täter wurde nach dem Jugendstrafrecht verurteilt, ein weiterer Angeklagter starb während des Verfahrens in Haft.",
+              "editorialNotes": "Publikationshinweis: Dieses Profil unterscheidet strikt zwischen belegten biografischen Fakten, dem dokumentierten Strafverfahren, den anschließenden Gesetzesreformen und der vorgeschlagenen Initiative von UltimateHealth. Es erhebt nicht den Anspruch, dass alle Empfehlungen der Verma-Kommission Gesetz wurden oder dass die vorgeschlagenen Verkehrssicherheitsmaßnahmen landesweit umgesetzt sind.",
+              "verifiedFacts": [
+                  "23-jährige Physiotherapie-Studentin in Delhi aus einer Familie mit Wurzeln in Uttar Pradesh.",
+                  "Am Abend des 16. Dezember 2012 in einem nicht autorisierten privaten Charterbus ab Munirka (Delhi) schwer misshandelt; verstarb am 29. Dezember 2012 im Mount Elizabeth Hospital in Singapur.",
+                  "Der Oberste Gerichtshof Indiens bestätigte die Urteile gegen vier erwachsene Täter im Mai 2017 und Juli 2018; Vollstreckung am 20. März 2020 im Tihar-Gefängnis.",
+                  "Einsetzung des dreiköpfigen Justice-J.S.-Verma-Komitees am 23. Dezember 2012 (Bericht vorgelegt am 23. Januar 2013).",
+                  "Verabschiedung des Criminal Law (Amendment) Act, 2013 (2. April 2013) sowie Einrichtung des Nirbhaya Fund (2013)."
+              ],
+              "societalImpact": "A. Justice-J.S.-Verma-Komitee (23. Dezember 2012 – 23. Januar 2013):\nUnter Vorsitz des ehemaligen obersten Richters J.S. Verma (mit Richterin Leila Seth und Gopal Subramanium) legte das Komitee umfassende Reformvorschläge zu Sexualstraftaten, Polizeiverantwortung und medizinischer Versorgung von Überlebenden vor.\n\nB. Criminal Law (Amendment) Act, 2013 (2. April 2013):\nÄnderte das indische Straf- und Strafprozessrecht, stellte Säureangriffe, Stalking und Voyeurismus unter spezifische Strafe, erweiterte den Vergewaltigungsbegriff und führte Sanktionen bei verweigerter Krankenhausbehandlung ein.\nWichtige redaktionelle Abgrenzung: Das Gesetz übernahm nicht jede Empfehlung der Verma-Kommission; Kommissionsbericht und Gesetz sind daher als verbundene, aber eigenständige Entwicklungen zu betrachten.\n\nC. Nirbhaya Fund (2013):\nStaatlicher Fonds zur Förderung von Projekten für die Sicherheit von Frauen im öffentlichen Raum und im Verkehrswesen.",
+              "actionableLesson": "Sicherheit im öffentlichen Nahverkehr und das Recht auf Mobilität:\n1. Überprüfte Fahrer- und Betreiberlizenzen.\n2. GPS-gestützte Fahrzeugüberwachung und Notfallprotokolle.\n3. Sichere Gestaltung und Beleuchtung von Haltestellen und Fußwegen.\n4. Schnelle Notfallhilfe über die landesweite Notrufnummer 112 (ERSS).\n5. Schulung zu verantwortungsvollem Einschreiten von Passanten (Bystander Intervention).\n6. Institutionelle Rechenschaftspflicht und transparente Sicherheitsprüfungen.",
+              "memorialPublication": {
+                  "title": "Toolkit für Sicherheit im Öffentlichen Verkehr & Verantwortungsvolle Zivilcourage",
+                  "focus": "Städtische Infrastruktur · Mobilität von Frauen · Verkehrssicherheit · Kommunale Notfallhilfe",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Ziel: Bereitstellung eines quelloffenen Prüf- und Bildungsleitfadens für Hochschulen, Verkehrsbetriebe und Kommunen zur Bewertung der Sicherheit im öffentlichen Nahverkehr.\n\nDie UltimateHealth-Perspektive:\nJyoti Singh zu gedenken bedeutet, ihre Bildungsziele zu würdigen, ihre Identität zu achten und weiter an einer Gesellschaft zu arbeiten, in der jede Frau frei und ohne Angst studieren, arbeiten, reisen und leben kann."
+              }
+          },
+          "hr": {
+              "name": "Jyoti Singh (Nirbhaya)",
+              "roleAndField": "Studentica fizioterapije · Delhi, Indija",
+              "categoryLabel": "Sigurnost, sloboda i pravna reforma",
+              "coreMessage": "Sigurnost, sloboda i dostojanstvo moraju biti svakodnevna prava. Žene nikada ne bi smjele pregovarati o svom pravu na obrazovanje, profesionalnu neovisnost ili kretanje javnim prostorom. Pravda zahtijeva više od strožih zakona: zahtijeva institucije koje sprječavaju nasilje, odgovorno reagiraju i štite preživjele.",
+              "whoWasThisPerson": "Jyoti Singh bila je 23-godišnja studentica fizioterapije u Delhiju.\nPotjecala je iz obitelji podrijetlom iz Uttar Pradesha koja se preselila u Delhi radi boljih mogućnosti obrazovanja. Njezina je obitelj podnijela velike žrtve kako bi podržala njezine ambicije, a Jyoti je i sama davala instrukcije i radila uz studij kako bi pomogla u financiranju školovanja.\n\nUrednička napomena: Jyoti je bila studentica fizioterapije, a ne već zaposlena fizioterapeutkinja. Njezin doprinos opisuje se kroz njezin obrazovni put i težnje, a ne kroz nepotvrđene tvrdnje o kliničkoj praksi.",
+              "contributions": "Što je predstavljala za društvo:\nŽivot Jyoti Singh predstavljao je težnje mladih žena koje настоje steći obrazovanje i profesionalnu neovisnost unatoč financijskim i društvenim preprekama, ističući važnost sigurnog kretanja i institucionalne zaštite.",
+              "factualContext": "Uvečer 16. prosinca 2012. Jyoti Singh i njezin prijatelj vraćali su se iz kina u Delhiju te su na autobusnom stajalištu Munirka ušli u privatni čarter-autobus koji nije imao дозвоlu za prijevoz putnika.\nŠest muškaraca u vozilu napalo je njezina prijatelja, a Jyoti podvrgnulo brutalnom seksualnom nasilju. Nakon liječenja u bolnici Safdarjung u Delhiju, 26. prosinca prebačena je u bolnicu Mount Elizabeth u Singapuru, gdje je preminula 29. prosinca 2012.\nSlučaj je postao poznat pod pseudonimom „Nirbhaya“ („Neustrašiva“), a njezini su roditelji kasnije javno zatražili da se prepoznaje njezino pravo ime.\n\nSudski postupak:\nČetvorica punoljetnih optuženika osuđena su na smrt, što je Vrhovni sud Indije potvrdio u svibnju 2017. i srpnju 2018., a kazne su izvršene 20. ožujka 2020. u zatvoru Tihar.",
+              "editorialNotes": "Napomena o objavi: Ovaj profil razlikuje potvrđene biografske činjenice, sudski postupak, zakonske reforme i predloženu inicijativu UltimateHealtha, bez tvrdnje da su sve препоruke Odbora Verma postale zakon.",
+              "verifiedFacts": [
+                  "23-godišnja studentica fizioterapije u Delhiju iz obitelji podrijetlom iz Uttar Pradesha.",
+                  "Brutalno napadnuta 16. prosinca 2012. u neovlaštenom privatnom autobusu u Delhiju; preminula 29. prosinca 2012. u bolnici Mount Elizabeth u Singapuru.",
+                  "Vrhovni sud Indije potvrdio je presude četvorici punoljetnih počinitelja u svibnju 2017. i srpnju 2018.; pogubljenja su izvršena 20. ožujka 2020.",
+                  "Vlada Indije osnovala je Odbor suca J.S. Verme 23. prosinca 2012. (izvješće podneseno 23. siječnja 2013.).",
+                  "Zakon o izmjenama i dopunama kaznenog zakona iz 2013. stupio je na snagu u travnju 2013., uz osnivanje Fonda Nirbhaya."
+              ],
+              "societalImpact": "A. Odbor suca J.S. Verme (prosinac 2012. – siječanj 2013.): Preporučio sveobuhvatne reforme kaznenog prava, policijske odgovornosti i medicinske skrbi za žrtve.\nB. Zakon o izmjenama i dopunama kaznenog zakona iz 2013. (2. travnja 2013.): Uveo strože odredbe za napade kiselinom, uhođenje, voajerizam i seksualno nasilje te odgovornost bolnica i javnih službenika.\nC. Fond Nirbhaya (2013.): Namjenski državni fond za projekte sigurnosti žena.",
+              "actionableLesson": "Sigurnost javnog prijevoza i pravo žena na mobilnost:\n1. Provjera dozvola vozača i prijevoznika\n2. GPS nadzor vozila\n3. Osvjetljenje i sigurnost autobusnih stajališta\n4. Brza hitna pomoć putem broja 112 (ERSS)\n5. Edukacija o odgovornoj intervenciji promatrača\n6. Institucionalna odgovornost.",
+              "memorialPublication": {
+                  "title": "Priručnik za sigurnost javnog prijevoza i odgovornu intervenciju građana",
+                  "focus": "Urbana infrastruktura · Mobilnost žena · Sigurnost javnog prijevoza · Brza reakcija zajednice",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Sjećanje na Jyoti Singh znači poštivanje njezinih obrazovnih težnji, njezina identiteta i trajni rad na društvu u kojem svaka žena može slobodno studirati, raditi, putovati i živjeti."
+              }
+          }
+      }
   },
   {
     id: 7,
