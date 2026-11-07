@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {PROD_URL} from '../../lib/api/APIUtils';
 import {useMutation, useQueryClient, UseMutationResult} from '@tanstack/react-query';
+import {resetAppBadgeCount} from '../../lib/platform/notificationUtils';
 type AxiosError = any;
 
 export const useMarkNotificationAsRead = (): UseMutationResult<
@@ -23,6 +24,7 @@ export const useMarkNotificationAsRead = (): UseMutationResult<
     onSuccess: () => {
       queryClient.setQueryData(['get-unread-notifications-count'], 0);
       queryClient.invalidateQueries({queryKey: ['get-unread-notifications-count']});
+      resetAppBadgeCount();
     },
   });
 };

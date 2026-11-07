@@ -17,7 +17,11 @@ import { useDeleteNotification } from '../../hooks/notification/useDeleteNotific
 import { useGetAllNotifications } from '../../hooks/notification/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../../hooks/notification/useMarkNoticationAsRead';
 import { useQueryClient } from '@tanstack/react-query';
-import {mergeNotificationsById} from '../../lib/platform/notificationUtils';
+import {
+  decrementAppBadgeCount,
+  mergeNotificationsById,
+  resetAppBadgeCount,
+} from '../../lib/platform/notificationUtils';
 
 type PendingDelete = {
   item: Notification;
@@ -82,6 +86,12 @@ const NotificationScreen = ({navigation}: any) => {
   }, [deleteNotification]);
 
   useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ['get-unread-notifications-count'],
+    });
+  }, [queryClient]);
+
+  useEffect(() => {
     const hasUnread = notificationsData.some(n => !n.read);
 
     if (isConnected && notificationsData.length > 0 && hasUnread) {
@@ -89,7 +99,17 @@ const NotificationScreen = ({navigation}: any) => {
         {},
         {
           onSuccess: async () => {
+            setNotificationsData(previous =>
+              (previous ?? []).map(notification => ({
+                ...notification,
+                read: true,
+              })),
+            );
             queryClient.setQueryData(['get-unread-notifications-count'], 0);
+            queryClient.invalidateQueries({
+              queryKey: ['get-unread-notifications-count'],
+            });
+            await resetAppBadgeCount();
             Snackbar.show({
               text: 'All notifications marked as read',
               duration: Snackbar.LENGTH_SHORT,
@@ -103,21 +123,33 @@ const NotificationScreen = ({navigation}: any) => {
           },
         },
       );
+    } else if (
+      isConnected &&
+      ((notificationsData.length > 0 && !hasUnread) ||
+        (!isLoading && notificationsData.length === 0))
+    ) {
+      queryClient.setQueryData(['get-unread-notifications-count'], 0);
+      resetAppBadgeCount();
     }
 
     return () => {};
-  }, [notificationsData, isConnected]);
+  }, [notificationsData, isConnected, isLoading]);
 
   const onRefresh = async () => {
-  setRefreshing(true);
+    setRefreshing(true);
 
-  try {
-    setPage(1); // Reset pagination
-    await refetch(); // Wait until the request completes
-  } finally {
-    setRefreshing(false); // Hide spinner after refetch finishes
-  }
-};
+    try {
+      setPage(1); // Reset pagination
+      await Promise.all([
+        refetch(),
+        queryClient.invalidateQueries({
+          queryKey: ['get-unread-notifications-count'],
+        }),
+      ]);
+    } finally {
+      setRefreshing(false); // Hide spinner after refetch finishes
+    }
+  };
 
   const restoreDeletedNotification = useCallback((snapshot: PendingDelete) => {
     setNotificationsData(previous => {
@@ -214,6 +246,14 @@ const NotificationScreen = ({navigation}: any) => {
         return;
       }
 
+      if (!item.read) {
+        queryClient.setQueryData(
+          ['get-unread-notifications-count'],
+          (old: number | undefined) => Math.max(0, (old ?? 1) - 1),
+        );
+        decrementAppBadgeCount(1);
+      }
+
       const timer = setTimeout(() => {
         const pendingDelete = pendingDeletesRef.current.get(item._id);
         if (!pendingDelete) {
@@ -257,6 +297,21 @@ const NotificationScreen = ({navigation}: any) => {
   );
 
   const handleNotificationClick = (item: Notification) => {
+    if (!item.read) {
+      setNotificationsData(previous =>
+        (previous ?? []).map(notification =>
+          notification._id === item._id
+            ? {...notification, read: true}
+            : notification,
+        ),
+      );
+      queryClient.setQueryData(
+        ['get-unread-notifications-count'],
+        (old: number | undefined) => Math.max(0, (old ?? 1) - 1),
+      );
+      decrementAppBadgeCount(1);
+    }
+
     if (
       (item.type === NotificationType.PodcastCommentMention ||
         item.type === NotificationType.PodcastComment ||
