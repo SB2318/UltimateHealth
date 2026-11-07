@@ -2723,42 +2723,370 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
   },
 
   // ── 3. Journalists Who Dedicated Their Lives to Documenting Truth ──
-  {
-    id: 11,
-    slug: "daphne-caruana-galizia",
-    name: "Daphne Caruana Galizia",
-    country: "Malta",
-    countryFlag: "🇲🇹",
-    category: "journalism",
-    categoryLabel: "Investigative Journalism & Anti-Corruption",
-    eraOrYear: "2017",
-    roleAndField: "Investigative Journalist & Columnist · Running Commentary",
-    avatarUrl: "https://images.openai.com/static-rsc-4/qigdzbrpcOamVenR7VKLWczF_7zzPJkK0aS5cPLrXyoB3qgGxTAG89SOwBPkhxVL8T6folTBOTqG0Qxd2lpHqjFFq_sSnsl6MjoPbwBWB1hVdso52TuyajCOZVqVQb7beGzGyD3YGcQeIBxTg11Lig12hiYZNtFTzulMtmlznnY?purpose=inline",
-    whoWasThisPerson:
-      "Malta's foremost investigative journalist and political blogger, whose independent site 'Running Commentary' was one of the most widely read publications in the Mediterranean nation.",
-    contributions:
-      "Over three decades, she fearlessly exposed money laundering, government corruption, organized crime connections, and offshore accounts linked to the Panama Papers, holding the highest echelons of power accountable.",
-    factualContext:
-      "In October 2017, after receiving persistent legal intimidation, asset freezes, and death threats, she was assassinated by a car bomb placed beneath her vehicle near her home in Bidnija.",
-    societalImpact:
-      "Her murder led to the resignation of the Maltese Prime Minister, the launch of a public inquiry that found the state responsible for creating a culture of impunity, and the formation of The Daphne Project—uniting 45 journalists from 18 global outlets to finish her investigations.",
-    actionableLesson:
-      "Democratic states must enact anti-SLAPP legislation to prevent powerful figures from using abusive lawsuits to financially crush investigative journalists.",
-    coreMessage:
-      "Protect independent journalism and the right to investigate wrongdoing. When a journalist is killed, society must ensure their stories multiply.",
-    verifiedQuote: {
-      quote: "There are crooks everywhere you look now. The situation is desperate.",
-      source: "Final blog post on Running Commentary (16 October 2017)",
-    },
-    memorialPublication: {
-      title: "Anti-SLAPP Defense & Digital Journalist Security Protocol",
-      focus: "Press Freedom & Whistleblower Protection",
-      deliverable: "A legal and digital safety guide for investigative writers operating under legal harassment and surveillance.",
-    },
-    references: [
-      { title: "The Daphne Caruana Galizia Foundation Research Archives", url: "https://www.daphne.foundation", publisher: "The Daphne Foundation" },
-      { title: "Public Inquiry into the Assassination of Daphne Caruana Galizia (2021)", url: "https://www.coe.int", publisher: "Council of Europe" },
-    ],
+    {
+      "id": 11,
+      "slug": "daphne-caruana-galizia",
+      "name": "Daphne Caruana Galizia",
+      "country": "Malta",
+      "countryFlag": "🇲🇹",
+      "category": "journalism",
+      "categoryLabel": "Investigative Journalism & Anti-Corruption",
+      "eraOrYear": "1964–2017",
+      "roleAndField": "Investigative Journalist · Columnist · Editor · Blogger · Anti-Corruption Reporter",
+      "avatarUrl": "https://images.openai.com/static-rsc-4/qigdzbrpcOamVenR7VKLWczF_7zzPJkK0aS5cPLrXyoB3qgGxTAG89SOwBPkhxVL8T6folTBOTqG0Qxd2lpHqjFFq_sSnsl6MjoPbwBWB1hVdso52TuyajCOZVqVQb7beGzGyD3YGcQeIBxTg11Lig12hiYZNtFTzulMtmlznnY?purpose=inline",
+      "verificationStatus": "Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "verifiedQuote": {
+          "quote": "There are crooks everywhere you look now. The situation is desperate.",
+          "source": "Daphne Caruana Galizia, final post on Running Commentary, 16 October 2017, 2:35 p.m."
+      },
+      "coreMessage": "Independent journalism is a public safeguard. Investigative reporters must be able to scrutinise powerful institutions, expose wrongdoing and protect their sources without facing intimidation, financial retaliation or violence. When a journalist is murdered, society must protect the work they left behind and ensure that accountability does not end with the prosecution of those who carried out the attack.",
+      "whoWasThisPerson": "Daphne Anne Caruana Galizia was born on 26 August 1964 in Sliema, Malta.\n\nShe became one of Malta's best-known investigative journalists, columnists and political bloggers. Her career spanned more than three decades, during which she reported on public affairs, political influence, corruption, business interests and the relationship between government and private power.\n\nShe began writing a regular column for The Sunday Times of Malta in 1988. She later helped establish The Malta Independent, working as an associate editor and columnist.\n\nAt the age of 28, while already raising three sons, she enrolled at the University of Malta to study archaeology and anthropology. Her interest in research and evidence became a defining part of her approach to journalism.\n\nIn 2004, she began publishing magazines covering food, design, interiors, art, culture and business. Her magazine Taste&Flair remains part of her publishing legacy.\n\nIn March 2008, she launched her independent blog, Running Commentary. It became one of Malta's most widely read online publications, attracting an average daily readership of approximately 400,000 and, at times, up to a million readers, according to her Foundation's biography.\n\nDaphne was also a mother of three sons: Matthew, Andrew and Paul. Her family later became central to the continuing campaign for justice and the preservation of her journalistic work.",
+      "contributions": "Daphne's principal contribution was sustained investigative reporting that challenged powerful political, commercial and institutional interests.\n\nHer work covered:\n• Political corruption: Investigations into alleged wrongdoing involving politicians and public officials across Malta's political establishment.\n• Offshore financial structures: Reporting on companies and financial arrangements connected to Maltese political figures following the Panama Papers revelations.\n• Public procurement and business interests: Examining relationships between government officials, private businesses and major commercial agreements.\n• Money laundering and organised crime: Reporting on allegations and connections involving financial networks and criminal activity.\n• Citizenship and passport schemes: Investigating Malta's citizenship-by-investment industry and the interests benefiting from it.\n• Accountability in public office: Using her blog to scrutinise the conduct of political leaders, ministers, advisers and other influential figures.\n\nHer Panama Papers-related reporting brought particular international attention to Malta. She reported on offshore companies associated with then-minister Konrad Mizzi and former Prime Minister Joseph Muscat's chief of staff, Keith Schembri. Her investigations also examined the company 17 Black, which later became significant in reporting on businessman Yorgen Fenech.\n\nThese reports should be understood as investigative journalism and allegations supported by documentary research, not as proof that every person she wrote about was guilty of a crime.\n\nHer work demonstrated the importance of independent reporting in societies where political and commercial interests can overlap.",
+      "factualContext": "On 16 October 2017, Daphne Caruana Galizia was assassinated in a car-bomb attack near her home in Bidnija, northern Malta. An explosive device had been placed beneath the driver's seat of her vehicle. It was detonated remotely as she drove away from her residence. She was 53 years old.\n\nHer assassination occurred after years of intimidation and harassment connected to her journalism. She had faced repeated legal actions, threats and attacks on her reputation. Her family also experienced serious harassment, including attacks on their property and the killing of family pets.\n\nThe Daphne Caruana Galizia Foundation documents the use of vexatious libel proceedings and asset freezes as forms of pressure against her. The Committee to Protect Journalists records that she had informed police of death threats approximately two weeks before her assassination.\n\nHer murder shocked Malta and prompted international condemnation from press-freedom organisations, journalists, human rights groups and political institutions.\n\nHer Final Publication — Running Commentary:\nAt 2:35 p.m. on 16 October 2017, Daphne published her final article on Running Commentary. The post was titled:\n\"That crook Schembri was in court today, pleading that he is not a crook.\"\nIt discussed Keith Schembri's appearance in a libel case and questioned his financial and political interests. The post ended with the words:\n“There are crooks everywhere you look now. The situation is desperate.”\nA short time later, she was killed. The original article remains available in the Running Commentary archive. Preserving this publication matters because it records the actual work she was doing, the questions she was raising and the public-interest issues she was investigating in her final hours.\n\nJudicial Proceedings and Criminal Accountability:\nThe criminal investigation and prosecutions developed over several years. The following distinctions are important:\n• 5 December 2017: Police arrested three men suspected of carrying out the assassination: Vince Muscat, and brothers George and Alfred Degiorgio.\n• February 2021: Vince Muscat pleaded guilty to participating in the murder and received a 15-year prison sentence.\n• October 2022: George and Alfred Degiorgio pleaded guilty to the murder and were sentenced to 40 years' imprisonment each.\n• June 2025: Robert Agius and Jamie Vella were found guilty of complicity in the murder for their role in supplying the bomb. They received life sentences.\n• January 2026: An appeals court rejected the appeal against the life sentences imposed on Agius and Vella.\n\nThese five convictions establish criminal accountability for the execution of the assassination and the supply of the explosive device.\n\nThe proceedings involving Yorgen Fenech:\nBusinessman Yorgen Fenech was accused by prosecutors of conspiring to commission and finance the assassination. He denied the allegations.\nHis jury trial took place in 2026. On 2 September 2026, a nine-member jury found him not guilty of both charges by an 8–1 vote.\nOn 22 September 2026, Malta's Attorney General formally appealed the acquittal.\nBy 7 November 2026, the appeal process was continuing. Fenech's defence had been granted additional time to respond to the prosecution's submissions.\n\nEditorial qualification: The prosecution's allegations against Fenech must not be presented as established criminal facts. He was acquitted by the jury, and the subsequent appeal had not yet been resolved at the time of this profile.",
+      "editorialNotes": "Essential editorial safeguards: (1) The Daphne Project (45 journalists from 18 news organisations across 15 countries) was coordinated by Forbidden Stories; the Daphne Caruana Galizia Foundation supported and promoted it but was financially and editorially independent. (2) The Public Inquiry (report published 29 July 2021) did not find that the State planted the bomb; it found that the State created an atmosphere of impunity that enabled her assassination and failed to take reasonable protective measures. Furthermore, Prime Minister Joseph Muscat's resignation (announced December 2019, effective January 2020) preceded the inquiry report by more than a year. (3) Five men have been convicted for executing the murder and supplying the bomb (Vince Muscat, George and Alfred Degiorgio, Robert Agius, and Jamie Vella), whereas businessman Yorgen Fenech was acquitted by a jury on 2 September 2026, with the Attorney General's appeal (filed 22 September 2026) still pending as of November 2026.",
+      "verifiedFacts": [
+          "Daphne Anne Caruana Galizia (born 26 August 1964 in Sliema, Malta) was an investigative journalist, columnist (The Sunday Times of Malta, The Malta Independent), magazine publisher (Taste&Flair), and creator of the independent blog Running Commentary (launched March 2008).",
+          "At 2:35 p.m. on 16 October 2017, she published her final post on Running Commentary ending with 'There are crooks everywhere you look now. The situation is desperate.' Moments later, she was assassinated at age 53 by a remotely detonated car bomb beneath the driver's seat near her home in Bidnija.",
+          "Five men have been convicted in connection with executing the assassination and supplying the bomb: Vince Muscat (15 years, Feb 2021), brothers George and Alfred Degiorgio (40 years each, Oct 2022), and bomb suppliers Robert Agius and Jamie Vella (life sentences in June 2025, upheld on appeal in Jan 2026).",
+          "Businessman Yorgen Fenech, accused by prosecutors of complicity in commissioning the murder, was acquitted by a jury (8–1 vote) on 2 September 2026; Malta's Attorney General appealed the acquittal on 22 September 2026, and the appeal remained ongoing as of November 2026.",
+          "On 29 July 2021, Malta's independent Public Inquiry concluded in its 438-page report that the State had created an atmosphere of impunity originating from the highest levels of the administration and failed to take reasonable measures to protect her life.",
+          "Coordinated by Forbidden Stories, The Daphne Project united 45 journalists from 18 news organisations across 15 countries to continue her unfinished investigations."
+      ],
+      "societalImpact": "The Public Inquiry — State Responsibility and Institutional Failure:\nHer family, supported by civil society and international organisations, demanded an independent public inquiry into the circumstances that had allowed the killing to happen. The public inquiry began in December 2019 and delivered its 438-page report on 29 July 2021.\n\nRather than determining only who had committed the murder, it examined whether the Maltese State had known, or ought to have known, about the risk to Daphne's life and whether it had failed to take reasonable steps to protect her. The inquiry reached a significant conclusion:\n• The State had created an atmosphere of impunity originating from the highest levels of the administration.\n• This environment had spread through regulatory institutions and the police.\n• The State had failed to recognise and respond adequately to the real and immediate risks to her life.\n• The authorities had failed to take measures that could reasonably have been expected to protect her.\n\nAn essential distinction: The inquiry did not find that the State, as an institution, had directly carried out the assassination. It found that institutional failures and a culture of impunity created the conditions in which the assassination could take place.\n\nPolitical Consequences and The Daphne Project:\nThe assassination and subsequent investigations led to a major political crisis in Malta. In November 2019, businessman Yorgen Fenech was arrested while attempting to leave Malta by yacht. Prime Minister Joseph Muscat announced his intention to resign in December 2019 and left office in January 2020 (preceding the public inquiry's final report by more than a year).\n\nThe Daphne Project — Journalism Beyond Borders:\nShortly after Daphne's assassination, 45 journalists representing 18 news organisations from 15 countries joined forces through The Daphne Project, coordinated by Forbidden Stories. The project aimed to continue Daphne's unfinished investigations, re-examine documents and evidence she had collected, interview sources, and demonstrate that killing a journalist does not end the public's access to their work. The Daphne Caruana Galizia Foundation supported and promoted the project, which remained financially and editorially independent.\n\nThe Daphne Caruana Galizia Foundation — Continuing Her Work:\nEstablished by members of her family, the Foundation works on justice and accountability, journalist protection, supporting independent collaborative journalism (including the Malta Investigative Journalism Centre), and preserving the Running Commentary archive.\n\nSocietal Impact and Subsequent Reforms (Anti-SLAPP Protection):\nSLAPP stands for Strategic Lawsuits Against Public Participation — legal proceedings used to intimidate or financially exhaust people speaking on matters of public interest. Malta adopted Legal Notice 177 of 2024 (Strategic Lawsuits Against Public Participation Order) to transpose EU anti-SLAPP protections. However, the European Anti-SLAPP Monitor has assessed Malta's implementation as partial, noting it covers cross-border cases but does not provide equivalent protection for domestic SLAPP cases. In April 2026, the Media Freedom Rapid Response coalition also reported that Malta had made insufficient progress in implementing broader media reforms recommended after Daphne's assassination.",
+      "actionableLesson": "Daphne's story demonstrates that freedom of the press cannot exist only as a constitutional principle. It must be protected in practice.\n\nSociety and governments must ensure:\n• Independent journalism: Reporters must be able to investigate public institutions without political interference.\n• Protection from threats: Credible threats against journalists must be assessed promptly and independently.\n• Anti-SLAPP safeguards: Courts must be able to identify and dismiss abusive legal proceedings designed to silence public-interest reporting.\n• Whistleblower protection: Sources who disclose corruption or institutional wrongdoing must have safe reporting channels.\n• Digital security: Journalists must have access to secure communication, source protection and digital threat assessments.\n• Institutional accountability: Public officials and regulators must be subject to independent scrutiny.\n• Transparent investigations: Attacks on journalists must be investigated impartially, including possible involvement or negligence by powerful individuals.\n• International cooperation: Cross-border investigations should continue when evidence, financial networks and alleged wrongdoing extend beyond national borders.",
+      "memorialPublication": {
+          "title": "Anti-SLAPP Defence & Digital Journalist Security Protocol",
+          "focus": "Press Freedom · Whistleblower Protection · Digital Safety · Legal Accountability",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "A proposed educational and operational framework for investigative journalists, independent writers, researchers and whistleblowers working on matters of public interest.\n\nPotential components:\n• Understanding SLAPPs: Identify abusive legal actions, recognise intimidation patterns and understand the difference between legitimate defamation proceedings and attempts to silence public participation.\n• Legal Preparedness: Provide accessible information about defamation law, legal representation, cross-border proceedings and available journalist-support organisations.\n• Digital Security: Cover secure communications, account protection, device security, source confidentiality and safe handling of sensitive documents.\n• Threat Assessment: Develop procedures for documenting threats, assessing risk and contacting appropriate authorities or specialist organisations.\n• Whistleblower Protection: Explain safe source communication, responsible handling of disclosures and the importance of protecting confidential identities.\n• Collaborative Investigation: Encourage secure collaboration, evidence preservation and continuity plans so investigations can continue if a journalist becomes unable to work.\n• Institutional Accountability: Provide a framework for monitoring threats, legal intimidation, attacks on journalists and the progress of official investigations.\n\nThe initiative should be developed with media lawyers, investigative journalists, digital-security specialists and press-freedom organisations. It is a proposed UltimateHealth initiative, not an existing programme of the Daphne Caruana Galizia Foundation.\n\nUltimateHealth Editorial Perspective:\nDaphne Caruana Galizia was more than a journalist whose murder became an international symbol. She was a daughter, a wife, a mother of three, a columnist, an editor, a magazine publisher and an investigative reporter who spent decades examining the relationship between power and accountability.\n\nA meaningful memorial must preserve her reporting, defend the right to investigate wrongdoing and ensure that the institutions responsible for protecting journalists are themselves held accountable.\n\nProtect the journalist. Preserve the investigation. Defend the public's right to know."
+      },
+      "references": [
+          {
+              "title": "Daphne Caruana Galizia — Original final blog post on Running Commentary (16 October 2017, 2:35 p.m.): 'That crook Schembri was in court today, pleading that he is not a crook'",
+              "url": "https://daphnecaruanagalizia.com/2017/10/crook-schembri-court-today-pleading-not-crook/",
+              "publisher": "Running Commentary (Primary Archive)",
+              "isPrimary": true
+          },
+          {
+              "title": "The Daphne Caruana Galizia Foundation — Biography (birth, career, education, family, publications, readership and final post)",
+              "url": "https://www.daphne.foundation/en/about/daphne/biography",
+              "publisher": "The Daphne Caruana Galizia Foundation",
+              "isPrimary": true
+          },
+          {
+              "title": "The Daphne Caruana Galizia Foundation — Who Was Daphne? (work, harassment, threats, legal actions and assassination context)",
+              "url": "https://www.daphne.foundation/en/about/daphne/",
+              "publisher": "The Daphne Caruana Galizia Foundation",
+              "isPrimary": true
+          },
+          {
+              "title": "Government of Malta — Public Inquiry Report into the Assassination of Daphne Caruana Galizia (29 July 2021, 438 pages)",
+              "url": "https://www.gov.mt/en/Government/DOI/Press%20Releases/Documents/pr211432a.pdf",
+              "publisher": "Government of Malta (Board of Public Inquiry)",
+              "isPrimary": true
+          },
+          {
+              "title": "The Daphne Caruana Galizia Foundation — Public Inquiry findings (29 July 2021)",
+              "url": "https://www.daphne.foundation/en/2021/07/29/public-inquiry-report",
+              "publisher": "The Daphne Caruana Galizia Foundation"
+          },
+          {
+              "title": "The Daphne Caruana Galizia Foundation — The Daphne Project (45 journalists, 18 organisations across 15 countries)",
+              "url": "https://www.daphne.foundation/en/journalism/",
+              "publisher": "The Daphne Caruana Galizia Foundation"
+          },
+          {
+              "title": "OCCRP — The Daphne Project (17 April 2018): Cross-border collaborative investigation",
+              "url": "https://www.occrp.org/en/project/the-daphne-project",
+              "publisher": "Organized Crime and Corruption Reporting Project (OCCRP)"
+          },
+          {
+              "title": "Committee to Protect Journalists (CPJ) — Daphne Caruana Galizia Case Record & Chronology through 2026",
+              "url": "https://cpj.org/data/people/daphne-caruana-galizia/",
+              "publisher": "Committee to Protect Journalists",
+              "isPrimary": true
+          },
+          {
+              "title": "The Daphne Caruana Galizia Foundation — Robert Agius and Jamie Vella sentenced to life imprisonment (10 June 2025)",
+              "url": "https://www.daphne.foundation/en/2025/06/10/sentence-complicity",
+              "publisher": "The Daphne Caruana Galizia Foundation"
+          },
+          {
+              "title": "Reuters — Malta attorney general appeals Yorgen Fenech acquittal (22 September 2026)",
+              "url": "https://www.reuters.com/business/media-telecom/malta-attorney-general-appeals-blogger-murder-trial-verdict-2026-09-22/",
+              "publisher": "Reuters"
+          },
+          {
+              "title": "MaltaToday — Yorgen Fenech granted additional time to respond to Attorney General's appeal against acquittal (27 October 2026)",
+              "url": "https://www.maltatoday.com.mt/news/court_and_police/145305/yorgen_fenech_granted_10day_extension_to_respond_to_attorney_generals_appeal_against_acquittal",
+              "publisher": "MaltaToday"
+          },
+          {
+              "title": "Government of Malta — Legal Notice 177 of 2024: Strategic Lawsuits Against Public Participation Order",
+              "url": "https://legislation.mt/eli/ln/2024/177/eng",
+              "publisher": "Government of Malta",
+              "isPrimary": true
+          },
+          {
+              "title": "European Anti-SLAPP Monitor — Malta Country Assessment (partial implementation and domestic SLAPP gap)",
+              "url": "https://slapp-monitor.eu/country/malta/",
+              "publisher": "European Anti-SLAPP Monitor"
+          },
+          {
+              "title": "Media Freedom Rapid Response (MFRR) — Malta: Government inaction on media reforms (22 April 2026)",
+              "url": "https://www.mfrr.eu/malta-government-inaction-on-media-reforms/",
+              "publisher": "Media Freedom Rapid Response"
+          },
+          {
+              "title": "European Parliament — Resolution on the rule of law and media freedom in Malta (C/2024/2656)",
+              "url": "https://eur-lex.europa.eu/eli/C/2024/2656/oj",
+              "publisher": "European Parliament (EUR-Lex)",
+              "isPrimary": true
+          }
+      ],
+      "translations": {
+          "hi": {
+              "country": "माल्टा",
+              "categoryLabel": "खोजी पत्रकारिता एवं भ्रष्टाचार-विरोध",
+              "roleAndField": "खोजी पत्रकार · स्तंभकार · संपादक · ब्लॉगर · भ्रष्टाचार-विरोधी रिपोर्टर",
+              "coreMessage": "स्वतंत्र पत्रकारिता एक सार्वजनिक सुरक्षा कवच है। खोजी पत्रकारों को डराने-धमकाने, वित्तीय प्रतिशोध या हिंसा का सामना किए बिना शक्तिशाली संस्थाओं की जांच करने, गलत कामों को उजागर करने और अपने स्रोतों की रक्षा करने में सक्षम होना चाहिए। जब किसी पत्रकार की हत्या की जाती है, तो समाज को उनके द्वारा छोड़े गए कार्यों की रक्षा करनी चाहिए।",
+              "verifiedQuote": {
+                  "quote": "अब आप जहाँ भी देखते हैं वहाँ बदमाश हैं। स्थिति निराशाजनक है।",
+                  "source": "डैफनी कारुआना गलीज़िया, रनिंग कमेंट्री पर अंतिम पोस्ट, 16 अक्टूबर 2017, दोपहर 2:35 बजे"
+              },
+              "whoWasThisPerson": "डैफनी ऐनी कारुआना गलीज़िया (Daphne Anne Caruana Galizia) का जन्म 26 अगस्त 1964 को स्लीमा, माल्टा में हुआ था।\n\nवह माल्टा की सबसे प्रसिद्ध खोजी पत्रकारों, स्तंभकारों और राजनीतिक ब्लॉगरों में से एक बनीं। उनका करियर तीन दशकों से अधिक समय तक फैला रहा। उन्होंने 1988 में 'द संडे टाइम्स ऑफ माल्टा' के लिए नियमित स्तंभ लिखना शुरू किया और बाद में 'द माल्टा इंडिपेंडेंट' की स्थापना में मदद की।\n\n28 वर्ष की आयु में, अपने तीन बेटों (मैथ्यू, एंड्रयू और पॉल) का पालन-पोषण करते हुए, उन्होंने पुरातत्व और नृविज्ञान का अध्ययन करने के लिए माल्टा विश्वविद्यालय में दाखिला लिया। 2004 में उन्होंने 'Taste&Flair' सहित पत्रिकाओं का प्रकाशन शुरू किया। मार्च 2008 में उन्होंने अपना स्वतंत्र ब्लॉग 'रनिंग कमेंट्री' (Running Commentary) शुरू किया, जिसकी औसत दैनिक पाठक संख्या लगभग 4,00,000 और कभी-कभी दस लाख तक पहुँच जाती थी।",
+              "contributions": "डैफनी का मुख्य योगदान निरंतर खोजी रिपोर्टिंग थी जिसने शक्तिशाली राजनीतिक, वाणिज्यिक और संस्थागत हितों को चुनौती दी:\n• राजनीतिक भ्रष्टाचार और सार्वजनिक पद पर जवाबदेही।\n• पनामा पेपर्स (Panama Papers) के खुलासे के बाद माल्टा के राजनीतिक व्यक्तियों (तत्कालीन मंत्री कोनराड मिज़ी और पूर्व प्रधानमंत्री जोसेफ मस्कट के चीफ ऑफ स्टाफ कीथ शेम्ब्री) से जुड़ी ऑफशोर कंपनियों और '17 Black' कंपनी की जांच।\n• सार्वजनिक खरीद, धन शोधन (मनी लॉन्ड्रिंग), संगठित अपराध और निवेश द्वारा नागरिकता (पासपोर्ट) योजनाओं की जांच।\n\nइन रिपोर्टों को दस्तावेज़ी शोध द्वारा समर्थित खोजी पत्रकारिता के रूप में समझा जाना चाहिए।",
+              "factualContext": "16 अक्टूबर 2017 को उत्तरी माल्टा के बिदनिजा (Bidnija) में अपने घर के पास एक कार-बम हमले में डैफनी कारुआना गलीज़िया की हत्या कर दी गई। उनकी उम्र 53 वर्ष थी। अपनी हत्या से लगभग दो सप्ताह पहले उन्होंने पुलिस को जान से मारने की धमकियों की सूचना दी थी, और वर्षों से अपमानजनक मानहानि मुकदमों (SLAPPs) व संपत्ति जब्ती का सामना कर रही थीं।\n\nउनका अंतिम प्रकाशन — रनिंग कमेंट्री (16 अक्टूबर 2017, दोपहर 2:35 बजे):\nउनकी अंतिम पोस्ट की समाप्ति इन शब्दों के साथ हुई: \"अब आप जहाँ भी देखते हैं वहाँ बदमाश हैं। स्थिति निराशाजनक है।\" कुछ ही देर बाद उनकी हत्या कर दी गई।\n\nन्यायिक कार्यवाही और आपराधिक जवाबदेही:\n• फरवरी 2021: विंस मस्कट (Vince Muscat) ने हत्या में शामिल होने का दोष स्वीकार किया और उसे 15 साल की सजा सुनाई गई।\n• अक्टूबर 2022: जॉर्ज और अल्फ्रेड डिजॉर्जियो (George and Alfred Degiorgio) ने अपराध स्वीकार किया और प्रत्येक को 40 साल के कारावास की सजा सुनाई गई।\n• जून 2025 / जनवरी 2026: बम की आपूर्ति करने में भूमिका के लिए रॉबर्ट अगियस (Robert Agius) और जेमी वेल्ला (Jamie Vella) को आजीवन कारावास की सजा सुनाई गई, जिसे जनवरी 2026 में अपील कोर्ट ने बरकरार रखा।\n• योर्गेन फेनेक (Yorgen Fenech) से संबंधित कार्यवाही: 2 सितंबर 2026 को नौ सदस्यीय जूरी ने 8–1 के मत से व्यवसायी योर्गेन फेनेक को दोनों आरोपों से बरी (not guilty) कर दिया। 22 सितंबर 2026 को माल्टा के अटॉर्नी जनरल ने बरी किए जाने के खिलाफ अपील दायर की, जो नवंबर 2026 तक लंबित थी।",
+              "editorialNotes": "आवश्यक संपादकीय सुरक्षा उपाय: (1) 'द डैफनी प्रोजेक्ट' (15 देशों के 18 समाचार संगठनों के 45 पत्रकार) का समन्वय 'फॉरबिडन स्टोरीज़' (Forbidden Stories) द्वारा किया गया था; फाउंडेशन ने इसका स्वतंत्र रूप से समर्थन किया। (2) 29 जुलाई 2021 की सार्वजनिक जांच रिपोर्ट ने पाया कि राज्य ने दंडमुक्ति (impunity) का माहौल बनाया जिसने हत्या को संभव बनाया और सुरक्षा के उचित कदम उठाने में विफल रहा; प्रधानमंत्री जोसेफ मस्कट का इस्तीफा (जनवरी 2020) जांच रिपोर्ट से एक साल पहले हुआ था। (3) योर्गेन फेनेक को 2 सितंबर 2026 को जूरी द्वारा बरी कर दिया गया था और अटॉर्नी जनरल की अपील नवंबर 2026 तक विचाराधीन थी।",
+              "verifiedFacts": [
+                  "डैफनी ऐनी कारुआना गलीज़िया (26 अगस्त 1964 – 16 अक्टूबर 2017) माल्टा की प्रमुख खोजी पत्रकार और 'रनिंग कमेंट्री' ब्लॉग की संस्थापक थीं।",
+                  "16 अक्टूबर 2017 को दोपहर 2:35 बजे अपनी अंतिम ब्लॉग पोस्ट प्रकाशित करने के कुछ ही समय बाद बिदनिजा में अपने घर के पास कार-बम विस्फोट में उनकी हत्या कर दी गई।",
+                  "हत्या को अंजाम देने और बम की आपूर्ति करने के लिए पाँच लोगों को दोषी ठहराया गया है: विंस मस्कट (15 वर्ष), जॉर्ज और अल्फ्रेड डिजॉर्जियो (40-40 वर्ष), तथा रॉबर्ट अगियस और जेमी वेल्ला (आजीवन कारावास, जून 2025 / जनवरी 2026)।",
+                  "व्यवसायी योर्गेन फेनेक को 2 सितंबर 2026 को जूरी द्वारा (8–1 मत से) बरी कर दिया गया; 22 सितंबर 2026 को अटॉर्नी जनरल द्वारा दायर अपील नवंबर 2026 में जारी थी।",
+                  "29 जुलाई 2021 को प्रकाशित 438-पृष्ठ की स्वतंत्र सार्वजनिक जांच रिपोर्ट ने निष्कर्ष निकाला कि राज्य ने दंडमुक्ति का वातावरण बनाया था और उनके जीवन की रक्षा के लिए उचित कदम उठाने में विफल रहा था।",
+                  "'फॉरबिडन स्टोरीज़' द्वारा समन्वित 'द डैफनी प्रोजेक्ट' ने उनकी अधूरी जांच को पूरा करने के लिए 15 देशों के 18 मीडिया संगठनों के 45 पत्रकारों को एकजुट किया।"
+              ],
+              "societalImpact": "सार्वजनिक जांच (Public Inquiry, दिसंबर 2019 – 29 जुलाई 2021):\n438-पृष्ठ की रिपोर्ट ने निष्कर्ष निकाला कि राज्य ने प्रशासन के उच्चतम स्तरों से उत्पन्न दंडमुक्ति का माहौल बनाया था और डैफनी के जीवन के प्रति वास्तविक और तात्कालिक जोखिमों को पहचानने व सुरक्षा देने में विफल रहा।\n\nद डैफनी प्रोजेक्ट और फाउंडेशन:\n'फॉरबिडन स्टोरीज़' के समन्वय में 15 देशों के 18 संगठनों के 45 पत्रकारों ने उनकी जांच को आगे बढ़ाया। उनके परिवार ने 'द डैफनी कारुआना गलीज़िया फाउंडेशन' की स्थापना की।\n\nएंटी-SLAPP सुधार (Legal Notice 177 of 2024):\nमाल्टा ने 2024 में कानूनी नोटिस 177 अपनाया, किंतु यूरोपीय एंटी-SLAPP मॉनिटर ने इसे आंशिक बताया है क्योंकि यह सीमा-पार के मामलों को कवर करता है लेकिन घरेलू SLAPP मामलों के लिए समान सुरक्षा प्रदान नहीं करता।",
+              "actionableLesson": "समाज और सरकारों को सुनिश्चित करना चाहिए:\n• स्वतंत्र पत्रकारिता और राजनीतिक हस्तक्षेप से मुक्ति।\n• पत्रकारों के खिलाफ खतरों का त्वरित और स्वतंत्र मूल्यांकन।\n• मजबूत एंटी-SLAPP कानूनी सुरक्षा (घरेलू और सीमा-पार दोनों मामलों में)।\n• व्हिसलब्लोअर (मुखबिर) संरक्षण और डिजिटल सुरक्षा।\n• संस्थागत जवाबदेही, पारदर्शी जांच और अंतर्राष्ट्रीय सहयोग।",
+              "memorialPublication": {
+                  "title": "एंटी-SLAPP रक्षा और डिजिटल पत्रकार सुरक्षा प्रोटोकॉल",
+                  "focus": "प्रेस की स्वतंत्रता · व्हिसलब्लोअर संरक्षण · डिजिटल सुरक्षा · कानूनी जवाबदेही",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "जनहित के मामलों पर काम करने वाले खोजी पत्रकारों, स्वतंत्र लेखकों और व्हिसलब्लोअर्स के लिए एक प्रस्तावित UltimateHealth ढाँचा:\n• SLAPP की पहचान और कानूनी तैयारी\n• डिजिटल सुरक्षा और स्रोत गोपनीयता\n• जोखिम मूल्यांकन और व्हिसलब्लोअर संरक्षण\n• सहयोगात्मक जांच और संस्थागत जवाबदेही।"
+              }
+          },
+          "bn": {
+              "country": "মাল্টা",
+              "categoryLabel": "অনুসন্ধানী সাংবাদিকতা ও দুর্নীতি-বিরোধিতা",
+              "roleAndField": "অনুসন্ধানী সাংবাদিক · কলামিস্ট · সম্পাদক · ব্লগার · দুর্নীতি-বিরোধী প্রতিবেদক",
+              "coreMessage": "স্বাধীন সাংবাদিকতা একটি জনসুরক্ষা কবচ। অনুসন্ধানী সাংবাদিকদের ভয়ভীতি, আর্থিক প্রতিশোধ বা সহিংসতার মুখোমুখি না হয়ে শক্তিশালী প্রতিষ্ঠানগুলোর ওপর নজরদারি করার, অনিয়ম প্রকাশ করার এবং তাঁদের সূত্র রক্ষা করার সুযোগ থাকতে হবে। যখন একজন সাংবাদিককে হত্যা করা হয়, তখন সমাজকে তাঁর রেখে যাওয়া কাজগুলো রক্ষা করতে হবে।",
+              "verifiedQuote": {
+                  "quote": "এখন আপনি যেদিকেই তাকান না কেন কেবল প্রতারকদেরই দেখবেন। পরিস্থিতি অত্যন্ত হতাশাজনক।",
+                  "source": "ড্যাফনি কারুয়ানা গালিজিয়া, রানিং কমেন্ট্রিতে শেষ পোস্ট, ১৬ অক্টোবর ২০১৭, দুপুর ২:৩৫"
+              },
+              "whoWasThisPerson": "ড্যাফনি অ্যান কারুয়ানা গালিজিয়া (Daphne Anne Caruana Galizia) ১৯৬৪ সালের ২৬ আগস্ট মাল্টার স্লিমাতে জন্মগ্রহণ করেন। তিন দশকেরও বেশি সময় ধরে তিনি মাল্টার অন্যতম প্রধান অনুসন্ধানী সাংবাদিক, কলামিস্ট এবং রাজনৈতিক ব্লগার হিসেবে কাজ করেছেন।\n\n১৯৮৮ সালে তিনি 'দ্য সানডে টাইমস অব মাল্টা'-তে কলাম লেখা শুরু করেন এবং পরবর্তীতে 'দ্য মাল্টা ইন্ডিপেন্ডেন্ট' প্রতিষ্ঠায় সহায়তা করেন। ২৮ বছর বয়সে তিন পুত্রসন্তান (ম্যাথিউ, অ্যান্ড্রু ও পল) লালন-পালনের পাশাপাশি তিনি মাল্টা বিশ্ববিদ্যালয়ে প্রত্নতত্ত্ব ও নৃবিজ্ঞান অধ্যয়ন করেন। ২০০৮ সালের মার্চ মাসে তিনি তাঁর স্বাধীন ব্লগ 'রানিং কমেন্ট্রি' (Running Commentary) চালু করেন, যার গড় দৈনিক পাঠক সংখ্যা ছিল প্রায় ৪,০০,০০০।",
+              "contributions": "ড্যাফনির প্রধান অবদান ছিল ধারাবাহিক অনুসন্ধানী প্রতিবেদন যা শক্তিশালী রাজনৈতিক ও বাণিজ্যিক স্বার্থকে চ্যালেঞ্জ করেছিল:\n• রাজনৈতিক দুর্নীতি ও সরকারি পদে জবাবদিহিতা।\n• পানামা পেপার্স (Panama Papers) প্রকাশের পর মাল্টার রাজনৈতিক ব্যক্তিদের (তৎকালীন মন্ত্রী কনরাড মিজি এবং সাবেক প্রধানমন্ত্রীর চিফ অব স্টাফ কিথ শেমব্রি) সাথে যুক্ত অফশোর কোম্পানি এবং '17 Black' কোম্পানির অনুসন্ধান।\n• সরকারি ক্রয়, মানি লন্ডারিং, সংগঠিত অপরাধ এবং বিনিয়োগের মাধ্যমে নাগরিকত্ব (পাসপোর্ট) প্রকল্পের অনুসন্ধান।",
+              "factualContext": "২০১৭ সালের ১৬ অক্টোবর উত্তর মাল্টার বিদনিজায় (Bidnija) নিজ বাড়ির কাছে একটি গাড়ি-বোমা হামলায় ৫৩ বছর বয়সে ড্যাফনি কারুয়ানা গালিজিয়া নিহত হন। দুপুর ২:৩৫ মিনিটে তিনি 'রানিং কমেন্ট্রি'-তে তাঁর শেষ নিবন্ধ প্রকাশ করেছিলেন।\n\nবিচারিক কার্যক্রম ও ফৌজদারি জবাবদিহিতা:\n• ফেব্রুয়ারি ২০২১: ভিন্স মাসকাট (Vince Muscat) হত্যার দায় স্বীকার করে ১৫ বছরের কারাদণ্ড পান।\n• অক্টোবর ২০২২: জর্জ ও আলফ্রেড ডিজর্জিও (George and Alfred Degiorgio) দায় স্বীকার করেন এবং প্রত্যেকে ৪০ বছরের কারাদণ্ড পান।\n• জুন ২০২৫ / জানুয়ারি ২০২৬: বোমা সরবরাহের দায়ে রবার্ট আজিয়ুস (Robert Agius) এবং জেমি ভেল্লা (Jamie Vella)-কে যাবজ্জীবন কারাদণ্ড দেওয়া হয়, যা জানুয়ারি ২০২৬-এ আপিল আদালতে বহাল থাকে।\n• ইয়র্গেন ফেনেক (Yorgen Fenech) সংক্রান্ত বিচার: ২ সেপ্টেম্বর ২০২৬ তারিখে ৯ সদস্যের জুরি ৮–১ ভোটে ব্যবসায়ী ইয়র্গেন ফেনেককে খালাস (not guilty) দেয়। ২২ সেপ্টেম্বর ২০২৬ তারিখে মাল্টার অ্যাটর্নি জেনারেল এই খালাসের বিরুদ্ধে আপিল করেন, যা নভেম্বর ২০২৬ পর্যন্ত চলমান ছিল।",
+              "editorialNotes": "গুরুত্বপূর্ণ সম্পাদকীয় সুরক্ষা: (১) 'দ্য ড্যাফনি প্রজেক্ট' (১৫টি দেশের ১৮টি সংবাদ সংস্থার ৪৫ জন সাংবাদিক) ফরবিডেন স্টোরিজ (Forbidden Stories) দ্বারা সমন্বিত হয়েছিল; ফাউন্ডেশন থেকে এটি আর্থিক ও সম্পাদকীয়ভাবে স্বাধীন ছিল। (২) ২৯ জুলাই ২০২১-এর পাবলিক ইনকোয়ারি রিপোর্ট সিদ্ধান্তে পৌঁছায় যে রাষ্ট্র দায়মুক্তির (impunity) পরিবেশ তৈরি করেছিল যা হত্যাকাণ্ডকে সম্ভব করেছে; প্রধানমন্ত্রী জোসেফ মাসকাটের পদত্যাগ (জানুয়ারি ২০২০) তদন্ত প্রতিবেদনের এক বছরেরও বেশি আগে ঘটেছিল। (৩) ইয়র্গেন ফেনেক ২ সেপ্টেম্বর ২০২৬-এ জুরি কর্তৃক খালাস পান এবং অ্যাটর্নি জেনারেলের আপিল এখনো বিচারাধীন।",
+              "verifiedFacts": [
+                  "ড্যাফনি অ্যান কারুয়ানা গালিজিয়া (২৬ আগস্ট ১৯৬৪ – ১৬ অক্টোবর ২০১৭) ছিলেন মাল্টার শীর্ষস্থানীয় অনুসন্ধানী সাংবাদিক এবং 'রানিং কমেন্ট্রি' ব্লগের প্রতিষ্ঠাতা।",
+                  "১৬ অক্টোবর ২০১৭ দুপুর ২:৩৫ মিনিটে শেষ ব্লগ পোস্ট প্রকাশের কিছুক্ষণ পরই বিদনিজায় গাড়ি-বোমা হামলায় তিনি নিহত হন।",
+                  "হত্যাকাণ্ড বাস্তবায়ন ও বোমা সরবরাহের দায়ে পাঁচজন দণ্ডিত হয়েছেন: ভিন্স মাসকাট (১৫ বছর), জর্জ ও আলফ্রেড ডিজর্জিও (৪০ বছর করে), এবং রবার্ট আজিয়ুস ও জেমি ভেল্লা (যাবজ্জীবন, জুন ২০২৫ / জানুয়ারি ২০২৬)।",
+                  "ব্যবসায়ী ইয়র্গেন ফেনেক ২ সেপ্টেম্বর ২০২৬ তারিখে জুরি ট্রায়ালে (৮–১ ভোটে) খালাস পান; ২২ সেপ্টেম্বর ২০২৬-এ অ্যাটর্নি জেনারেলের দায়ের করা আপিল নভেম্বর ২০২৬ পর্যন্ত চলমান ছিল।",
+                  "২৯ জুলাই ২০২১ তারিখে প্রকাশিত ৪৩৮ পৃষ্ঠার স্বাধীন পাবলিক ইনকোয়ারি রিপোর্টে বলা হয় যে রাষ্ট্র দায়মুক্তির পরিবেশ তৈরি করেছিল এবং ড্যাফনির জীবন রক্ষায় যৌক্তিক পদক্ষেপ নিতে ব্যর্থ হয়েছিল।",
+                  "ফরবিডেন স্টোরিজের সমন্বয়ে 'দ্য ড্যাফনি প্রজেক্ট' ১৫টি দেশের ১৮টি সংস্থার ৪৫ জন সাংবাদিককে তাঁর অসমাপ্ত অনুসন্ধান চালিয়ে যেতে একত্রিত করে।"
+              ],
+              "societalImpact": "পাবলিক ইনকোয়ারি (ডিসেম্বর ২০১৯ – ২৯ জুলাই ২০২১): ৪৩৮ পৃষ্ঠার প্রতিবেদনে রাষ্ট্রের প্রাতিষ্ঠানিক ব্যর্থতা ও দায়মুক্তির সংস্কৃতি চিহ্নিত করা হয়।\n\nদ্য ড্যাফনি প্রজেক্ট ও ফাউন্ডেশন: ফরবিডেন স্টোরিজের সমন্বয়ে ৪৫ জন সাংবাদিক তাঁর অসমাপ্ত অনুসন্ধান চালিয়ে যান এবং তাঁর পরিবার 'দ্য ড্যাফনি কারুয়ানা গালিজিয়া ফাউন্ডেশন' প্রতিষ্ঠা করে।\n\nঅ্যান্টি-SLAPP সংস্কার (Legal Notice 177 of 2024): মাল্টা ২০২৪ সালে আইনি নোটিশ ১৭৭ গ্রহণ করলেও ইউরোপীয় অ্যান্টি-SLAPP মনিটর এটিকে আংশিক বলে মূল্যায়ন করেছে, কারণ এটি কেবল আন্তঃসীমান্ত মামলার ক্ষেত্রে প্রযোজ্য এবং দেশীয় SLAPP মামলায় সমান সুরক্ষা দেয় না।",
+              "actionableLesson": "সমাজ ও সরকারকে নিশ্চিত করতে হবে:\n• স্বাধীন সাংবাদিকতা এবং হুমকি থেকে সুরক্ষা।\n• দেশীয় ও আন্তর্জাতিক পর্যায়ে শক্তিশালী অ্যান্টি-SLAPP আইনি সুরক্ষা।\n• হুইসেলব্লোয়ার সুরক্ষা ও ডিজিটাল নিরাপত্তা।\n• প্রাতিষ্ঠানিক জবাবদিহিতা, নিরপেক্ষ তদন্ত এবং আন্তঃসীমান্ত সহযোগিতা।",
+              "memorialPublication": {
+                  "title": "অ্যান্টি-SLAPP প্রতিরক্ষা ও ডিজিটাল সাংবাদিক নিরাপত্তা প্রোটোকল",
+                  "focus": "সংবাদপত্রের স্বাধীনতা · হুইসেলব্লোয়ার সুরক্ষা · ডিজিটাল নিরাপত্তা · আইনি জবাবদিহিতা",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "অনুসন্ধানী সাংবাদিক ও হুইসেলব্লোয়ারদের জন্য প্রস্তাবিত UltimateHealth কাঠামো: SLAPP মোকাবিলা, আইনি প্রস্তুতি, ডিজিটাল নিরাপত্তা, হুমকি মূল্যায়ন এবং যৌথ অনুসন্ধান ধারাবাহিকতা।"
+              }
+          },
+          "ta": {
+              "country": "மால்டா",
+              "categoryLabel": "புலனாய்வு இதழியல் மற்றும் ஊழல் எதிர்ப்பு",
+              "roleAndField": "புலனாய்வுப் பத்திரிகையாளர் · கட்டுரையாளர் · ஆசிரியர் · பதிவர் · ஊழல் எதிர்ப்பு செய்தியாளர்",
+              "coreMessage": "சுதந்திரமான இதழியல் ஒரு பொதுப் பாதுகாப்பு அரண். புலனாய்வுப் பத்திரிகையாளர்கள் அச்சுறுத்தல், நிதிப் பழிவாங்கல் அல்லது வன்முறையை எதிர்கொள்ளாமல் அதிகாரமிக்க நிறுவனங்களை ஆய்வு செய்யவும், தவறுகளை அம்பலப்படுத்தவும் பாதுகாக்கப்பட வேண்டும்.",
+              "verifiedQuote": {
+                  "quote": "இப்போது நீங்கள் திரும்பும் இடமெல்லாம் மோசடிக்காரர்கள் உள்ளனர். நிலைமை மிகவும் மோசமாக உள்ளது.",
+                  "source": "டாஃப்னி கருவானா கலீசியா, ரன்னிங் கமெண்ட்ரியில் இறுதிப் பதிவு, 16 அக்டோபர் 2017, பிற்பகல் 2:35"
+              },
+              "whoWasThisPerson": "டாஃப்னி ஆன் கருவானா கலீசியா (Daphne Anne Caruana Galizia) 26 ஆகஸ்ட் 1964 அன்று மால்டாவின் ஸ்லீமாவில் பிறந்தார். மூன்று தசாப்தங்களுக்கும் மேலாக மால்டாவின் முன்னணி புலனாய்வுப் பத்திரிகையாளராகவும் 'Running Commentary' வலைப்பதிவின் ஆசிரியராகவும் பணியாற்றினார்.",
+              "contributions": "பனாமா পেப்பர்ஸ் (Panama Papers) வெளியீட்டிற்குப் பிறகு மால்டா அரசியல் பிரமுகர்களுடன் தொடர்புடைய நிறுவனங்கள், '17 Black', ஊழல் மற்றும் பணமோசடி குறித்து விரிவான புலனாய்வுக் கட்டுரைகளை எழுதினார்.",
+              "factualContext": "16 அக்டோபர் 2017 அன்று பிற்பகல் 2:35 மணிக்கு தனது இறுதி வலைப்பதிவை வெளியிட்ட சற்று நேரத்தில், பிட்னிஜாவில் உள்ள அவரது இல்லம் அருகே கார் குண்டுவெடிப்பில் படுகொலை செய்யப்பட்டார்.\n\nநீதித்துறை நடவடிக்கைகள்: கொலையைச் செயல்படுத்திய மற்றும் குண்டு வழங்கிய வழக்கில் ஐந்து பேர் தண்டிக்கப்பட்டுள்ளனர்: வின்ஸ் மஸ்கட் (15 ஆண்டுகள், பிப்ரவரி 2021), ஜார்ஜ் மற்றும் ஆல்ஃபிரட் டிஜார்ஜியோ (தலா 40 ஆண்டுகள், அக்டோபர் 2022), மற்றும் ராபர்ட் அஜியஸ், ஜேமி வெல்லா (ஆயுள் தண்டனை, ஜூன் 2025 / ஜனவரி 2026). தொழிலதிபர் யோர்கன் ஃபெனெக் (Yorgen Fenech) 2 செப்டம்பர் 2026 அன்று ஜூரி விசாரணையில் (8–1 வாக்குகளில்) விடுவிக்கப்பட்டார்; 22 செப்டம்பர் 2026 அன்று அட்டர்னி ஜெனரல் தாக்கல் செய்த மேல்முறையீடு நவம்பர் 2026 நிலவரப்படி நிலுவையில் உள்ளது.",
+              "editorialNotes": "முக்கிய ஆசிரியர் குறிப்பு: 'தி டாஃப்னி ப்ராஜெக்ட்' (15 நாடுகளின் 18 ஊடக நிறுவனங்களைச் சேர்ந்த 45 பத்திரிகையாளர்கள்) 'Forbidden Stories' அமைப்பால் ஒருங்கிணைக்கப்பட்டது. 29 ஜூலை 2021 பொது விசாரணை அறிக்கை, அரசு தண்டனையிலிருந்து விலக்களிக்கும் கலாச்சாரத்தை (atmosphere of impunity) உருவாக்கியதாகக் கண்டறிந்தது. யோர்கன் ஃபெனெக் செப்டம்பர் 2026 இல் ஜூரியால் விடுவிக்கப்பட்டார் மற்றும் மேல்முறையீடு நிலுவையில் உள்ளது.",
+              "verifiedFacts": [
+                  "டாஃப்னி கருவானா கலீசியா (26 ஆகஸ்ட் 1964 – 16 அக்டோபர் 2017) மால்டாவின் முன்னணி புலனாய்வுப் பத்திரிகையாளர் மற்றும் 'Running Commentary' பதிவர்.",
+                  "16 அக்டோபர் 2017 அன்று கார் குண்டுவெடிப்பில் 53 வயதில் படுகொலை செய்யப்பட்டார்.",
+                  "கொலை மற்றும் குண்டு விநியோகத்தில் 5 பேர் (வின்ஸ் மஸ்கட், ஜார்ஜ் மற்றும் ஆல்ஃபிரட் டிஜார்ஜியோ, ராபர்ட் அஜியஸ், ஜேமி வெல்லா) தண்டிக்கப்பட்டுள்ளனர்.",
+                  "யோர்கன் ஃபெனெக் 2 செப்டம்பர் 2026 அன்று ஜூரியால் விடுவிக்கப்பட்டார்; 22 செப்டம்பர் 2026 அன்று தாக்கல் செய்யப்பட்ட மேல்முறையீடு நிலுவையில் உள்ளது.",
+                  "29 ஜூலை 2021 பொது விசாரணை அறிக்கை, மால்டா அரசு அவரது உயிரைப் பாதுகாக்கத் தவறியதாகவும் தண்டனையிலிருந்து விலக்களிக்கும் சூழலை உருவாக்கியதாகவும் முடிவு செய்தது.",
+                  "Forbidden Stories ஒருங்கிணைத்த 'The Daphne Project' இல் 15 நாடுகளைச் சேர்ந்த 45 பத்திரிகையாளர்கள் அவரது புலனாய்வுகளைத் தொடர்ந்தனர்."
+              ],
+              "societalImpact": "ஜூலை 2021 பொது விசாரணை அறிக்கை, 'Forbidden Stories' ஒருங்கிணைத்த 'The Daphne Project', டாஃப்னி கருவானா கலீசியா அறக்கட்டளை மற்றும் மால்டாவின் 2024 Anti-SLAPP சட்டம் (உள்நாட்டு வழக்குகளில் முழுமையான பாதுகாப்பின்மை குறித்த ஐரோப்பிய கண்காணிப்பகத்தின் மதிப்பீடு).",
+              "actionableLesson": "சுதந்திரமான இதழியல், அச்சுறுத்தல்களிலிருந்து பாதுகாப்பு, வலுவான Anti-SLAPP சட்டப் பாதுகாப்பு, தகவல் தெரிவிப்போர் (Whistleblower) பாதுகாப்பு மற்றும் எண்மப் பாதுகாப்பு.",
+              "memorialPublication": {
+                  "title": "Anti-SLAPP பாதுகாப்பு மற்றும் எண்மப் பத்திரிகையாளர் பாதுகாப்பு நெறிமுறை",
+                  "focus": "பத்திரிகை சுதந்திரம் · தகவல் தெரிவிப்போர் பாதுகாப்பு · எண்மப் பாதுகாப்பு · சட்டப் பொறுப்புக்கூறல்",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "புலனாய்வுப் பத்திரிகையாளர்கள் மற்றும் தகவல் தெரிவிப்போருக்கான Anti-SLAPP சட்ட விழிப்புணர்வு, எண்மப் பாதுகாப்பு மற்றும் கூட்டுப் புலனாய்வு பாதுகாப்பு வழிகாட்டி."
+              }
+          },
+          "or": {
+              "country": "ମାଲ୍ଟା",
+              "categoryLabel": "ଅନୁସନ୍ଧାନମୂଳକ ସାମ୍ବାଦିକତା ଏବଂ ଦୁର୍ନୀତି-ବିରୋଧ",
+              "roleAndField": "ଅନୁସନ୍ଧାନମୂଳକ ସାମ୍ବାଦিকা · ସ୍ତମ୍ଭକାର · ସମ୍ପାଦिका · ବ୍ଲଗର୍ · ଦୁର୍ନୀତି-ବିରୋଧୀ ରିପୋର୍ଟର",
+              "coreMessage": "ସ୍ୱାଧୀନ ସାମ୍ବାଦିକତା ଏକ ସାର୍ବଜନୀନ ସୁରକ୍ଷା କବଚ। ଅନୁସନ୍ଧାନମୂଳକ ସାମ୍ବାଦିକମାନେ ଭୟଭୀତ, ଆର୍ଥିକ ପ୍ରତିশୋଧ କିମ୍ବା ହିଂସାର ସମ୍ମୁଖୀନ ନ ହୋଇ ଶକ୍ତିଶାଳୀ ଅନୁଷ୍ଠାନଗୁଡ଼ିକର ଯାଞ୍ଚ କରିବା ଏବଂ ଦୁର୍ନୀତି ପଦାକୁ ଆଣିବାରେ ସକ୍ଷମ ହେବା ଉଚିତ୍।",
+              "verifiedQuote": {
+                  "quote": "ଏବେ ଆପଣ ଯେଉଁଆଡ଼େ ଚାହିଁବେ ସବୁଠି ପ୍ରତାରକ ଅଛନ୍ତି। ପରିସ୍ଥିତି ଅତ୍ୟନ୍ତ ନୈରାଶ୍ୟଜନକ।",
+                  "source": "ଡାଫନି କାରୁଆନା ଗାଲିଜିଆ, ରନିଂ କମେଣ୍ଟ୍ରିରେ ଶେଷ ପୋଷ୍ଟ, ୧୬ ଅକ୍ଟୋବର ୨୦୧୭, ଅପରାହ୍ନ ୨:୩୫"
+              },
+              "whoWasThisPerson": "ଡାଫନି ଆନ୍ କାରୁଆନା ଗାଲିଜିଆ (Daphne Anne Caruana Galizia) ୨୬ ଅଗଷ୍ଟ ୧୯୬୪ ରେ ମାଲ୍ଟାର ସ୍ଲିমাରେ ଜନ୍ମଗ୍ରହଣ କରିଥିଲେ। ସେ ତିନି ଦଶନ୍ଧି ଧରି ମାଲ୍ଟାର ପ୍ରମୁଖ ଅନୁସନ୍ଧାନମୂଳକ ସାମ୍ବାଦিকা ଏବଂ 'Running Commentary' ବ୍ଲଗର ପ୍ରତିଷ୍ଠାତା ଥିଲେ।",
+              "contributions": "ପାନାମା ପେପର୍ସ (Panama Papers) ପ୍ରକାଶ ପାଇବା ପରେ ମାଲ୍ଟାର ରାଜନୈତିକ ବ୍ୟକ୍ତିବିଶେଷଙ୍କ ସହ ଜଡ଼ିତ ଅଫଶୋର୍ କମ୍ପାନୀ, '17 Black', ସରକାରୀ ଦୁର୍ନୀତି ଏବଂ ମନି ଲଣ୍ଡରିଂ ଉପରେ ସେ ଅନୁସନ୍ଧାନମୂଳକ ରିପୋର୍ଟ ପ୍ରକାଶ କରିଥିଲେ।",
+              "factualContext": "୧୬ ଅକ୍ଟୋବର ୨୦୧୭ ଅପରାହ୍ନ ୨:୩୫ ରେ ନିଜର ଶେଷ ବ୍ଲଗ୍ ପୋଷ୍ଟ ପ୍ରକାଶ କରିବାର ଅଳ୍ପ ସମୟ ପରେ ବିଦନିଜାରେ କାର-ବୋମା ବିସ୍ଫୋରଣରେ ୫୩ ବର୍ଷ ବୟସରେ ତାଙ୍କର ହତ୍ୟା କରାଯାଇଥିଲା।\n\nନ୍ୟାୟିକ କାର୍ଯ୍ୟାନୁଷ୍ଠାନ: ହତ୍ୟାକାଣ୍ଡ ଓ ବୋମା ଯୋଗାଣରେ ୫ ଜଣ ଦୋଷୀ ସାବ୍ୟସ୍ତ ହୋଇଛନ୍ତି: ଭିନ୍ସ ମସକାଟ୍ (୧୫ ବର୍ଷ, ଫେବୃଆରୀ ୨୦୨୧), ଜର୍ଜ ଓ ଆଲଫ୍ରେଡ୍ ଡିଜର୍ଜିଓ (୪୦ ବର୍ଷ ଲେଖାଏଁ, ଅକ୍ଟୋବର ୨୦୨୨), ଏବଂ ରବର୍ଟ ଆଜିୟୁସ୍ ଓ ଜେମି ଭେଲ୍ଲା (ଆଜୀବନ କାରାଦଣ୍ଡ, ଜୁନ୍ ୨୦୨୫ / ଜାନୁଆରୀ ୨୦୨୬)। ବ୍ୟବସାୟୀ ୟୋର୍ଗେନ୍ ଫେନେକ୍ (Yorgen Fenech) ୨ ସେପ୍ଟେମ୍ବର ୨୦୨୬ ରେ ଜୁରୀ ଦ୍ୱାରା (୮–୧ ଭୋଟରେ) ନିର୍ଦ୍ଦୋଷରେ ଖଲାସ ହୋଇଥିଲେ; ୨୨ ସେପ୍ଟେମ୍ବର ୨୦୨୬ ରେ ଆଟର୍ଣ୍ଣି ଜେନେରାଲଙ୍କ ଅପିଲ୍ ନଭେମ୍ବର ୨୦୨୬ ସୁଦ୍ଧା ବିଚାରାଧୀନ ଥିଲା।",
+              "editorialNotes": "ସମ୍ପାଦକୀୟ ଟିପ୍ପଣୀ: 'The Daphne Project' (୧୫ଟି ଦେଶର ୧୮ଟି ସଂସ୍ଥାର ୪୫ ଜଣ ସାମ୍ବାଦିକ) 'Forbidden Stories' ଦ୍ୱାରା ସମନ୍ୱିତ ହୋଇଥିଲା। ୨୯ ଜୁଲାଇ ୨୦୨୧ ର ସାର୍ବଜନୀନ ତଦନ୍ତ ରିପୋର୍ଟ (Public Inquiry) ପାଇଥିଲା ଯେ ରାଷ୍ଟ୍ର ଦଣ୍ଡମୁକ୍ତିର ବାତାବରଣ ସୃଷ୍ଟି କରିଥିଲା। ୟୋର୍ଗେନ୍ ଫେନେକ୍ ୨ ସେପ୍ଟେମ୍ବର ୨୦୨୬ ରେ ଜୁରୀ ଦ୍ୱାରା ଖଲାସ ହୋଇଥିଲେ ଏବଂ ଅପିଲ୍ ବିଚାରାଧୀନ ଅଛି।",
+              "verifiedFacts": [
+                  "ଡାଫନି କାରୁଆନା ଗାଲିଜିଆ (୨୬ ଅଗଷ୍ଟ ୧୯୬୪ – ୧୬ ଅକ୍ଟୋବର ୨୦୧୭) ମାଲ୍ଟାର ପ୍ରମୁଖ ଅନୁସନ୍ଧାନମୂଳକ ସାମ୍ବାଦিকা ଥିଲେ।",
+                  "୧୬ ଅକ୍ଟୋବର ୨୦୧୭ ରେ ବିଦନିଜାରେ କାର-ବୋମା ଆକ୍ରମଣରେ ତାଙ୍କର ହତ୍ୟା କରାଯାଇଥିଲା।",
+                  "ହତ୍ୟା ଓ ବୋମା ଯୋଗାଣରେ ୫ ଜଣ (ଭିନ୍ସ ମସକାଟ୍, ଜର୍ଜ ଓ ଆଲଫ୍ରେଡ୍ ଡିଜର୍ଜିଓ, ରବର୍ଟ ଆଜିୟୁସ୍ ଓ ଜେମି ଭେଲ୍ଲା) ଦଣ୍ଡିତ ହୋଇଛନ୍ତି।",
+                  "ୟୋର୍ଗେନ୍ ଫେନେକ୍ ୨ ସେପ୍ଟେମ୍ବର ୨୦୨୬ ରେ ଜୁରୀ ଦ୍ୱାରା ଖଲାସ ହୋଇଥିଲେ; ୨୨ ସେପ୍ଟେମ୍ବର ୨୦୨୬ ର ଅପିଲ୍ ବିଚାରାଧୀନ ଅଛି।",
+                  "୨୯ ଜୁଲାଇ ୨୦୨୧ ର ୪୩୮-ପୃଷ୍ଠାର ସାର୍ବଜନୀନ ତଦନ୍ତ ରିପୋର୍ଟ ରାଷ୍ଟ୍ରର ଆନୁଷ୍ଠାନିକ ବିଫଳତା ଓ ଦଣ୍ଡମୁକ୍ତି ସଂସ୍କୃତିକୁ ଦାୟୀ କରିଥିଲା।",
+                  "Forbidden Stories ଦ୍ୱାରା ସମନ୍ୱିତ 'The Daphne Project' ୪୫ ଜଣ ସାମ୍ବାଦିକଙ୍କୁ একত্রিত କରିଥିଲା।"
+              ],
+              "societalImpact": "୨୯ ଜୁଲାଇ ୨୦୨୧ ସାର୍ବଜନୀନ ତଦନ୍ତ ରିପୋର୍ଟ, 'Forbidden Stories' ଦ୍ୱାରା ସମନ୍ୱିତ 'The Daphne Project', ଡାଫନି କାରୁଆନା ଗାଲିଜିଆ ଫାଉଣ୍ଡେସନ୍ ଏବଂ ମାଲ୍ଟାର ୨୦୨୪ Anti-SLAPP ଆଇନ (ଘରୋଇ ମାମଲାରେ ଅসম্পୂର୍ଣ୍ଣ ସୁରକ୍ଷା)।",
+              "actionableLesson": "ସ୍ୱାଧୀନ ସାମ୍ବାଦିକତା, ଧମକରୁ ସୁରକ୍ଷା, ଶକ୍ତିଶାଳୀ Anti-SLAPP ଆଇନ, ହ୍ୱିସେଲବ୍ଲୋଅର୍ ସୁରକ୍ଷା ଏବଂ ଡିଜିଟାଲ୍ ସୁରକ୍ଷା।",
+              "memorialPublication": {
+                  "title": "Anti-SLAPP ପ୍ରତିରକ୍ଷା ଏବଂ ଡିଜିଟାଲ୍ ସାମ୍ବାଦିକ ସୁରକ୍ଷା ପ୍ରୋଟୋକଲ୍",
+                  "focus": "ପ୍ରେସ୍ ସ୍ୱାଧୀନତା · ହ୍ୱିସେଲବ୍ଲୋଅର୍ ସୁରକ୍ଷା · ଡିଜିଟାଲ୍ ସୁରକ୍ଷା · ଆଇନଗତ ଉତ୍ତରଦାୟିତ୍ୱ",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ଅନୁସନ୍ଧାନମୂଳକ ସାମ୍ବାଦିକ ଓ ହ୍ୱିସେଲବ୍ଲୋଅରଙ୍କ ପାଇଁ ପ୍ରସ୍ତାବିତ UltimateHealth ସୁରକ୍ଷା ଓ ଆଇନଗତ ପ୍ରସ୍ତୁତି ମାର୍ଗଦର୍ଶିକା।"
+              }
+          },
+          "de": {
+              "country": "Malta",
+              "categoryLabel": "Investigativjournalismus & Korruptionsbekämpfung",
+              "roleAndField": "Investigativjournalistin · Kolumnistin · Redakteurin · Bloggerin · Antikorruptionsreporterin",
+              "coreMessage": "Unabhängiger Journalismus ist ein Schutzschild der Öffentlichkeit. Investigativjournalistinnen und -journalisten müssen mächtige Institutionen überprüfen, Missstände aufdecken und ihre Quellen schützen können, ohne Einschüchterung, finanzieller Vergeltung oder Gewalt ausgesetzt zu sein. Wenn eine Journalistin ermordet wird, muss die Gesellschaft ihr Werk schützen.",
+              "verifiedQuote": {
+                  "quote": "Überall, wo man jetzt hinsieht, sind Gauner. Die Lage ist verzweifelt.",
+                  "source": "Daphne Caruana Galizia, letzter Beitrag auf Running Commentary, 16. Oktober 2017, 14:35 Uhr"
+              },
+              "whoWasThisPerson": "Daphne Anne Caruana Galizia wurde am 26. August 1964 in Sliema, Malta, geboren.\n\nIhre Karriere erstreckte sich über mehr als drei Jahrzehnte, in denen sie als eine der bekanntesten Investigativjournalistinnen, Kolumnistinnen und politischen Bloggerinnen Maltas über Korruption, politische Einflussnahme und die Verflechtung von Regierung und wirtschaftlicher Macht berichtete.\n\n1988 begann sie eine regelmäßige Kolumne für die Sunday Times of Malta und wirkte später am Aufbau von The Malta Independent mit. Mit 28 Jahren, während sie bereits drei Söhne (Matthew, Andrew und Paul) großzog, studierte sie Archäologie und Anthropologie an der Universität Malta. 2004 gründete sie Zeitschriften wie Taste&Flair, und im März 2008 startete sie ihren unabhängigen Blog Running Commentary, der täglich rund 400.000 und zeitweise bis zu eine Million Leser erreichte.",
+              "contributions": "Daphnes wichtigster Beitrag war ihre beharrliche investigative Berichterstattung über:\n• Politische Korruption und Rechenschaftspflicht in öffentlichen Ämtern.\n• Offshore-Finanzstrukturen im Zuge der Panama Papers (darunter Berichte über Offshore-Firmen im Umfeld des damaligen Ministers Konrad Mizzi und des Stabschefs des Premierministers, Keith Schembri, sowie über die Firma 17 Black).\n• Öffentliche Auftragsvergabe, Geldwäsche, organisierte Kriminalität und Maltas Staatsbürgerschafts-gegen-Investitions-Programm.",
+              "factualContext": "Am 16. Oktober 2017 wurde Daphne Caruana Galizia im Alter von 53 Jahren nahe ihrem Haus in Bidnija im Norden Maltas durch eine unter dem Fahrersitz platzierte und ferngezündete Autobombe ermordet. Zuvor hatte sie um 14:35 Uhr ihren letzten Beitrag auf Running Commentary veröffentlicht („There are crooks everywhere you look now. The situation is desperate.“). Ihrer Ermordung gingen jahrelange Einschüchterungen, missbräuchliche Verleumdungsklagen (SLAPPs), Kontopfändungen und Morddrohungen voraus.\n\nStrafverfahren und strafrechtliche Verantwortung:\n• Februar 2021: Vince Muscat bekannte sich der Beteiligung am Mord schuldig und erhielt 15 Jahre Haft.\n• Oktober 2022: Die Brüder George und Alfred Degiorgio bekannten sich schuldig und wurden zu jeweils 40 Jahren Haft verurteilt.\n• Juni 2025 / Januar 2026: Robert Agius und Jamie Vella wurden wegen Beihilfe zum Mord (Lieferung der Bombe) zu lebenslangen Freiheitsstrafen verurteilt; ihre Berufung wurde im Januar 2026 zurückgewiesen.\n• Verfahren gegen Yorgen Fenech: Der Geschäftsmann Yorgen Fenech wurde von einer neunköpfigen Jury am 2. September 2026 mit 8 zu 1 Stimmen in beiden Anklagepunkten freigesprochen. Am 22. September 2026 legte Maltas Generalstaatsanwalt Berufung gegen den Freispruch ein; das Berufungsverfahren dauerte im November 2026 noch an.",
+              "editorialNotes": "Wichtige redaktionelle Abgrenzungen: (1) Das Daphne Project (45 Journalisten aus 18 Medienhäusern in 15 Ländern) wurde von Forbidden Stories koordiniert; die Stiftung unterstützte es unabhängig. (2) Die öffentliche Untersuchung (Bericht vom 29. Juli 2021) stellte keine direkte staatliche Ausführung des Attentats fest, sondern dass der Staat eine Kultur der Straflosigkeit (atmosphere of impunity) geschaffen und notwendige Schutzmaßnahmen unterlassen hatte; der Rücktritt von Premierminister Joseph Muscat (Januar 2020) erfolgte über ein Jahr vor dem Bericht. (3) Yorgen Fenech wurde am 2. September 2026 von einer Jury freigesprochen; die Berufung der Staatsanwaltschaft ist noch anhängig.",
+              "verifiedFacts": [
+                  "Daphne Anne Caruana Galizia (26. August 1964 – 16. Oktober 2017) war Maltas bekannteste Investigativjournalistin und Gründerin des Blogs Running Commentary.",
+                  "Am 16. Oktober 2017 veröffentlichte sie um 14:35 Uhr ihren letzten Blogbeitrag und wurde kurz darauf nahe ihrem Haus in Bidnija durch eine Autobombe getötet.",
+                  "Fünf Männer wurden wegen der Ausführung des Mordes und der Lieferung der Bombe verurteilt: Vince Muscat (15 Jahre), George und Alfred Degiorgio (je 40 Jahre) sowie Robert Agius und Jamie Vella (lebenslänglich, Juni 2025 / Januar 2026).",
+                  "Der Geschäftsmann Yorgen Fenech wurde am 2. September 2026 von einer Jury (8:1 Stimmen) freigesprochen; die Berufung des Generalstaatsanwalts vom 22. September 2026 war im November 2026 noch anhängig.",
+                  "Am 29. Juli 2021 kam der 438-seitige Bericht der unabhängigen öffentlichen Untersuchung zu dem Schluss, dass der maltesische Staat eine Atmosphäre der Straflosigkeit geschaffen und es versäumt hatte, ihr Leben angemessen zu schützen.",
+                  "Unter der Koordination von Forbidden Stories führten 45 Journalisten aus 18 Medienorganisationen in 15 Ländern im Rahmen des Daphne Project ihre Recherchen fort."
+              ],
+              "societalImpact": "Öffentliche Untersuchung (Dezember 2019 – 29. Juli 2021): Feststellung staatlicher Mitverantwortung durch eine Kultur der Straflosigkeit und unterlassenen Schutz.\n\nDas Daphne Project & die Stiftung: Koordiniert von Forbidden Stories setzten 45 Journalisten aus 15 Ländern ihre Arbeit fort; ihre Familie gründete die Daphne Caruana Galizia Foundation.\n\nAnti-SLAPP-Reformen (Legal Notice 177 von 2024): Der European Anti-SLAPP Monitor bewertete Maltas Umsetzung als unvollständig, da sie grenzüberschreitende Fälle abdeckt, aber keinen gleichwertigen Schutz für innerstaatliche SLAPP-Verfahren bietet.",
+              "actionableLesson": "Gesellschaft und Regierungen müssen sicherstellen:\n• Schutz unabhängiger journalistischer Recherche vor politischer Einflussnahme.\n• Unabhängige Gefährdungsbeurteilung bei Drohungen gegen Journalisten.\n• Wirksame Anti-SLAPP-Schutzgesetze (auch für innerstaatliche Verfahren).\n• Hinweisgeberschutz (Whistleblower), digitale Sicherheit und grenzüberschreitende Zusammenarbeit.",
+              "memorialPublication": {
+                  "title": "Anti-SLAPP-Verteidigungs- & Digitales Journalistenschutz-Protokoll",
+                  "focus": "Pressefreiheit · Hinweisgeberschutz · Digitale Sicherheit · Rechtliche Rechenschaftspflicht",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Ein vorgeschlagenes UltimateHealth-Rahmenwerk für Investigativjournalisten und Hinweisgeber zu SLAPP-Abwehr, rechtlicher Vorsorge, digitaler Sicherheit, Gefährdungsanalyse, Quellenschutz und kollaborativer Weiterführung bedrohter Recherchen."
+              }
+          },
+          "es": {
+              "country": "Malta",
+              "categoryLabel": "Periodismo de Investigación y Anticorrupción",
+              "roleAndField": "Periodista de Investigación · Columnista · Editora · Bloguera · Reportera Anticorrupción",
+              "coreMessage": "El periodismo independiente es una salvaguardia pública. Los periodistas de investigación deben poder examinar a las instituciones poderosas, exponer irregularidades y proteger a sus fuentes sin enfrentarse a intimidación, represalias financieras o violencia. Cuando asesinan a un periodista, la sociedad debe proteger el trabajo que dejó atrás.",
+              "verifiedQuote": {
+                  "quote": "Hay delincuentes por todas partes donde mires ahora. La situación es desesperada.",
+                  "source": "Daphne Caruana Galizia, última publicación en Running Commentary, 16 de octubre de 2017, 14:35 h"
+              },
+              "whoWasThisPerson": "Daphne Anne Caruana Galizia nació el 26 de agosto de 1964 en Sliema, Malta.\n\nA lo largo de más de tres décadas se convirtió en una de las periodistas de investigación, columnistas y blogueras políticas más destacadas de Malta. Comenzó a escribir una columna regular para The Sunday Times of Malta en 1988 y más tarde ayudó a fundar The Malta Independent.\n\nA los 28 años, mientras criaba a sus tres hijos (Matthew, Andrew y Paul), se matriculó en la Universidad de Malta para estudiar arqueología y antropología. En 2004 empezó a publicar revistas como Taste&Flair, y en marzo de 2008 lanzó su blog independiente Running Commentary, que alcanzó unos 400.000 lectores diarios y hasta un millón en momentos clave.",
+              "contributions": "Su contribución principal fue el periodismo de investigación sostenido sobre:\n• Corrupción política y rendición de cuentas en cargos públicos.\n• Estructuras financieras extraterritoriales tras los Papeles de Panamá (Panama Papers), incluyendo sociedades vinculadas al entonces ministro Konrad Mizzi y al jefe de gabinete Keith Schembri, así como la empresa 17 Black.\n• Contratación pública, blanqueo de capitales, crimen organizado y programas de ciudadanía por inversión.",
+              "factualContext": "El 16 de octubre de 2017, Daphne Caruana Galizia fue asesinada a los 53 años mediante un coche bomba detonado a distancia cerca de su casa en Bidnija, al norte de Malta, poco después de publicar a las 14:35 h su último artículo en Running Commentary («There are crooks everywhere you look now. The situation is desperate»). Su asesinato estuvo precedido por años de demandas abusivas por difamación, congelación de cuentas y amenazas de muerte denunciadas a la policía dos semanas antes.\n\nProcedimientos judiciales y responsabilidad penal:\n• Febrero de 2021: Vince Muscat se declaró culpable y recibió una condena de 15 años de prisión.\n• Octubre de 2022: Los hermanos George y Alfred Degiorgio se declararon culpables y fueron condenados a 40 años de prisión cada uno.\n• Junio de 2025 / Enero de 2026: Robert Agius y Jamie Vella fueron condenados a cadena perpetua por complicidad al suministrar la bomba; su apelación fue rechazada en enero de 2026.\n• Procedimientos relativos a Yorgen Fenech: El 2 de septiembre de 2026, un jurado de nueve miembros declaró no culpable al empresario Yorgen Fenech por 8 votos a 1. El 22 de septiembre de 2026, el Fiscal General de Malta apeló la absolución, recurso que seguía en trámite en noviembre de 2026.",
+              "editorialNotes": "Salvaguardias editoriales esenciales: (1) El Proyecto Daphne (45 periodistas de 18 medios en 15 países) fue coordinado por Forbidden Stories, con independencia financiera y editorial respecto de la Fundación. (2) La Investigación Pública (informe del 29 de julio de 2021) concluyó que el Estado creó una atmósfera de impunidad que facilitó el asesinato y no adoptó medidas razonables de protección; la dimisión del primer ministro Joseph Muscat (enero de 2020) fue más de un año anterior al informe. (3) Yorgen Fenech fue absuelto por un jurado el 2 de septiembre de 2026 y la apelación de la fiscalía seguía pendiente en noviembre de 2026.",
+              "verifiedFacts": [
+                  "Daphne Anne Caruana Galizia (26 de agosto de 1964 – 16 de octubre de 2017) fue la principal periodista de investigación de Malta y creadora del blog Running Commentary.",
+                  "Fue asesinada el 16 de octubre de 2017 mediante un coche bomba en Bidnija poco después de publicar su último artículo a las 14:35 h.",
+                  "Cinco hombres han sido condenados por ejecutar el asesinato y suministrar la bomba: Vince Muscat (15 años), George y Alfred Degiorgio (40 años cada uno), y Robert Agius y Jamie Vella (cadena perpetua en junio de 2025, confirmada en enero de 2026).",
+                  "El empresario Yorgen Fenech fue absuelto por un jurado (8–1) el 2 de septiembre de 2026; la apelación del Fiscal General del 22 de septiembre de 2026 seguía en curso en noviembre de 2026.",
+                  "El 29 de julio de 2021, el informe de 438 páginas de la Investigación Pública concluyó que el Estado maltés creó una atmósfera de impunidad y no tomó medidas razonables para proteger su vida.",
+                  "Coordinado por Forbidden Stories, el Proyecto Daphne reunió a 45 periodistas de 18 organizaciones en 15 países para continuar sus investigaciones."
+              ],
+              "societalImpact": "Investigación Pública (diciembre de 2019 – 29 de julio de 2021): Determinó la responsabilidad del Estado por crear una cultura de impunidad.\n\nEl Proyecto Daphne y la Fundación: Coordinado por Forbidden Stories (45 periodistas de 18 medios en 15 países) y labor continua de la Fundación Daphne Caruana Galizia.\n\nReformas Anti-SLAPP (Aviso Legal 177 de 2024): Evaluado como parcial por el European Anti-SLAPP Monitor por cubrir casos transfronterizos pero dejar desprotegidos los casos internos en Malta.",
+              "actionableLesson": "La sociedad y los gobiernos deben garantizar:\n• Periodismo independiente y evaluación inmediata de amenazas físicas.\n• Salvaguardias anti-SLAPP completas (tanto nacionales como transfronterizas).\n• Protección de denunciantes (whistleblowers) y seguridad digital.\n• Responsabilidad institucional, investigaciones transparentes y cooperación internacional.",
+              "memorialPublication": {
+                  "title": "Protocolo de Defensa Anti-SLAPP y Seguridad Digital para Periodistas",
+                  "focus": "Libertad de Prensa · Protección de Denunciantes · Seguridad Digital · Responsabilidad Legal",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Un marco educativo y operativo propuesto por UltimateHealth sobre identificación de demandas SLAPP, preparación jurídica, seguridad digital, evaluación de amenazas, protección de fuentes y continuidad colaborativa de investigaciones."
+              }
+          },
+          "fr": {
+              "country": "Malte",
+              "categoryLabel": "Journalisme d'investigation et lutte contre la corruption",
+              "roleAndField": "Journaliste d'investigation · Chroniqueuse · Éditrice · Blogueuse · Reportrice anticorruption",
+              "coreMessage": "Le journalisme indépendant est un rempart public. Les journalistes d'investigation doivent pouvoir contrôler les institutions puissantes, révéler les abus et protéger leurs sources sans subir d'intimidation, de représailles financières ou de violence. Lorsqu'un journaliste est assassiné, la société doit protéger son travail.",
+              "verifiedQuote": {
+                  "quote": "Il y a des escrocs partout où l'on regarde maintenant. La situation est désespérée.",
+                  "source": "Daphne Caruana Galizia, dernier billet sur Running Commentary, 16 octobre 2017, 14 h 35"
+              },
+              "whoWasThisPerson": "Daphne Anne Caruana Galizia est née le 26 août 1964 à Sliema, à Malte.\n\nPendant plus de trois décennies, elle s'est imposée comme l'une des journalistes d'investigation, chroniqueuses et blogueuses politiques les plus connues de Malte. Elle a commencé à tenir une chronique régulière dans The Sunday Times of Malta en 1988, puis a contribué à fonder The Malta Independent.\n\nÀ 28 ans, tout en élevant ses trois fils (Matthew, Andrew et Paul), elle a repris des études d'archéologie et d'anthropologie à l'Université de Malte. En 2004, elle a lancé des magazines dont Taste&Flair, puis en mars 2008 son blog indépendant Running Commentary, suivi quotidiennement par environ 400 000 lecteurs et jusqu'à un million certains jours.",
+              "contributions": "Sa contribution majeure fut un travail d'investigation soutenu portant sur :\n• La corruption politique et la responsabilité des titulaires de charges publiques.\n• Les structures financières offshore révélées par les Panama Papers (notamment les sociétés liées au ministre Konrad Mizzi et au chef de cabinet Keith Schembri, ainsi que la société 17 Black).\n• Les marchés publics, le blanchiment d'argent, le crime organisé et les programmes de citoyenneté par investissement.",
+              "factualContext": "Le 16 octobre 2017, Daphne Caruana Galizia a été assassinée à l'âge de 53 ans dans un attentat à la voiture piégée près de son domicile à Bidnija, peu après avoir publié à 14 h 35 son dernier article sur Running Commentary (« There are crooks everywhere you look now. The situation is desperate »). Son assassinat faisait suite à des années de procédures-bâillons (SLAPP), de gels d'avoirs et de menaces de mort signalées à la police deux semaines plus tôt.\n\nProcédures judiciaires et responsabilité pénale :\n• Février 2021 : Vince Muscat a plaidé coupable et a été condamné à 15 ans de prison.\n• Octobre 2022 : Les frères George et Alfred Degiorgio ont plaidé coupable et ont été condamnés à 40 ans de prison chacun.\n• Juin 2025 / Janvier 2026 : Robert Agius et Jamie Vella ont été condamnés à la réclusion à perpétuité pour complicité (fourniture de la bombe), peine confirmée en appel en janvier 2026.\n• Procédures concernant Yorgen Fenech : Le 2 septembre 2026, un jury de neuf membres a acquitté l'homme d'affaires Yorgen Fenech par 8 voix contre 1. Le 22 septembre 2026, le procureur général de Malte a fait appel de cet acquittement, procédure toujours en cours en novembre 2026.",
+              "editorialNotes": "Garanties éditoriales essentielles : (1) Le Projet Daphne (45 journalistes de 18 rédactions dans 15 pays) a été coordonné par Forbidden Stories, en toute indépendance financière et éditoriale vis-à-vis de la Fondation. (2) L'enquête publique (rapport du 29 juillet 2021) a conclu que l'État avait créé un climat d'impunité ayant permis l'assassinat et manqué à son devoir de protection ; la démission du Premier ministre Joseph Muscat (janvier 2020) a précédé ce rapport de plus d'un an. (3) Yorgen Fenech a été acquitté par un jury le 2 septembre 2026 et l'appel du parquet restait pendant en novembre 2026.",
+              "verifiedFacts": [
+                  "Daphne Anne Caruana Galizia (26 août 1964 – 16 octobre 2017) était la principale journaliste d'investigation de Malte et la créatrice du blog Running Commentary.",
+                  "Elle a été assassinée le 16 octobre 2017 par une bombe placée sous son siège conducteur à Bidnija, peu après son dernier billet publié à 14 h 35.",
+                  "Cinq hommes ont été condamnés pour l'exécution du meurtre et la fourniture de la bombe : Vince Muscat (15 ans), George et Alfred Degiorgio (40 ans chacun), ainsi que Robert Agius et Jamie Vella (perpétuité en juin 2025, confirmée en janvier 2026).",
+                  "L'homme d'affaires Yorgen Fenech a été acquitté par un jury (8–1) le 2 septembre 2026 ; l'appel formé le 22 septembre 2026 par le procureur général était toujours en cours en novembre 2026.",
+                  "Le 29 juillet 2021, le rapport de 438 pages de l'enquête publique indépendante a conclu que l'État maltais avait créé une atmosphère d'impunité et failli à prendre des mesures raisonnables pour protéger sa vie.",
+                  "Coordonné par Forbidden Stories, le Projet Daphne a réuni 45 journalistes de 18 médias dans 15 pays pour poursuivre ses enquêtes."
+              ],
+              "societalImpact": "Enquête publique (décembre 2019 – 29 juillet 2021) : Conclusion sur la responsabilité de l'État dans la création d'un climat d'impunité.\n\nLe Projet Daphne et la Fondation : Coordonné par Forbidden Stories (45 journalistes, 18 médias, 15 pays) et action continue de la Fondation Daphne Caruana Galizia.\n\nRéformes anti-SLAPP (Legal Notice 177 de 2024) : Jugées partielles par l'European Anti-SLAPP Monitor car elles ne couvrent que les litiges transfrontaliers et non les procédures-bâillons purement nationales.",
+              "actionableLesson": "La société et les gouvernements doivent garantir :\n• L'indépendance du journalisme et l'évaluation rapide des menaces physiques.\n• Des garanties anti-SLAPP complètes (y compris pour les procédures nationales).\n• La protection des lanceurs d'alerte et la sécurité numérique.\n• La responsabilité institutionnelle, des enquêtes transparentes et la coopération internationale.",
+              "memorialPublication": {
+                  "title": "Protocole de défense anti-SLAPP et de sécurité numérique des journalistes",
+                  "focus": "Liberté de la presse · Protection des lanceurs d'alerte · Sécurité numérique · Responsabilité juridique",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Un cadre éducatif et opérationnel proposé par UltimateHealth couvrant l'identification des procédures-bâillons (SLAPP), la préparation juridique, la sécurité numérique, l'évaluation des menaces, la protection des sources et la continuité collaborative des enquêtes."
+              }
+          },
+          "hr": {
+              "country": "Malta",
+              "categoryLabel": "Istraživačko novinarstvo i borba protiv korupcije",
+              "roleAndField": "Istraživačka novinarka · Kolumnistica · Urednica · Blogerica · Antikorupcijska reporterka",
+              "coreMessage": "Neovisno novinarstvo javna je zaštita. Istraživački novinari moraju moći propitivati moćne institucije, razotkrivati nepravilnosti i štititi svoje izvore bez suočavanja sa zastrašivanjem, financijskom odmazdom ili nasiljem. Kada je novinar ubijen, društvo mora zaštititi rad koji je ostavio iza sebe.",
+              "verifiedQuote": {
+                  "quote": "Prevaranti su posvuda kamo god sada pogledate. Situacija je očajna.",
+                  "source": "Daphne Caruana Galizia, posljednja objava na blogu Running Commentary, 16. listopada 2017., 14:35"
+              },
+              "whoWasThisPerson": "Daphne Anne Caruana Galizia rođena je 26. kolovoza 1964. u Sliemi na Malti.\n\nTijekom više od tri desetljeća postala je jedna od najpoznatijih malteških istraživačkih novinarki, kolumnistica i političkih blogerica. Godine 1988. počela je pisati redovitu kolumnu za The Sunday Times of Malta, a kasnije je pomogla osnovati The Malta Independent.\n\nU dobi od 28 godina, dok je već odgajala три sina (Matthewa, Andrewa i Paula), upisala je studij arheologije i antropologije na Sveučilištu na Malti. Godine 2004. pokrenula je časopise poput Taste&Flair, a u ožujku 2008. neovisni blog Running Commentary koji je bilježio oko 400.000 dnevnih čitatelja.",
+              "contributions": "Njezin glavni doprinos bilo je ustrajno istraživačko izvješćivanje o:\n• Političkoj korupciji i odgovornosti u javnim službama.\n• Offshore financijskim strukturama nakon objave Panamskih dokumenata (Panama Papers), uključujući tvrtke povezane s tadašnjim ministrom Konradom Mizzijem i predstojnikom ureda premijera Keithom Schembrijem te tvrtku 17 Black.\n• Javnoj nabavi, pranju novca, organiziranom kriminalu i programu državljanstva putem ulaganja.",
+              "factualContext": "Dana 16. listopada 2017. Daphne Caruana Galizia ubijena je u dobi od 53 godine u napadu automobilom-bombom blizu svog doma u Bidniji, nedugo nakon što je u 14:35 objavila svoj posljednji članak na blogu Running Commentary („There are crooks everywhere you look now. The situation is desperate”).\n\nSudski postupci i kaznena odgovornost:\n• Veljača 2021.: Vince Muscat priznao je krivnju i osuđen je na 15 godina zatvora.\n• Listopad 2022.: Braća George i Alfred Degiorgio priznali su krivnju te su osuđeni na po 40 godina zatvora.\n• Lipanj 2025. / Siječanj 2026.: Robert Agius i Jamie Vella osuđeni su na doživotni zatvor zbog opskrbe bombom, a žalbeni sud potvrdio je presude u siječnju 2026.\n• Postupak u vezi s Yorgenom Fenechom: Dana 2. rujna 2026. deveteročlana porota oslobodila je poduzetnika Yorgena Fenecha optužbi glasovima 8 prema 1. Dana 22. rujna 2026. glavni državni odvjetnik Malte uložio je žalbu na oslobađajuću presudu, a žalbeni postupak još je trajao u studenome 2026.",
+              "editorialNotes": "Ključne uredničke napomene: (1) Projekt Daphne (45 novinara iz 18 medijskih kuća u 15 zemalja) koordinirala je organizacija Forbidden Stories, neovisno o Zakladi. (2) Javna istraga (izvješće od 29. srpnja 2021.) zaključila je da je država stvorila ozračje nekažnjivosti koje je omogućilo atentat te propustila poduzeti razumne mjere zaštite; ostavka premijera Josepha Muscata (siječanj 2020.) prethodila je izvješću više od godinu dana. (3) Yorgen Fenech oslobođen je pred porotom 2. rujna 2026., a žalba državnog odvjetništva još je u tijeku.",
+              "verifiedFacts": [
+                  "Daphne Anne Caruana Galizia (26. kolovoza 1964. – 16. listopada 2017.) bila je водеća malteška istraživačka novinarka i autorica bloga Running Commentary.",
+                  "Ubijena je 16. listopada 2017. automobilom-bombom u Bidniji ubrzo nakon objave posljednjeg članka u 14:35.",
+                  "Petorica muškaraca osuđena su za izvršenje ubojstva i nabavu bombe: Vince Muscat (15 godina), George i Alfred Degiorgio (po 40 godina) te Robert Agius i Jamie Vella (doživotni zatvor u lipnju 2025., potvrđen u siječnju 2026.).",
+                  "Poduzetnik Yorgen Fenech oslobođen je pred porotom (8–1) 2. rujna 2026.; žalba glavnog državnog odvjetnika od 22. rujna 2026. bila je u tijeku u studenome 2026.",
+                  "Dana 29. srpnja 2021. izvješće neovisne javne istrage na 438 stranica zaključilo je da je država stvorila ozračje nekažnjivosti i propustila zaštititi njezin život.",
+                  "Pod koordinacijom Forbidden Stories, Projekt Daphne okupio je 45 novinara iz 18 organizacija u 15 zemalja kako bi nastavili njezina istraživanja."
+              ],
+              "societalImpact": "Javna istraga (prosinac 2019. – 29. srpnja 2021.), Projekt Daphne pod koordinacijom Forbidden Stories, rad Zaklade Daphne Caruana Galizia te djelomična provedba Anti-SLAPP zaštite na Malti (Zakonska obavijest 177 iz 2024., koja ne pokriva domaće SLAPP tužbe).",
+              "actionableLesson": "Društvo i vlade moraju osigurati:\n• Neovisno novinarstvo i brzu procjenu fizičkih prijetnji.\n• Potpunu Anti-SLAPP zaštitu (uključujući domaće sudske postupke).\n• Zaštitu zviždača i digitalnu sigurnost novinara.\n• Institucionalnu odgovornost, nepristrane istrage i međunarodnu suradnju.",
+              "memorialPublication": {
+                  "title": "Protokol za Anti-SLAPP obranu i digitalnu sigurnost novinara",
+                  "focus": "Sloboda medija · Zaštita zviždača · Digitalna sigurnost · Pravna odgovornost",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Predloženi edukativni i operativni okvir UltimateHealtha za prepoznavanje SLAPP tužbi, pravnu pripremu, digitalnu sigurnost, procjenu prijetnji, zaštitu izvora i suradnički nastavak istraživanja."
+              }
+          }
+      }
   },
   {
     id: 12,
