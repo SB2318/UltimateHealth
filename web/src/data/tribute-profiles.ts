@@ -856,8 +856,305 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
           }
       }
   },
+    {
+      "id": 4,
+      "slug": "dr-tamara-oneal",
+      "name": "Dr. Tamara O’Neal",
+      "country": "United States",
+      "countryFlag": "🇺🇸",
+      "category": "healthcare",
+      "categoryLabel": "Emergency Medicine & Workplace Defense",
+      "eraOrYear": "2018",
+      "roleAndField": "Attending Emergency Medicine Physician · Mercy Hospital & Medical Center, Chicago, Illinois",
+      "avatarUrl": "/assets/dr-tamara-oneal.jpeg",
+      "verificationStatus": "Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "coreMessage": "Intimate-partner violence can follow people into their workplaces. Healthcare institutions must take credible threats seriously, provide confidential reporting and support mechanisms, and coordinate emergency responses that protect employees, patients, and visitors.",
+      "whoWasThisPerson": "Dr. Tamara O’Neal was a 38-year-old emergency medicine physician at Mercy Hospital & Medical Center in Chicago.\nShe graduated from the University of Illinois College of Medicine in 2014 and completed her emergency medicine residency in 2017. She had also participated in Southern Illinois University's Medical/Dental Education Preparatory Program (MEDPREP) between 2007 and 2009.\nBeyond her clinical work, she volunteered to teach clinical residents at Mercy Hospital. She was remembered by colleagues and friends for her commitment to community service, her generosity, and her ability to bring people together.\nShe also led her church choir and raised money for disadvantaged children. Her commitment to helping underserved communities was reflected in her choice of emergency medicine, a field in which she could care for people who might otherwise struggle to access timely medical attention.",
+      "contributions": "Dr. O’Neal's contribution extended beyond treating patients in the emergency department.\n\nClinical service:\n• Worked as an emergency medicine attending physician at Mercy Hospital in Chicago.\n• Provided emergency care to patients in an urban hospital setting.\n• Continued to support medical education by volunteering to teach clinical residents.\n\nEducation and mentorship:\n• Participated in UIC's Urban Health Program.\n• Encouraged underrepresented students to consider careers in medicine.\n• Supported the development of future healthcare professionals through her teaching and personal mentorship.\n\nCommunity service:\n• Raised money for disadvantaged children.\n• Led her church choir.\n• Demonstrated a strong commitment to serving underserved communities, particularly Chicago's South Side.\n\nHer university and professional communities remembered her not only as a physician, but also as someone who actively supported the people around her.\n\nA Legacy Continued — Scholarships and Medical Education:\nDr. O’Neal's educational and community legacy has continued through scholarships established in her memory.\n\nA. Tamara O’Neal MD Scholarship Fund — University of Illinois Chicago\nIn March 2019, a group of twelve fellow UIC College of Medicine alumni established the Tamara O’Neal MD Scholarship Fund.\nThe fund was created to support medical students and honour her commitment to medical education and underserved communities.\nThe initial fundraising effort raised more than $68,000. The alumni hoped to build an ongoing endowed scholarship.\nThe scholarship was designed to support:\n• A first-year medical student participating in UIC's Urban Health Program.\n• Potential additional support for a fourth-year medical student pursuing emergency medicine residency, depending on available funding.\nUIC also highlighted Dr. O’Neal's commitment to encouraging underrepresented students to consider medicine as a career.\n\nB. Dr. Tamara O’Neal MEDPREP Scholarship — Southern Illinois University\nSouthern Illinois University Foundation also recognises Dr. O’Neal through the Dr. Tamara O’Neal MEDPREP Scholarship.\nThe scholarship honours her as a former MEDPREP student from 2007–2009.\nThe university's foundation describes her passion for helping her community and her desire to serve people in Chicago, particularly on the South Side.\nThe MEDPREP scholarship supports students pursuing medical or dental education. Awards are based on academic performance, community service, and/or financial need.\n\nWhy These Scholarships Matter:\nThese are more than commemorative names. They connect Dr. O’Neal's educational journey with opportunities for future students. Her participation in preparatory education, medical school, residency, and emergency medicine is now remembered through initiatives that can help other students pursue healthcare careers.\nThe scholarships also recognise the role of medical education in building a more representative healthcare workforce.\nUltimateHealth recognises these scholarship initiatives as a distinct and continuing part of her legacy.",
+      "factualContext": "On 19 November 2018, Dr. Tamara O’Neal was fatally shot in the parking lot of Mercy Hospital & Medical Center in Chicago.\nHer former fiancé, Juan Lopez, had gone to the hospital and was waiting for her. According to the official Cook County investigation, he confronted her in the parking lot. After an argument, he produced a semi-automatic handgun and shot her several times.\nContemporary reporting stated that Dr. O’Neal had called 911 to report that her former fiancé was at the hospital with a gun.\nAfter shooting her, Lopez entered the hospital building and shot pharmacy resident Dayna Less, who was in the lobby near an elevator.\nHe subsequently encountered responding police officers inside the hospital. Chicago Police Officer Samuel Jimenez was shot and later died from his injuries during the confrontation.\nLopez was fatally shot by a responding police officer. The Cook County review concluded that the officer's use of deadly force was legally justified under the circumstances. The official medical findings also documented a self-inflicted gunshot wound to Lopez's head, but his death was classified as a homicide because another gunshot wound was inflicted by the officer.\n\nThe incident resulted in the deaths of three victims:\n• Dr. Tamara O’Neal — Emergency medicine physician.\n• Dayna Less — Pharmacy resident.\n• Samuel Jimenez — Chicago Police Officer.\n\nThe gunman's death was also confirmed in the official investigation.\nThis incident exposed a particularly difficult workplace-safety challenge: a threat originating from an individual's personal life can enter a healthcare facility and endanger employees, patients, visitors, and responding personnel.",
+      "editorialNotes": "Publication note: The biographical, scholarship, and incident details above are supported by institutional records and contemporary reporting. The proposed workplace-safety guide is an UltimateHealth initiative, not a historical reform attributed to Dr. O’Neal's death. The H.R. 1195 legislative history is included for context, not as a direct consequence of this case.",
+      "verifiedFacts": [
+          "38-year-old attending emergency medicine physician at Mercy Hospital & Medical Center, Chicago; graduated UIC College of Medicine (2014), completed residency (2017), and attended SIU MEDPREP (2007–2009).",
+          "Fatally shot on 19 November 2018 in the Mercy Hospital parking lot by her former fiancé, Juan Lopez, who then entered the hospital and killed pharmacy resident Dayna Less and Chicago Police Officer Samuel Jimenez.",
+          "Cook County State's Attorney investigation documented that Lopez sustained a self-inflicted gunshot wound to the head and a fatal gunshot wound inflicted by a responding officer (classified as justifiable homicide).",
+          "Memorial scholarships established in her honour at the University of Illinois Chicago (Tamara O’Neal MD Scholarship Fund, March 2019) and Southern Illinois University (Dr. Tamara O’Neal MEDPREP Scholarship).",
+          "Mourned in official statements by the American College of Emergency Physicians (ACEP, 20 Nov 2018), National Medical Association (NMA, 21 Nov 2018), and Emergency Medicine Residents' Association (EMRA, 26 Nov 2018)."
+      ],
+      "societalImpact": "Professional and Institutional Response:\n\nAmerican College of Emergency Physicians (ACEP)\nOn 20 November 2018, the American College of Emergency Physicians issued an official statement mourning Dr. O’Neal and the other victims.\nACEP described the incident as an apparent domestic-violence-related shooting and expressed concern about the wider problem of firearm violence.\nThe organisation also reaffirmed its support for:\n• Research into firearm-related injuries and deaths.\n• Extreme Risk Protection Orders (ERPOs) and Gun Violence Restraining Orders (GVROs).\n• Public-health approaches to firearm injury prevention.\n• Legislative and regulatory measures addressing firearm-related risks.\n\nEmergency Medicine Residents' Association (EMRA)\nThe Emergency Medicine Residents' Association issued a statement on 26 November 2018, expressing condolences and recognising Dr. O’Neal's contribution to emergency medicine and the people around her.\n\nEmergency Nurses Association (ENA)\nENA has continued to advocate for safer emergency departments and stronger workplace-violence prevention practices. Its later collaboration with ACEP included the No Silence on ED Violence campaign, launched in 2019.\nThese organisational initiatives should be understood as part of a broader, continuing response to violence against healthcare workers. They should not be represented as reforms caused solely by Dr. O’Neal's death.\n\nSocietal Impact and the Legislative Context — Workplace Violence Prevention for Healthcare Workers:\nThe Mercy Hospital shooting became part of the wider national discussion about healthcare workplace safety.\nHowever, one legislative claim requires careful distinction.\nH.R. 1195, the Workplace Violence Prevention for Health Care and Social Service Workers Act, was introduced in the 117th United States Congress on 22 February 2021.\nThe proposed legislation sought to require covered healthcare and social-service employers to develop and implement comprehensive workplace-violence prevention plans.\nThe House passed the bill on 16 April 2021. It was subsequently received in the Senate and referred to the Senate Committee on Health, Education, Labor, and Pensions.\nImportant factual distinction: H.R. 1195 was part of a broader legislative effort to address workplace violence. Its introduction and progress cannot be attributed specifically to Dr. O’Neal's death. It should also not be described as an enacted federal law.\nThe case remains relevant to the broader discussion of how healthcare facilities should prepare for threats involving employees' personal safety.",
+      "actionableLesson": "Workplace Threat Screening and Healthcare Campus Security\nHealthcare institutions should recognise that threats to employees do not always originate from patients or visitors. They may also arise from external individuals who have personal relationships with staff members.\n\nA comprehensive prevention approach should include:\n1. Confidential threat reporting:\n• Provide employees with confidential ways to report threats, stalking, harassment, or intimidation.\n• Establish clear procedures for escalating credible threats.\n• Ensure that staff can seek help without fear of professional retaliation.\n\n2. Domestic-violence-informed workplace support:\n• Train designated HR, occupational health, and security personnel to respond sensitively to reports of intimate-partner violence.\n• Help affected employees develop workplace safety plans.\n• Respect confidentiality and share information only when necessary for safety and lawful response.\n\n3. Coordinated security response:\n• Establish clear communication between hospital security, local law enforcement, and emergency management teams.\n• Define procedures for responding to armed individuals and credible threats.\n• Train staff to recognise emergency alerts and follow lockdown or evacuation instructions.\n\n4. Access control and campus preparedness:\n• Review parking areas, staff entrances, emergency exits, and visitor access arrangements.\n• Ensure that security personnel can respond rapidly to incidents in parking lots and other external areas.\n• Conduct regular emergency-response exercises.\n\n5. Post-incident support:\n• Provide psychological, medical, and legal support to affected employees and families.\n• Review incidents to identify weaknesses in existing safety procedures.\n• Ensure that lessons learned lead to measurable improvements.\n\nThese are proposed safety practices for healthcare institutions, not claims that a particular hospital has implemented them.",
+      "memorialPublication": {
+          "title": "Workplace Threat Screening & Healthcare Campus Security Guide",
+          "focus": "Occupational Safety · Intimate-Partner Violence · Threat Reporting · Hospital Emergency Preparedness",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "Purpose:\nDevelop a practical educational resource for healthcare institutions and professionals on identifying, reporting, and responding to external threats that may endanger employees at their workplace.\n\nProposed guide sections:\n• Recognising stalking, harassment, and credible threats.\n• Confidential workplace threat-reporting procedures.\n• Supporting employees experiencing intimate-partner violence.\n• Coordinating HR, hospital security, and law enforcement.\n• Parking-lot and campus access safety.\n• Active-threat response, lockdown, and evacuation procedures.\n• Post-incident support and institutional review.\n\nIntended audience:\nHospital administrators, Emergency department leadership, Human resources and occupational health teams, Hospital security professionals, Healthcare workers and medical residents.\n\nEditorial principle: The guide should be educational, evidence-based, and developed with input from workplace-safety professionals. It should not replace local emergency procedures, legal advice, or specialist domestic-violence support.\n\nThe UltimateHealth Perspective:\nDr. Tamara O’Neal's story brings together three important dimensions of healthcare:\n• Clinical service: Her work as an emergency physician and volunteer clinical educator.\n• Community contribution: Her commitment to underserved communities, disadvantaged children, and medical education.\n• Workplace safety: The need for institutions to recognise and respond to credible threats against employees, including threats arising from intimate-partner violence.\nHer scholarships at UIC and Southern Illinois University offer a continuing educational legacy. They connect her memory with the opportunities of future medical and healthcare students.\nRemembering Dr. Tamara O’Neal means recognising the physician she was, the people she supported, the students who may benefit from her memorial scholarships, and the importance of making healthcare workplaces safer.\nA healthcare professional should never have to face a threat to their life simply because their workplace is accessible to the person threatening them."
+      },
+      "references": [
+          {
+              "title": "American College of Emergency Physicians (ACEP) — ACEP Statement on Chicago Hospital Shooting, 20 November 2018",
+              "url": "https://www.emergencyphysicians.org/press-releases/2018/11-20-2018-acep-statement-on-chicago-hospital-shooting",
+              "publisher": "American College of Emergency Physicians",
+              "isPrimary": true
+          },
+          {
+              "title": "University of Illinois Chicago (UIC Today) — Scholarship to honor memory of slain emergency medicine alumna, 13 March 2019",
+              "url": "https://today.uic.edu/scholarship-to-honor-memory-of-slain-emergency-medicine-alumna/",
+              "publisher": "University of Illinois Chicago",
+              "isPrimary": true
+          },
+          {
+              "title": "Southern Illinois University Foundation — MEDPREP Scholarships (Dr. Tamara O’Neal MEDPREP Scholarship)",
+              "url": "https://siuf.org/giving/college-unit/medprep.php",
+              "publisher": "Southern Illinois University Foundation",
+              "isPrimary": true
+          },
+          {
+              "title": "Cook County State's Attorney's Office — Police Involved Death Decision Memorandum: Juan Lopez",
+              "url": "https://www.cookcountystatesattorney.org/sites/g/files/ywwepo351/files/document/file/2024-08/Juan%20Lopez%20Memo.pdf",
+              "publisher": "Cook County State's Attorney's Office",
+              "isPrimary": true
+          },
+          {
+              "title": "Emergency Medicine Residents' Association (EMRA) — Statement on Mercy Hospital Mass Shootings, 26 November 2018",
+              "url": "https://www.emra.org/news/emra-statement-on-mercy-hospital-mass-shootings",
+              "publisher": "Emergency Medicine Residents' Association",
+              "isPrimary": true
+          },
+          {
+              "title": "U.S. Government Publishing Office — H.R. 1195, Workplace Violence Prevention for Health Care and Social Service Workers Act (Introduced in House)",
+              "url": "https://www.govinfo.gov/app/details/BILLS-117hr1195ih",
+              "publisher": "U.S. Government Publishing Office",
+              "isPrimary": true
+          },
+          {
+              "title": "U.S. Government Publishing Office — H.R. 1195, Referred in Senate (19 April 2021)",
+              "url": "https://www.govinfo.gov/app/details/BILLS-117hr1195rfs",
+              "publisher": "U.S. Government Publishing Office",
+              "isPrimary": true
+          },
+          {
+              "title": "Chicago Sun-Times — Slain Mercy Hospital doctor called 911 before ex-fiancé killed her, 21 November 2018",
+              "url": "https://chicago.suntimes.com/2018/11/21/18315209/slain-mercy-hospital-doctor-called-911-before-ex-fiance-killed-her",
+              "publisher": "Chicago Sun-Times"
+          },
+          {
+              "title": "CBS Chicago — The Promising Life and Tragic Death of Dr. Tamara O’Neal, 20 November 2018",
+              "url": "https://www.cbsnews.com/chicago/news/promising-life-tragic-death-dr-tamara-oneal/",
+              "publisher": "CBS Chicago"
+          },
+          {
+              "title": "ABC7 Chicago — Scholarship established in honor of slain Mercy Hospital doctor, 14 March 2019",
+              "url": "https://abc7chicago.com/amp/post/scholarship-established-honoring-slain-mercy-hospital-doctor-uic-grad/5193862/",
+              "publisher": "ABC7 Chicago"
+          },
+          {
+              "title": "National Medical Association (NMA) — NMA Responds to the Tragic Death of Dr. Tamara O’Neal, 21 November 2018",
+              "url": "https://members.nmanet.org/news/429072/NMA-Responds-to-the-Tragic-Death-of-a-Healer-and-True-First-Responder-Dr.-Tamara-ONeal.htm",
+              "publisher": "National Medical Association"
+          }
+      ],
+      "translations": {
+          "hi": {
+              "name": "डॉ. तमारा ओ’नील",
+              "roleAndField": "अटेंडिंग आपातकालीन चिकित्सा चिकित्सक · मर्सी हॉस्पिटल एंड मेडिकल सेंटर, शिकागो, इलिनोइस",
+              "categoryLabel": "आपातकालीन चिकित्सा एवं कार्यस्थल सुरक्षा",
+              "coreMessage": "अंतरंग-साथी की हिंसा (Intimate-partner violence) लोगों का उनके कार्यस्थलों तक पीछा कर सकती है। स्वास्थ्य संस्थानों को विश्वसनीय खतरों को गंभीरता से लेना चाहिए, गोपनीय रिपोर्टिंग और सहायता तंत्र प्रदान करना चाहिए, और ऐसे आपातकालीन प्रतिक्रिया उपायों का समन्वय करना चाहिए जो कर्मचारियों, रोगियों और आगंतुकों की रक्षा करें।",
+              "whoWasThisPerson": "डॉ. तमारा ओ’नील शिकागो के मर्सी हॉस्पिटल एंड मेडिकल सेंटर में 38 वर्षीय आपातकालीन चिकित्सा चिकित्सक थीं।\nउन्होंने 2014 में इलिनोइस विश्वविद्यालय कॉलेज ऑफ मेडिसिन से स्नातक किया और 2017 में अपनी आपातकालीन चिकित्सा रेजिडेंसी पूरी की। उन्होंने 2007 और 2009 के बीच सदर्न इलिनोइस यूनिवर्सिटी के मेडिकल/डेंटल एजुकेशन प्रिपरेटरी प्रोग्राम (MEDPREP) में भी भाग लिया था।\nअपने नैदानिक कार्य के अलावा, उन्होंने मर्सी अस्पताल में क्लिनिकल रेजिडेंट्स को पढ़ाने के लिए स्वेच्छा से काम किया। उन्हें सहकर्मियों और मित्रों द्वारा सामुदायिक सेवा के प्रति उनकी प्रतिबद्धता, उदारता और लोगों को एक साथ लाने की क्षमता के लिए याद किया जाता था।\nवे अपने चर्च के गायक मंडल (choir) का नेतृत्व भी करती थीं और वंचित बच्चों के लिए धन जुटाती थीं। वंचित समुदायों की मदद करने की उनकी प्रतिबद्धता आपातकालीन चिकित्सा के उनके चुनाव में झलकती थी।",
+              "contributions": "डॉ. ओ’नील का योगदान आपातकालीन विभाग में रोगियों के इलाज से कहीं आगे तक फैला हुआ था।\n\nनैदानिक सेवा:\n• शिकागो के मर्सी अस्पताल में आपातकालीन चिकित्सा अटेंडिंग चिकित्सक के रूप में कार्य किया।\n• शहरी अस्पताल परिवेश में रोगियों को आपातकालीन देखभाल प्रदान की और क्लिनिकल रेजिडेंट्स को स्वेच्छा से पढ़ाया।\n\nशिक्षा और मार्गदर्शन:\n• UIC के अर्बन हेल्थ प्रोग्राम में भाग लिया और कम प्रतिनिधित्व वाले छात्रों को चिकित्सा में करियर बनाने के लिए प्रोत्साहित किया।\n\nसामुदायिक सेवा:\n• वंचित बच्चों के लिए धन जुटाया, चर्च गायक मंडल का नेतृत्व किया और शिकागो के साउथ साइड के वंचित समुदायों की सेवा की।\n\nएक निरंतर विरासत — छात्रवृत्तियाँ और चिकित्सा शिक्षा:\nA. तमारा ओ’नील एमडी स्कॉलरशिप फंड — यूनिवर्सिटी ऑफ इलिनोइस शिकागो (UIC): मार्च 2019 में 12 पूर्व छात्रों द्वारा स्थापित, जिसने प्रारंभिक रूप से $68,000 से अधिक जुटाए ताकि अर्बन हेल्थ प्रोग्राम के प्रथम वर्ष के मेडिकल छात्रों और आपातकालीन चिकित्सा में जाने वाले छात्रों को सहायता मिल सके।\nB. डॉ. तमारा ओ’नील MEDPREP स्कॉलरशिप — सदर्न इलिनोइस यूनिवर्सिटी (SIU): 2007–2009 की पूर्व MEDPREP छात्रा के रूप में उनके सम्मान में स्थापित, जो चिकित्सा या दंत चिकित्सा शिक्षा प्राप्त करने वाले छात्रों की सहायता करती है।\nUltimateHealth इन छात्रवृत्ति पहलों को उनकी विरासत के एक विशिष्ट और निरंतर हिस्से के रूप में मान्यता देता है।",
+              "factualContext": "19 नवंबर 2018 को, शिकागो में मर्सी हॉस्पिटल एंड मेडिकल सेंटर की पार्किंग में डॉ. तमारा ओ’नील की गोली मारकर हत्या कर दी गई।\nउनका पूर्व मंगेतर, जुआन लोपेज, अस्पताल गया था और उनका इंतजार कर रहा था। कुक काउंटी की आधिकारिक जांच के अनुसार, उसने पार्किंग में उनका सामना किया और बहस के बाद सेमी-ऑटोमैटिक हैंडगन से उन्हें कई गोलियां मारीं।\nसमकालीन रिपोर्टिंग में कहा गया कि डॉ. ओ’नील ने यह बताने के लिए 911 पर कॉल किया था कि उनका पूर्व मंगेतर बंदूक के साथ अस्पताल में है।\nउन्हें गोली मारने के बाद, लोपेज ने अस्पताल की इमारत में प्रवेश किया और लॉबी में फार्मेसी रेजिडेंट डेना लेस (Dayna Less) को गोली मार दी। इसके बाद हुई मुठभेड़ में शिकागो पुलिस अधिकारी सैमुअल जिमेनेज (Samuel Jimenez) को गोली लगी और बाद में उनकी मृत्यु हो गई।\nजवाबी कार्रवाई में पुलिस अधिकारी की गोली से लोपेज मारा गया (मेडिकल जांच में उसके सिर पर खुद को मारी गई गोली का घाव भी दर्ज किया गया, लेकिन पुलिस की गोली के कारण मृत्यु को होमिसाइड वर्गीकृत किया गया)।\n\nइस घटना में तीन पीड़ितों की मृत्यु हुई:\n• डॉ. तमारा ओ’नील — आपातकालीन चिकित्सा चिकित्सक।\n• डेना लेस — फार्मेसी रेजिडेंट।\n• सैमुअल जिमेनेज — शिकागो पुलिस अधिकारी।",
+              "editorialNotes": "प्रकाशन नोट: उपरोक्त जीवनी, छात्रवृत्ति और घटना का विवरण संस्थागत रिकॉर्ड और समकालीन रिपोर्टिंग द्वारा समर्थित है। प्रस्तावित कार्यस्थल-सुरक्षा मार्गदर्शिका एक UltimateHealth पहल है। H.R. 1195 का विधायी इतिहास संदर्भ के लिए शामिल किया गया है, न कि इस मामले के प्रत्यक्ष परिणाम के रूप में।",
+              "verifiedFacts": [
+                  "मर्सी हॉस्पिटल एंड मेडिकल सेंटर, शिकागो में 38 वर्षीय आपातकालीन चिकित्सा चिकित्सक; UIC कॉलेज ऑफ मेडिसिन (2014) से स्नातक और SIU MEDPREP (2007–2009) की पूर्व छात्रा।",
+                  "19 नवंबर 2018 को अस्पताल की पार्किंग में पूर्व मंगेतर जुआन लोपेज द्वारा गोली मारकर हत्या; हमलावर ने फार्मेसी रेजिडेंट डेना लेस और पुलिस अधिकारी सैमुअल जिमेनेज की भी हत्या की।",
+                  "कुक काउंटी स्टेट अटॉर्नी की जांच ने पुष्टि की कि जवाबी पुलिस कार्रवाई कानूनी रूप से न्यायोचित थी।",
+                  "उनकी स्मृति में UIC (तमारा ओ’नील एमडी स्कॉलरशिप फंड, मार्च 2019) और सदर्न इलिनोइस यूनिवर्सिटी (MEDPREP स्कॉलरशिप) में छात्रवृत्तियाँ स्थापित की गईं।",
+                  "ACEP (20 नवंबर 2018), NMA (21 नवंबर 2018) और EMRA (26 नवंबर 2018) द्वारा आधिकारिक शोक और सम्मान वक्तव्य जारी किए गए।"
+              ],
+              "societalImpact": "पेशेवर और संस्थागत प्रतिक्रिया:\n• अमेरिकन कॉलेज ऑफ इमरजेंसी फिजिशियन (ACEP): 20 नवंबर 2018 को शोक वक्तव्य जारी किया और आग्नेयास्त्र हिंसा की रोकथाम व ERPO/GVRO कानूनों के प्रति समर्थन दोहराया।\n• इमरजेंसी मेडिसिन रेजिडेंट्स एसोसिएशन (EMRA) और इमरजेंसी नर्सेज एसोसिएशन (ENA): शोक व्यक्त किया और 2019 में 'No Silence on ED Violence' अभियान चलाया।\n\nविधायी संदर्भ — H.R. 1195:\nH.R. 1195 (Workplace Violence Prevention for Health Care and Social Service Workers Act) 22 फरवरी 2021 को 117वीं अमेरिकी कांग्रेस में पेश किया गया और 16 अप्रैल 2021 को हाउस द्वारा पारित कर सीनेट समिति को भेजा गया।\nमहत्वपूर्ण तथ्यात्मक अंतर: H.R. 1195 कार्यस्थल हिंसा को संबोधित करने के व्यापक विधायी प्रयास का हिस्सा था; इसे विशेष रूप से डॉ. ओ’नील की मृत्यु के परिणाम के रूप में या अधिनियमित संघीय कानून के रूप में वर्णित नहीं किया जाना चाहिए।",
+              "actionableLesson": "कार्यस्थल खतरा स्क्रीनिंग और स्वास्थ्य परिसर सुरक्षा:\n1. गोपनीय खतरा रिपोर्टिंग: कर्मचारियों को बिना किसी पेशेवर प्रतिशोध के डर के खतरों, पीछा करने (stalking) या उत्पीड़न की गोपनीय रिपोर्ट करने के तरीके प्रदान करें।\n2. घरेलू-हिंसा-सूचित कार्यस्थल सहायता: अंतरंग-साथी की हिंसा की रिपोर्टों पर संवेदनशीलता से प्रतिक्रिया करने के लिए HR और सुरक्षा कर्मियों को प्रशिक्षित करें।\n3. समन्वित सुरक्षा प्रतिक्रिया: अस्पताल सुरक्षा, स्थानीय पुलिस और आपातकालीन प्रबंधन टीमों के बीच स्पष्ट संचार स्थापित करें।\n4. प्रवेश नियंत्रण और परिसर की तैयारी: पार्किंग क्षेत्रों, स्टाफ प्रवेश द्वारों और निकास की समीक्षा करें।\n5. घटना के बाद सहायता: प्रभावित कर्मचारियों और परिवारों को मनोवैज्ञानिक, चिकित्सा और कानूनी सहायता प्रदान करें।",
+              "memorialPublication": {
+                  "title": "कार्यस्थल खतरा स्क्रीनिंग और स्वास्थ्य परिसर सुरक्षा मार्गदर्शिका",
+                  "focus": "व्यावसायिक सुरक्षा · अंतरंग-साथी हिंसा · खतरा रिपोर्टिंग · अस्पताल आपातकालीन तैयारी",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "उद्देश्य: कार्यस्थल पर कर्मचारियों को खतरे में डालने वाले बाहरी खतरों की पहचान करने, रिपोर्ट करने और उन पर प्रतिक्रिया देने के लिए स्वास्थ्य संस्थानों हेतु एक व्यावहारिक शैक्षिक संसाधन विकसित करना।\n\nUltimateHealth दृष्टिकोण:\nडॉ. तमारा ओ’नील को याद करने का अर्थ है उस चिकित्सक को पहचानना जो वे थीं, जिन लोगों का उन्होंने समर्थन किया, वे छात्र जो उनकी स्मारक छात्रवृत्तियों से लाभान्वित हो सकते हैं, और स्वास्थ्य कार्यस्थलों को सुरक्षित बनाने का महत्व।"
+              }
+          },
+          "bn": {
+              "name": "ডা. তামারা ও’নিল",
+              "roleAndField": "অ্যাটেন্ডিং জরুরি চিকিৎসা চিকিৎসক · মার্সি হাসপাতাল অ্যান্ড মেডিকেল সেন্টার, শিকাগো, ইলিনয়",
+              "categoryLabel": "জরুরি চিকিৎসা ও কর্মস্থল সুরক্ষা",
+              "coreMessage": "ঘনিষ্ঠ সঙ্গীর সহিংসতা (Intimate-partner violence) মানুষের কর্মস্থল পর্যন্ত অনুসরণ করতে পারে। স্বাস্থ্যসেবা প্রতিষ্ঠানগুলোকে বিশ্বাসযোগ্য হুমকিগুলো গুরুত্বের সাথে নিতে হবে, গোপনীয় রিপোর্টিং ও সহায়তা ব্যবস্থা প্রদান করতে হবে এবং কর্মী, রোগী ও দর্শনার্থীদের সুরক্ষায় সমন্বিত জরুরি পদক্ষেপ নিতে হবে।",
+              "whoWasThisPerson": "ডা. তামারা ও’নিল ছিলেন শিকাগোর মার্সি হাসপাতাল অ্যান্ড মেডিকেল সেন্টারের ৩৮ বছর বয়সী জরুরি চিকিৎসা চিকিৎসক।\nতিনি ২০১৪ সালে ইউনিভার্সিটি অব ইলিনয় কলেজ অব মেডিসিন থেকে স্নাতক হন এবং ২০১৭ সালে জরুরি মেডিসিন রেসিডেন্সি সম্পন্ন করেন। এর আগে ২০০৭–২০০৯ সালে তিনি সাউদার্ন ইলিনয় ইউনিভার্সিটির MEDPREP প্রোগ্রামে অংশ নিয়েছিলেন।\nক্লিনিক্যাল কাজের পাশাপাশি তিনি স্বেচ্ছাসেবী হিসেবে রেসিডেন্ট ডাক্তারদের পড়াতেন, চার্চের গায়কদল পরিচালনা করতেন এবং সুবিধাবঞ্চিত শিশুদের জন্য তহবিল সংগ্রহ করতেন।",
+              "contributions": "ক্লিনিক্যাল সেবা, শিক্ষা ও মেন্টরশিপ এবং সমাজসেবায় তাঁর অবদান ছিল অনন্য।\n\nএকটি চলমান উত্তরাধিকার — শিক্ষাবৃত্তি ও চিকিৎসা শিক্ষা:\nA. তামারা ও’নিল এমডি স্কলারশিপ ফান্ড (ইউনিভার্সিটি অব ইলিনয় শিকাগো - UIC): মার্চ ২০১৯-এ তাঁর ১২ জন সহপাঠী এই তহবিল গঠন করেন, যা প্রাথমিক পর্যায়ে $৬৮,০০০-এর বেশি সংগ্রহ করে আরবান হেলথ প্রোগ্রামের মেডিকেল শিক্ষার্থীদের সহায়তা করে।\nB. ডা. তামারা ও’নিল MEDPREP স্কলারশিপ (সাউদার্ন ইলিনয় ইউনিভার্সিটি - SIU): প্রাক্তন MEDPREP শিক্ষার্থী হিসেবে তাঁর স্মৃতিতে প্রতিষ্ঠিত এই বৃত্তি মেডিকেল ও ডেন্টাল শিক্ষার্থীদের সহায়তা প্রদান করে।",
+              "factualContext": "১৯ নভেম্বর ২০১৮ তারিখে শিকাগোর মার্সি হাসপাতালের পার্কিং লটে ডা. তামারা ও’নিলকে তাঁর প্রাক্তন বাগদত্তা হুয়ান লোপেজ গুলি করে হত্যা করে। সমসাময়িক প্রতিবেদন অনুসারে, ডা. ও’নিল ৯১১-এ কল করে জানিয়েছিলেন যে তাঁর প্রাক্তন বাগদত্তা বন্দুক নিয়ে হাসপাতালে এসেছে।\nতাঁকে গুলি করার পর লোপেজ হাসপাতালের ভেতরে প্রবেশ করে ফার্মেসি রেসিডেন্ট ডায়না লেস (Dayna Less) এবং শিকাগো পুলিশ অফিসার স্যামুয়েল জিমেনেজকে (Samuel Jimenez) গুলি করে হত্যা করে। পরবর্তীতে পুলিশের গুলিতে লোপেজ নিহত হয় (কুক কাউন্টির তদন্তে পুলিশের বলপ্রয়োগ আইনগতভাবে যুক্তিসঙ্গত বলে প্রমাণিত হয়)।",
+              "editorialNotes": "প্রকাশনা নোট: উপরের জীবনী, শিক্ষাবৃত্তি এবং ঘটনার বিবরণ প্রাতিষ্ঠানিক নথি ও সমসাময়িক প্রতিবেদনের ওপর ভিত্তি করে রচিত। প্রস্তাবিত নিরাপত্তা নির্দেশিকাটি UltimateHealth-এর একটি উদ্যোগ। H.R. 1195 বিলের ইতিহাসটি প্রেক্ষাপট হিসেবে যুক্ত করা হয়েছে, এই ঘটনার সরাসরি ফলাফল হিসেবে নয়।",
+              "verifiedFacts": [
+                  "শিকাগোর মার্সি হাসপাতালের ৩৮ বছর বয়সী জরুরি বিভাগের চিকিৎসক; UIC (২০১৪) এবং SIU MEDPREP (২০০৭–২০০৯)-এর প্রাক্তন শিক্ষার্থী।",
+                  "১৯ নভেম্বর ২০১৮-এ হাসপাতালের পার্কিং লটে প্রাক্তন বাগদত্তা হুয়ান লোপেজের গুলিতে নিহত হন; হামলায় ফার্মেসি রেসিডেন্ট ডায়না লেস এবং পুলিশ অফিসার স্যামুয়েল জিমেনেজও প্রাণ হারান।",
+                  "তাঁর স্মৃতিতে UIC (তামারা ও’নিল এমডি স্কলারশিপ ফান্ড) এবং SIU (MEDPREP স্কলারশিপ)-এ দুটি শিক্ষাবৃত্তি প্রতিষ্ঠিত হয়েছে।",
+                  "ACEP, EMRA এবং NMA আনুষ্ঠানিক শোকবার্তা ও বিবৃতি প্রকাশ করে।"
+              ],
+              "societalImpact": "পেশাগত ও প্রাতিষ্ঠানিক প্রতিক্রিয়া:\nACEP (২০ নভেম্বর ২০১৮) এবং EMRA (২৬ নভেম্বর ২০১৮) শোক প্রকাশ করে বিবৃতি দেয় এবং আগ্নেয়াস্ত্র সহিংসতা রোধে জনস্বাস্থ্যমূলক পদক্ষেপের আহ্বান জানায়।\n\nআইনি প্রেক্ষাপট (H.R. 1195):\nফেব্রুয়ারি ২০২১-এ মার্কিন কংগ্রেসে H.R. 1195 (Workplace Violence Prevention for Health Care and Social Service Workers Act) উত্থাপিত হয় এবং এপ্রিল ২০২১-এ হাউসে পাস হয়ে সিনেটে প্রেরিত হয়। উল্লেখ্য, এটি একটি বৃহত্তর আইনি প্রচেষ্টার অংশ ছিল এবং এটি এখনো চূড়ান্ত ফেডারেল আইন হিসেবে প্রণীত হয়নি।",
+              "actionableLesson": "কর্মস্থলের হুমকি যাচাই এবং হাসপাতাল ক্যাম্পাস নিরাপত্তা:\n১. গোপনীয় হুমকি রিপোর্টিং ব্যবস্থা\n২. পারিবারিক সহিংসতা বিষয়ে সংবেদনশীল কর্মস্থল সহায়তা\n৩. হাসপাতাল নিরাপত্তা ও পুলিশের মধ্যে সমন্বিত সাড়াদান\n৪. পার্কিং লট ও ক্যাম্পাস প্রবেশাধিকার নিয়ন্ত্রণ\n৫. ঘটনা-পরবর্তী মানসিক, চিকিৎসা ও আইনি সহায়তা।",
+              "memorialPublication": {
+                  "title": "কর্মস্থল হুমকি যাচাই ও হাসপাতাল ক্যাম্পাস নিরাপত্তা নির্দেশিকা",
+                  "focus": "পেশাগত নিরাপত্তা · ঘনিষ্ঠ সঙ্গীর সহিংসতা · হুমকি রিপোর্টিং · হাসপাতাল জরুরি প্রস্তুতি",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ডা. তামারা ও’নিলকে স্মরণ করার অর্থ হলো একজন নিবেদিতপ্রাণ চিকিৎসক, তাঁর সমাজসেবা, তাঁর স্মৃতিতে প্রতিষ্ঠিত শিক্ষাবৃত্তি এবং স্বাস্থ্যকর্মীদের জন্য নিরাপদ কর্মস্থল গড়ার গুরুত্বকে স্বীকৃতি দেওয়া।"
+              }
+          },
+          "ta": {
+              "name": "டாக்டர் தமாரா ஓ’நீல்",
+              "roleAndField": "அவசர சிகிச்சை மருத்துவர் · மெர்சி மருத்துவமனை மற்றும் மருத்துவ மையம், சிகாகோ, இல்லினாய்ஸ்",
+              "categoryLabel": "அவசர மருத்துவம் மற்றும் பணியிடப் பாதுகாப்பு",
+              "coreMessage": "நெருக்கமானவர்களால் ஏற்படும் குடும்ப வன்முறை பணியிடங்களுக்கும் ஒருவரைப் பின்தொடரக்கூடும். சுகாதார நிறுவனங்கள் அத்தகைய அச்சுறுத்தல்களைத் தீவிரமாகக் கருதி, இரகசியப் புகார் மற்றும் பாதுகாப்பு வழிமுறைகளை உருவாக்க வேண்டும்.",
+              "whoWasThisPerson": "டாக்டர் தமாரா ஓ’நீல் சிகாகோவில் உள்ள மெர்சி மருத்துவமனையில் 38 வயதான அவசர சிகிச்சை மருத்துவராகப் பணியாற்றினார்.\n2014 இல் இல்லினாய்ஸ் பல்கலைக்கழக மருத்துவக் கல்லூரியில் பட்டம் பெற்றார் மற்றும் 2017 இல் அவசர மருத்துவப் பயிற்சியை முடித்தார் (2007–2009 இல் SIU MEDPREP திட்டத்தில் பயின்றார்). மருத்துவப் பணிக்கு அப்பால், பயிற்சி மருத்துவர்களுக்குக் கற்பிப்பதிலும், தேவாலயப் பாடகர் குழுவை வழிநடத்துவதிலும், ஏழை குழந்தைகளுக்கு உதவுவதிலும் சிறந்து விளங்கினார்.",
+              "contributions": "மருத்துவ சேவை, கல்வி வழிகாட்டல் மற்றும் சமூக சேவையில் அவரது பங்களிப்பு குறிப்பிடத்தக்கது.\n\nதொடரும் மரபு — கல்வி உதவித்தொகைகள்:\nA. தமாரா ஓ’நீல் எம்டி கல்வி உதவித்தொகை நிதி (UIC): மார்ச் 2019 இல் அவரது சக முன்னாள் மாணவர்களால் தொடங்கப்பட்டு $68,000 க்கும் மேல் நிதி திரட்டப்பட்டது.\nB. டாக்டர் தமாரா ஓ’நீல் MEDPREP கல்வி உதவித்தொகை (தெற்கு இல்லினாய்ஸ் பல்கலைக்கழகம் - SIU): மருத்துவம் மற்றும் பல் மருத்துவம் பயிலும் மாணவர்களுக்கு உதவும் வகையில் நிறுவப்பட்டது.",
+              "factualContext": "நவம்பர் 19, 2018 அன்று, சிகாகோவின் மெர்சி மருத்துவமனை வாகன நிறுத்துமிடத்தில் டாக்டர் தமாரா ஓ’நீல் அவரது முன்னாள் வருங்கால கணவர் ஜுவான் லோபஸால் சுட்டுக் கொல்லப்பட்டார்.\nஅவரைச் சுட்ட பிறகு, லோபஸ் மருத்துவமனைக்குள் நுழைந்து மருந்தகப் பயிற்சி மருத்துவர் டேனா லெஸ் (Dayna Less) மற்றும் சிகாகோ காவல்துறை அதிகாரி சாமுவேல் ஜிமெனெஸ் (Samuel Jimenez) ஆகியோரைச் சுட்டுக் கொன்றார். பின்னர் காவல்துறையினரின் துப்பாக்கிச் சூட்டில் லோபஸ் உயிரிழந்தார்.",
+              "editorialNotes": "வெளியீட்டுக் குறிப்பு: மேற்கண்ட விவரங்கள் நிறுவன ஆவணங்கள் மற்றும் செய்திகளின் அடிப்படையில் அமைந்தவை. H.R. 1195 சட்ட விவரம் சூழலுக்காக மட்டுமே சேர்க்கப்பட்டுள்ளது.",
+              "verifiedFacts": [
+                  "சிகாகோ மெர்சி மருத்துவமனையின் 38 வயது அவசர சிகிச்சை மருத்துவர்; UIC (2014) மற்றும் SIU MEDPREP (2007–2009) முன்னாள் மாணவி.",
+                  "நவம்பர் 19, 2018 அன்று மருத்துவமனை வளாகத்தில் சுட்டுக் கொல்லப்பட்டார்; மருந்தக உறைவிட மருத்துவர் டேனா லெஸ் மற்றும் காவல்துறை அதிகாரி சாமுவேல் ஜிமெனெஸ் ஆகியோரும் கொல்லப்பட்டனர்.",
+                  "UIC மற்றும் SIU பல்கலைக்கழகங்களில் அவரது நினைவாக மருத்துவக் கல்வி உதவித்தொகைகள் நிறுவப்பட்டுள்ளன.",
+                  "ACEP, EMRA மற்றும் NMA அமைப்புகள் அதிகாரப்பூர்வ இரங்கல் அறிக்கைகளை வெளியிட்டன."
+              ],
+              "societalImpact": "ACEP, EMRA மற்றும் ENA ஆகிய மருத்துவ அமைப்புகள் இச்சம்பவத்திற்குக் கண்டனம் தெரிவித்து பணியிடப் பாதுகாப்பை வலியுறுத்தின. 2021 இல் அமெரிக்க நாடாளுமன்றத்தில் அறிமுகப்படுத்தப்பட்ட H.R. 1195 மசோதா பணியிட வன்முறைத் தடுப்புக்கான பரந்த முயற்சியின் ஒரு பகுதியாகும்.",
+              "actionableLesson": "சுகாதார நிறுவனங்களுக்கான பாதுகாப்பு நடைமுறைகள்:\n1. இரகசிய அச்சுறுத்தல் புகார் முறை\n2. குடும்ப வன்முறை குறித்த விழிப்புணர்வு கொண்ட பணியிட ஆதரவு\n3. ஒருங்கிணைந்த பாதுகாப்பு நடவடிக்கை\n4. வாகன நிறுத்துமிடம் மற்றும் வளாகப் பாதுகாப்பு\n5. சம்பவத்திற்குப் பிந்தைய ஆதரவு.",
+              "memorialPublication": {
+                  "title": "பணியிட அச்சுறுத்தல் தடுப்பு மற்றும் மருத்துவமனை வளாகப் பாதுகாப்பு வழிகாட்டி",
+                  "focus": "பணியிடப் பாதுகாப்பு · குடும்ப வன்முறைத் தடுப்பு · அவசரகாலத் தயார்நிலை",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "டாக்டர் தமாரா ஓ’நீலை நினைவுகூர்வது என்பது அவரது மருத்துவ சேவை, அவரது பெயரில் வழங்கப்படும் கல்வி உதவித்தொகைகள் மற்றும் பாதுகாப்பான மருத்துவப் பணியிடங்களின் அவசியத்தை அங்கீகரிப்பதாகும்."
+              }
+          },
+          "or": {
+              "name": "ଡା. ତାମାରା ଓ’ନିଲ୍",
+              "roleAndField": "ଜରୁରୀକାଳୀନ ଚିକିତ୍ସା ବିଶେଷଜ୍ଞ · ମର୍ସି ହସ୍ପିଟାଲ ଆଣ୍ଡ ମେଡିକାଲ ସେଣ୍ଟର, শିକାଗୋ, ଇଲିନୋଇସ୍",
+              "categoryLabel": "ଜରୁରୀକାଳୀନ ଚିକିତ୍ସା ଓ କାର୍ଯ୍ୟସ୍ଥଳୀ ସୁରକ୍ଷା",
+              "coreMessage": "ଘରୋଇ ବା ବ୍ୟକ୍ତିଗତ ହିଂସା କର୍ମଚାରୀଙ୍କୁ ସେମାନଙ୍କ କାର୍ଯ୍ୟସ୍ଥଳୀ ପର୍ଯ୍ୟନ୍ତ ଅନୁସରଣ କରିପାରେ। ସ୍ୱାସ୍ଥ୍ୟ ଅନୁଷ୍ଠାନଗୁଡ଼ିକ ଏଭଳି ବିପଦକୁ ଗୁରୁତ୍ୱର ସହ ନେଇ ଗୋପନୀୟ ରିପୋର୍ଟିଂ ଏବଂ ସମନ୍ୱିତ ସୁରକ୍ଷା ବ୍ୟବସ୍ଥା ଗ୍ରହଣ କରିବା ଆବଶ୍ୟକ।",
+              "whoWasThisPerson": "ଡା. ତାମାରା ଓ’ନିଲ୍ ଶିକାଗୋର ମର୍ସି ହସ୍ପିଟାଲରେ ଜଣେ ୩୮ ବର୍ଷୀୟା ଜରୁରୀକାଳୀନ ଚିକିତ୍ସକ ଥିଲେ। ସେ ୨୦୧୪ରେ ୟୁନିଭର୍ସିଟି ଅଫ୍ ଇଲିନୋଇସ୍ କଲେଜ ଅଫ୍ ମେଡିସିନରୁ ସ୍ନାତକ ଏବଂ ୨୦୧୭ରେ রেসিડેन्സി ସମାପ୍ତ କରିଥିଲେ। ସେ ରେସିଡେଣ୍ଟ ଡାକ୍ତରମାନଙ୍କୁ ପଢ଼ାଇବା ସହ ଚର୍ଚ୍ଚ କ୍ୱାୟରର ନେତୃତ୍ୱ ନେଉଥିଲେ ଏବଂ ଗରିବ ପିଲାମାନଙ୍କ ପାଇଁ ପାଣ୍ଠି ସଂଗ୍ରହ କରୁଥିଲେ।",
+              "contributions": "ରୋଗୀ ସେବା, ଶିକ୍ଷା ଓ ସମାଜସେବା ସହିତ ତାଙ୍କ ସ୍ମୃତିରେ ଦୁଇଟି ପ୍ରಮುଖ ଶିକ୍ଷାବୃତ୍ତି ସ୍ଥାପିତ ହୋଇଛି:\nA. ତାମାରା ଓ’ନିଲ୍ ଏମଡି ସ୍କଲାରଶିପ୍ ଫଣ୍ଡ (UIC, ମାର୍ଚ୍ଚ ୨୦୧୯) — ଯାହା ମେଡିକାଲ ଛାତ୍ରଛାତ୍ରୀଙ୍କୁ ସହାୟତା କରେ।\nB. ଡା. ତାମାରା ଓ’ନିଲ୍ MEDPREP ସ୍କଲାରଶିପ୍ (ସଦର୍ଣ୍ଣ ଇଲିନୋଇସ୍ ୟୁନିଭର୍ସିଟି - SIU)।",
+              "factualContext": "୧୯ ନଭେମ୍ବର ୨୦୧୮ରେ ଶିକାଗୋର ମର୍ସି ହସ୍ପିଟାଲ ପାର୍କିଂ লটରେ ଡା. ତାମାରା ଓ’ନିଲଙ୍କୁ ତାଙ୍କ ପୂର୍ବତନ ଭାବୀ ସ୍ୱାମୀ ଜୁଆନ୍ ଲୋପେଜ୍ ଗୁଳି କରି ହତ୍ୟା କରିଥିଲା। ଏହାପରେ ଲୋପେଜ୍ ହସ୍ପିଟାଲ ଭିତରେ ଫାର୍ମାସି ରେସିଡେଣ୍ଟ ଡେନା ଲେସ୍ ଏବଂ ପୋଲିସ ଅଫିସର ସାମୁଏଲ୍ ଜିମେନେଜଙ୍କୁ ମଧ୍ୟ ଗୁଳି କରି ହତ୍ୟା କରିଥିଲା ଏବଂ ପୋଲିସ ଗୁଳିରେ ନିହତ ହୋଇଥିଲା।",
+              "editorialNotes": "ପ୍ରକାଶନ ଟିପ୍ପଣୀ: ଉପରୋକ୍ତ ବିବରଣୀ ସରକାରୀ ତଦନ୍ତ ଓ ଆନୁଷ୍ଠାନିକ ରେକର୍ଡ ଉପରେ ଆଧାରିତ। H.R. 1195 ବିଲ୍ କେବଳ ପ୍ରସଙ୍ଗ ପାଇଁ ଉଲ୍ଲେଖ କରାଯାଇଛି।",
+              "verifiedFacts": [
+                  "ମର୍ସି ହସ୍ପିଟାଲ, ଶିକାଗୋର ୩୮ ବର୍ଷୀୟା ଜରୁରୀକାଳୀନ ଚିକିତ୍ସକ; UIC (୨୦୧୪) ଏବଂ SIU MEDPREP (୨୦୦୭–୨୦୦୯) ର ପୂର୍ବତନ ଛାତ୍ରୀ।",
+                  "୧୯ ନଭେମ୍ବର ୨୦୧୮ରେ ହସ୍ପିଟାଲ ପାର୍କିଂରେ ଗୁଳିମାଡ଼ରେ নিহত; ଫାର୍ମାସି ରେସିଡେଣ୍ଟ ଡେନା ଲେସ୍ ଓ ପୋଲିସ ଅଫିସର ସାମୁଏଲ୍ ଜିମେନେଜ୍ ମଧ୍ୟ ଶହୀଦ ହୋଇଥିଲେ।",
+                  "UIC ଏବଂ SIU ରେ ତାଙ୍କ ସ୍ମୃତିରେ ମେଡିକାଲ ସ୍କଲାରଶିପ୍ ସ୍ଥାପିତ ହୋଇଛି।",
+                  "ACEP, EMRA ଏବଂ NMA ପକ୍ଷରୁ ଆନୁଷ୍ଠାନିକ ଶୋକ ପ୍ରକାଶ କରାଯାଇଥିଲା।"
+              ],
+              "societalImpact": "ACEP, EMRA ଏବଂ ENA ଭଳି ସଂଗଠନ ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀଙ୍କ ସୁରକ୍ଷା ପାଇଁ ସ୍ୱର ଉତ୍ତୋଳନ করেছিলেন। ୨୦୨୧ରେ ଆମେରିକା କଂଗ୍ରେସରେ ଆଗତ H.R. 1195 ବିଲ୍ କାର୍ଯ୍ୟସ୍ଥଳୀ ହିଂସା ରୋକିବା ପାଇଁ ଏକ ବ୍ୟାପକ ପ୍ରୟାସର ଅଂଶ ଥିଲା।",
+              "actionableLesson": "ସ୍ୱାସ୍ଥ୍ୟ ଅନୁଷ୍ଠାନଗୁଡ଼ିକ ପାଇଁ ପ୍ରସ୍ତାବିତ ସୁରକ୍ଷା ବ୍ୟବସ୍ଥା:\n୧. ଗୋପନୀୟ ବିପଦ ରିପୋର୍ଟିଂ\n୨. ଘରୋଇ ହିଂସା ସମ୍ବନ୍ଧୀୟ କାର୍ଯ୍ୟସ୍ଥଳୀ ସହାୟତା\n୩. ସମନ୍ୱିତ ସୁରକ୍ଷା ପ୍ରତିକ୍ରିୟା\n୪. ପାର୍କିଂ ଓ କ୍ୟାମ୍ପସ୍ ପ୍ରବେଶ ନିୟନ୍ତ୍ରଣ\n୫. ଘଟଣା ପରବର୍ତ୍ତୀ ସହାୟତା।",
+              "memorialPublication": {
+                  "title": "କାର୍ଯ୍ୟସ୍ଥଳୀ ବିପଦ ଯାଞ୍ଚ ଓ ହସ୍ପିଟାଲ କ୍ୟାମ୍ପସ୍ ସୁରକ୍ଷା ମାର୍ଗଦର୍ଶିକା",
+                  "focus": "ବୃତ୍ତିଗତ ସୁରକ୍ଷା · ଘରୋଇ ହିଂସା · ବିପଦ ରିପୋର୍ଟିଂ · ହସ୍ପିଟାଲ ଜରୁରୀକାଳୀନ ପ୍ରସ୍ତୁତି",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ଡା. ତାମାରା ଓ’ନିଲଙ୍କୁ ସ୍ମରଣ କରିବାର ଅର୍ଥ ହେଉଛି ତାଙ୍କର ଚିକିତ୍ସା ସେବା, ତାଙ୍କ ନାମରେ ଥିବା ଶିକ୍ଷାବୃତ୍ତି ଏବଂ ସୁରକ୍ଷିତ ହସ୍ପିଟାଲ କାର୍ଯ୍ୟସ୍ଥଳীর ଆବଶ୍ୟକତାକୁ ସମ୍ମାନ ଜଣାଇବା।"
+              }
+          },
+          "es": {
+              "name": "Dra. Tamara O’Neal",
+              "roleAndField": "Médica Adjunta de Medicina de Urgencias · Mercy Hospital & Medical Center, Chicago, Illinois",
+              "categoryLabel": "Medicina de Urgencias y Defensa en el Lugar de Trabajo",
+              "coreMessage": "La violencia de pareja puede perseguir a las personas hasta sus lugares de trabajo. Las instituciones sanitarias deben tomar en serio las amenazas creíbles, proporcionar mecanismos confidenciales de denuncia y apoyo, y coordinar respuestas de emergencia que protejan a empleados, pacientes y visitantes.",
+              "whoWasThisPerson": "La Dra. Tamara O’Neal era una médica de urgencias de 38 años en el Mercy Hospital & Medical Center de Chicago.\nSe graduó de la Facultad de Medicina de la Universidad de Illinois (UIC) en 2014 y completó su residencia en medicina de urgencias en 2017. También participó en el Programa Preparatorio de Educación Médica/Dental (MEDPREP) de la Southern Illinois University entre 2007 y 2009.\nAdemás de su labor clínica, se ofreció como voluntaria para enseñar a médicos residentes en el Mercy Hospital. También dirigía el coro de su iglesia y recaudaba fondos para niños desfavorecidos, reflejando su compromiso con las comunidades desatendidas del sur de Chicago.",
+              "contributions": "La contribución de la Dra. O’Neal se extendió más allá del tratamiento de pacientes en urgencias:\n• Servicio clínico: Médica adjunta de urgencias en Mercy Hospital y docente voluntaria de residentes.\n• Educación y mentoría: Participó en el Urban Health Program de UIC y alentó a estudiantes subrepresentados a seguir carreras médicas.\n• Servicio comunitario: Recaudó fondos para niños desfavorecidos y dirigió el coro de su iglesia.\n\nUn legado que continúa — Becas y educación médica:\nA. Fondo de Becas Tamara O’Neal MD — University of Illinois Chicago (UIC): Establecido en marzo de 2019 por doce exalumnos de UIC, recaudando más de $68,000 iniciales para apoyar a estudiantes de medicina del Urban Health Program y futuros residentes de urgencias.\nB. Beca MEDPREP Dra. Tamara O’Neal — Southern Illinois University (SIU): Reconoce a la Dra. O’Neal como exalumna de MEDPREP (2007–2009) y apoya a estudiantes de medicina u odontología según mérito académico, servicio comunitario y necesidad financiera.\nUltimateHealth reconoce estas becas como una parte distinta y continua de su legado.",
+              "factualContext": "El 19 de noviembre de 2018, la Dra. Tamara O’Neal fue asesinada a tiros en el estacionamiento del Mercy Hospital & Medical Center en Chicago.\nSu exprometido, Juan Lopez, la confrontó en el estacionamiento y, tras una discusión, le disparó varias veces con una pistola semiautomática. Los informes contemporáneos indicaron que la Dra. O’Neal había llamado al 911 para informar que su exprometido estaba en el hospital con un arma.\nDespués de dispararle, Lopez entró al hospital y mató a tiros a la residente de farmacia Dayna Less en el vestíbulo, y posteriormente hirió mortalmente al oficial de policía de Chicago Samuel Jimenez.\nLopez murió tras recibir un disparo de un oficial que respondió al ataque (la investigación oficial del Condado de Cook concluyó que el uso de fuerza letal estuvo legalmente justificado y documentó también una herida autoinfligida en la cabeza, clasificando su muerte como homicidio).\n\nEl incidente resultó en la muerte de tres víctimas:\n• Dra. Tamara O’Neal — Médica de urgencias.\n• Dayna Less — Residente de farmacia.\n• Samuel Jimenez — Oficial de Policía de Chicago.",
+              "editorialNotes": "Nota de publicación: Los detalles biográficos, de becas y del incidente están respaldados por registros institucionales y reportajes contemporáneos. La guía propuesta de seguridad laboral es una iniciativa de UltimateHealth, no una reforma histórica atribuida a su muerte. El historial legislativo de H.R. 1195 se incluye como contexto, no como consecuencia directa de este caso.",
+              "verifiedFacts": [
+                  "Médica adjunta de urgencias de 38 años en Mercy Hospital, Chicago; graduada de UIC College of Medicine (2014) y exalumna de SIU MEDPREP (2007–2009).",
+                  "Asesinada a tiros el 19 de noviembre de 2018 en el estacionamiento del Mercy Hospital por su exprometido Juan Lopez, quien luego mató a la residente de farmacia Dayna Less y al oficial Samuel Jimenez.",
+                  "El memorando de la Fiscalía Estatal del Condado de Cook documentó el tiroteo, las víctimas y la respuesta policial justificada.",
+                  "Se establecieron becas conmemorativas en su honor en la University of Illinois Chicago (marzo de 2019) y en la Southern Illinois University (MEDPREP).",
+                  "Conmemorada oficialmente por ACEP (20 nov 2018), NMA (21 nov 2018) y EMRA (26 nov 2018)."
+              ],
+              "societalImpact": "Respuesta profesional e institucional:\n• American College of Emergency Physicians (ACEP): Emitió una declaración oficial el 20 de noviembre de 2018 lamentando la pérdida y reafirmando su apoyo a la investigación sobre violencia con armas de fuego y órdenes de protección de riesgo extremo (ERPO/GVRO).\n• Emergency Medicine Residents' Association (EMRA) y Emergency Nurses Association (ENA): Emitieron declaraciones de condolencia y continuaron abogando por departamentos de urgencias más seguros (campaña No Silence on ED Violence en 2019).\n\nContexto legislativo — H.R. 1195:\nEl proyecto de ley H.R. 1195 (Workplace Violence Prevention for Health Care and Social Service Workers Act) se presentó en el 117.º Congreso de EE. UU. el 22 de febrero de 2021 y fue aprobado por la Cámara de Representantes el 16 de abril de 2021, pasando al Senado.\nDistinción fáctica importante: H.R. 1195 formó parte de un esfuerzo legislativo más amplio; no puede atribuirse específicamente a la muerte de la Dra. O’Neal ni describirse como una ley federal promulgada.",
+              "actionableLesson": "Evaluación de amenazas laborales y seguridad en campus hospitalarios:\n1. Denuncia confidencial de amenazas, acoso o intimidación sin temor a represalias.\n2. Apoyo laboral informado sobre violencia doméstica (planes de seguridad personalizados con RR. HH. y seguridad).\n3. Respuesta de seguridad coordinada con las fuerzas del orden locales y protocolos de bloqueo/evacuación.\n4. Control de acceso y preparación en estacionamientos, entradas de personal y áreas externas.\n5. Apoyo médico, psicológico y legal posterior al incidente.\n\nEstas son prácticas de seguridad propuestas para instituciones sanitarias, no afirmaciones de que un hospital en particular las haya implementado.",
+              "memorialPublication": {
+                  "title": "Guía de Evaluación de Amenazas Laborales y Seguridad en Campus Sanitarios",
+                  "focus": "Seguridad Ocupacional · Violencia de Pareja · Denuncia de Amenazas · Preparación Hospitalaria",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Propósito: Desarrollar un recurso educativo práctico para instituciones sanitarias sobre cómo identificar, reportar y responder a amenazas externas que puedan poner en peligro a los empleados.\n\nLa perspectiva de UltimateHealth:\nRecordar a la Dra. Tamara O’Neal significa reconocer a la médica que fue, a las personas a las que apoyó, a los estudiantes que se benefician de sus becas conmemorativas y la importancia de hacer que los lugares de trabajo sanitarios sean más seguros."
+              }
+          },
+          "fr": {
+              "name": "Dre Tamara O’Neal",
+              "roleAndField": "Médecin Urgentiste Titulaire · Mercy Hospital & Medical Center, Chicago, Illinois",
+              "categoryLabel": "Médecine d'Urgence et Sécurité au Travail",
+              "coreMessage": "Les violences conjugales peuvent poursuivre les personnes jusque sur leur lieu de travail. Les établissements de santé doivent prendre les menaces crédibles au sérieux, offrir des mécanismes confidentiels de signalement et de soutien, et coordonner des réponses d'urgence protégeant le personnel, les patients et les visiteurs.",
+              "whoWasThisPerson": "La Dre Tamara O’Neal était une médecin urgentiste de 38 ans au Mercy Hospital & Medical Center de Chicago.\nDiplômée du College of Medicine de l'Université de l'Illinois (UIC) en 2014, elle a terminé son internat en médecine d'urgence en 2017 après avoir participé au programme préparatoire MEDPREP de la Southern Illinois University entre 2007 et 2009.\nAu-delà de son travail clinique, elle enseignait bénévolement aux internes, dirigeait la chorale de son église et collectait des fonds pour les enfants défavorisés des quartiers sud de Chicago.",
+              "contributions": "La contribution de la Dre O’Neal s'étendait bien au-delà des soins d'urgence :\n• Service clinique : Médecin urgentiste au Mercy Hospital et formatrice bénévole auprès des internes.\n• Éducation et mentorat : Engagement dans l'Urban Health Program de l'UIC pour encourager les étudiants sous-représentés à poursuivre des études de médecine.\n• Engagement communautaire : Collecte de fonds pour les enfants défavorisés et direction de sa chorale.\n\nUn héritage poursuivi — Bourses d'études et formation médicale :\nA. Tamara O’Neal MD Scholarship Fund — University of Illinois Chicago (UIC) : Créé en mars 2019 par douze anciens camarades de promotion (plus de 68 000 $ réunis initialement) pour soutenir les étudiants en médecine de l'Urban Health Program et les futurs urgentistes.\nB. Bourse MEDPREP Dre Tamara O’Neal — Southern Illinois University (SIU) : Honore son parcours d'ancienne étudiante MEDPREP (2007–2009) et soutient les étudiants en médecine ou chirurgie dentaire.\nUltimateHealth reconnaît ces bourses comme une composante distincte et durable de son héritage.",
+              "factualContext": "Le 19 novembre 2018, la Dre Tamara O’Neal a été mortellement abattue sur le parking du Mercy Hospital & Medical Center à Chicago.\nSon ex-fiancé, Juan Lopez, l'attendait sur le parking et, après une dispute, lui a tiré dessus à plusieurs reprises avec un pistolet semi-automatique. Selon les articles de presse de l'époque, la Dre O’Neal avait appelé le 911 pour signaler que son ex-fiancé se trouvait à l'hôpital avec une arme.\nAprès lui avoir tiré dessus, Lopez est entré dans le bâtiment et a abattu Dayna Less, interne en pharmacie, dans le hall, puis a mortellement blessé l'officier de police de Chicago Samuel Jimenez.\nLopez a été mortellement touché par un policier intervenant sur les lieux (l'enquête officielle du comté de Cook a conclu que l'usage de la force meurtrière était légalement justifié et a également relevé une blessure par balle auto-infligée à la tête, classant le décès comme homicide).\n\nL'attaque a coûté la vie à trois victimes :\n• Dre Tamara O’Neal — Médecin urgentiste.\n• Dayna Less — Interne en pharmacie.\n• Samuel Jimenez — Officier de police de Chicago.",
+              "editorialNotes": "Note de publication : Les éléments biographiques, les bourses et les faits relatifs à l'incident s'appuient sur des archives institutionnelles et la presse de l'époque. Le guide de sécurité au travail proposé est une initiative d'UltimateHealth. L'historique législatif du projet H.R. 1195 est mentionné à titre de contexte et non comme une conséquence directe de cette affaire.",
+              "verifiedFacts": [
+                  "Médecin urgentiste de 38 ans au Mercy Hospital de Chicago ; diplômée de l'UIC College of Medicine (2014) et ancienne étudiante SIU MEDPREP (2007–2009).",
+                  "Tuée par balle le 19 novembre 2018 sur le parking du Mercy Hospital par son ex-fiancé Juan Lopez, qui a ensuite tué l'interne en pharmacie Dayna Less et le policier Samuel Jimenez.",
+                  "Le mémorandum officiel du procureur du comté de Cook a documenté la fusillade, les victimes et la réponse policière.",
+                  "Deux bourses d'études commémoratives ont été créées en son honneur à l'UIC (mars 2019) et à la Southern Illinois University (MEDPREP).",
+                  "Hommages officiels publiés par l'ACEP (20 nov. 2018), la NMA (21 nov. 2018) et l'EMRA (26 nov. 2018)."
+              ],
+              "societalImpact": "Réponse professionnelle et institutionnelle :\n• American College of Emergency Physicians (ACEP) : Déclaration officielle du 20 novembre 2018 saluant sa mémoire et soutenant la prévention des violences par armes à feu et les ordonnances de protection (ERPO/GVRO).\n• Emergency Medicine Residents' Association (EMRA) et Emergency Nurses Association (ENA) : Hommages officiels et campagne No Silence on ED Violence (2019).\n\nContexte législatif — H.R. 1195 :\nLe projet de loi H.R. 1195 (Workplace Violence Prevention for Health Care and Social Service Workers Act) a été présenté au 117e Congrès américain le 22 février 2021 et adopté par la Chambre des représentants le 16 avril 2021 avant d'être transmis au Sénat.\nDistinction factuelle importante : H.R. 1195 s'inscrivait dans un effort législatif plus large ; il ne doit pas être présenté comme une conséquence directe du décès de la Dre O’Neal ni comme une loi fédérale promulguée.",
+              "actionableLesson": "Évaluation des menaces au travail et sécurité des campus hospitaliers :\n1. Signalement confidentiel des menaces, du harcèlement ou de la traque sans crainte de représailles.\n2. Soutien professionnel sensibilisé aux violences conjugales (plans de sécurité individualisés).\n3. Réponse de sécurité coordonnée entre la sécurité hospitalière et les forces de l'ordre.\n4. Contrôle des accès et sécurisation des parkings et entrées du personnel.\n5. Soutien médical, psychologique et juridique après un incident.",
+              "memorialPublication": {
+                  "title": "Guide d'Évaluation des Menaces au Travail et de Sécurité des Campus Hospitaliers",
+                  "focus": "Sécurité au Travail · Violences Conjugales · Signalement des Menaces · Préparation aux Urgences",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Objectif : Élaborer une ressource éducative pratique pour aider les établissements de santé à identifier, signaler et gérer les menaces extérieures ciblant le personnel.\n\nLa perspective d'UltimateHealth :\nSe souvenir de la Dre Tamara O’Neal, c'est honorer la médecin qu'elle était, les personnes qu'elle a soutenues, les étudiants bénéficiaires de ses bourses commémoratives et la nécessité de sécuriser les lieux de travail hospitaliers."
+              }
+          },
+          "de": {
+              "name": "Dr. Tamara O’Neal",
+              "roleAndField": "Oberärztin für Notfallmedizin · Mercy Hospital & Medical Center, Chicago, Illinois",
+              "categoryLabel": "Notfallmedizin & Arbeitsplatzsicherheit",
+              "coreMessage": "Gewalt durch Intimpartner kann Betroffene bis an ihren Arbeitsplatz verfolgen. Gesundheitseinrichtungen müssen glaubwürdige Bedrohungen ernst nehmen, vertrauliche Melde- und Unterstützungsmechanismen bereitstellen und Notfallmaßnahmen koordinieren, die Beschäftigte, Patienten und Besucher schützen.",
+              "whoWasThisPerson": "Dr. Tamara O’Neal war eine 38-jährige Notfallmedizinerin am Mercy Hospital & Medical Center in Chicago.\nSie schloss 2014 ihr Medizinstudium am University of Illinois College of Medicine (UIC) ab und beendete 2017 ihre Facharztausbildung für Notfallmedizin. Von 2007 bis 2009 hatte sie am Vorbereitungsprogramm MEDPREP der Southern Illinois University teilgenommen.\nNeben ihrer klinischen Tätigkeit unterrichtete sie ehrenamtlich Assistenzärzte, leitete ihren Kirchenchor und sammelte Spenden für benachteiligte Kinder in Chicagos South Side.",
+              "contributions": "Dr. O’Neals Beitrag reichte weit über die Notaufnahme hinaus:\n• Klinischer Dienst: Notfallmedizinerin am Mercy Hospital und ehrenamtliche Ausbilderin für Assistenzärzte.\n• Bildung und Mentoring: Engagement im Urban Health Program der UIC zur Förderung unterrepräsentierter Medizinstudierender.\n• Gemeindedienst: Spendensammlungen für benachteiligte Kinder und Chorleitung.\n\nEin fortgeführtes Vermächtnis — Stipendien und medizinische Ausbildung:\nA. Tamara O’Neal MD Scholarship Fund — University of Illinois Chicago (UIC): Im März 2019 von zwölf UIC-Alumni gegründet (über 68.000 $ Startkapital) zur Förderung von Medizinstudierenden im Urban Health Program und angehenden Notfallmedizinern.\nB. Dr. Tamara O’Neal MEDPREP Scholarship — Southern Illinois University (SIU): Würdigt sie als ehemalige MEDPREP-Studentin (2007–2009) und unterstützt Studierende der Medizin und Zahnmedizin.\nUltimateHealth würdigt diese Stipendieninitiativen als eigenständigen und fortdauernden Teil ihres Vermächtnisses.",
+              "factualContext": "Am 19. November 2018 wurde Dr. Tamara O’Neal auf dem Parkplatz des Mercy Hospital & Medical Center in Chicago tödlich angeschossen.\nIhr ehemaliger Verlobter Juan Lopez hatte dort auf sie gewartet und schoss nach einem Streit mehrmals mit einer halbautomatischen Pistole auf sie. Zeitgenössischen Berichten zufolge hatte Dr. O’Neal zuvor den Notruf 911 gewählt, um zu melden, dass ihr Ex-Verlobter bewaffnet am Krankenhaus sei.\nAnschließend betrat Lopez das Krankenhausgebäude und erschoss die Pharmazie-Assistenzärztin Dayna Less in der Lobby sowie im weiteren Verlauf den Polizisten Samuel Jimenez vom Chicago Police Department.\nLopez wurde von einem einschreitenden Polizisten tödlich getroffen (die offizielle Untersuchung von Cook County stufte den Schusswaffengebrauch der Polizei als rechtmäßig ein und dokumentierte zudem eine selbst zugefügte Kopfschusswunde bei Lopez).\n\nBei dem Vorfall kamen drei Opfer ums Leben:\n• Dr. Tamara O’Neal — Notfallmedizinerin.\n• Dayna Less — Pharmazie-Assistenzärztin.\n• Samuel Jimenez — Polizeibeamter der Stadt Chicago.",
+              "editorialNotes": "Publikationshinweis: Die Angaben zu Biografie, Stipendien und Tatverlauf stützen sich auf institutionelle Dokumente und zeitgenössische Berichte. Der vorgeschlagene Sicherheitsleitfaden ist eine Initiative von UltimateHealth. Die Gesetzgebungsgeschichte zu H.R. 1195 dient der Einordnung und wird nicht als direkte Folge dieses Falls dargestellt.",
+              "verifiedFacts": [
+                  "38-jährige Notfallmedizinerin am Mercy Hospital, Chicago; Absolventin des UIC College of Medicine (2014) und des SIU MEDPREP-Programms (2007–2009).",
+                  "Am 19. November 2018 auf dem Parkplatz des Mercy Hospital von ihrem Ex-Verlobten Juan Lopez erschossen, der anschließend auch die Pharmazie-Assistenzärztin Dayna Less und den Polizisten Samuel Jimenez tötete.",
+                  "Offizieller Untersuchungsbericht der Staatsanwaltschaft von Cook County dokumentierte den Tatverlauf und den gerechtfertigten Polizeieinsatz.",
+                  "Gedächtnisstipendien an der University of Illinois Chicago (März 2019) und der Southern Illinois University (MEDPREP) eingerichtet.",
+                  "Offizielle Gedenkerklärungen von ACEP (20. Nov. 2018), NMA (21. Nov. 2018) und EMRA (26. Nov. 2018)."
+              ],
+              "societalImpact": "Berufsständische und institutionelle Reaktion:\n• American College of Emergency Physicians (ACEP): Offizielle Stellungnahme vom 20. November 2018 zur Trauer um die Opfer und zur Prävention von Schusswaffengewalt (einschließlich ERPOs/GVROs).\n• Emergency Medicine Residents' Association (EMRA) und Emergency Nurses Association (ENA): Gedenkerklärungen und Einsatz für sicherere Notaufnahmen (Kampagne No Silence on ED Violence, 2019).\n\nGesetzgeberischer Kontext — H.R. 1195:\nDer Gesetzentwurf H.R. 1195 (Workplace Violence Prevention for Health Care and Social Service Workers Act) wurde am 22. Februar 2021 im 117. US-Kongress eingebracht, am 16. April 2021 vom Repräsentantenhaus verabschiedet und an den Senat überwiesen.\nWichtige sachliche Abgrenzung: H.R. 1195 war Teil einer breiteren gesetzgeberischen Initiative; er kann weder spezifisch Dr. O’Neals Tod zugeschrieben noch als verabschiedetes Bundesgesetz bezeichnet werden.",
+              "actionableLesson": "Bedrohungsanalyse am Arbeitsplatz und Krankenhaussicherheit:\n1. Vertrauliche Meldung von Bedrohungen, Stalking oder Belästigung ohne Angst vor beruflichen Nachteilen.\n2. Unterstützung am Arbeitsplatz bei Partnerschaftsgewalt (individuelle Sicherheitspläne mit Personalabteilung und Sicherheitsdienst).\n3. Koordinierte Sicherheitsreaktion zwischen Krankenhaussicherheit und Polizei.\n4. Zugangskontrolle und Überwachung von Parkplätzen und Personaleingängen.\n5. Psychologische, medizinische und rechtliche Nachsorge nach Vorfällen.",
+              "memorialPublication": {
+                  "title": "Leitfaden zur Bedrohungsanalyse am Arbeitsplatz und zur Campus-Sicherheit im Gesundheitswesen",
+                  "focus": "Arbeitsschutz · Partnerschaftsgewalt · Bedrohungsmeldung · Notfallvorsorge im Krankenhaus",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Ziel: Entwicklung eines praxisnahen Leitfadens für Gesundheitseinrichtungen zur Erkennung, Meldung und Abwehr externer Bedrohungen gegen Beschäftigte.\n\nDie UltimateHealth-Perspektive:\nDr. Tamara O’Neal zu gedenken bedeutet, ihre ärztliche Arbeit, ihr gesellschaftliches Engagement, die durch ihre Gedächtnisstipendien geförderten Studierenden und die Notwendigkeit sicherer Arbeitsplätze im Gesundheitswesen zu würdigen."
+              }
+          },
+          "hr": {
+              "name": "Dr. Tamara O’Neal",
+              "roleAndField": "Specijalistica hitne medicine · Mercy Hospital & Medical Center, Chicago, Illinois",
+              "categoryLabel": "Hitna medicina i sigurnost na radnom mjestu",
+              "coreMessage": "Nasilje intimnog partnera može pratiti osobe i do njihova radnog mjesta. Zdravstvene ustanove moraju ozbiljno shvatiti vjerodostojne prijetnje, osigurati povjerljive mehanizme prijave i podrške te koordinirati hitne протоkole koji štite zaposlenike, pacijente i posjetitelje.",
+              "whoWasThisPerson": "Dr. Tamara O’Neal bila je 38-godišnja liječnica hitne medicine u bolnici Mercy Hospital & Medical Center u Chicagu.\nDiplomirala je na Medicinskom fakultetu Sveučilišta Illinois (UIC) 2014. godine, a specijalizaciju iz hitne medicine završila 2017. godine. Između 2007. i 2009. sudjelovala je u pripremnom programu MEDPREP na Sveučilištu Southern Illinois.\nUz klinički rad, volontirala je подуčavajući specijalizante, vodila crkveni zbor i prikupljala sredstva za djecu u nepovoljnom položaju u južnom dijelu Chicaga.",
+              "contributions": "Doprinos dr. O’Neal nadilazio je liječenje pacijenata u hitnoj službi:\n• Klinička služba: Specijalistica hitne medicine u bolnici Mercy i volonterska mentorica specijalizantima.\n• Obrazovanje i mentorstvo: Sudjelovala u UIC-ovu Urban Health Programu i poticala studente iz nedovoljno zastupljenih skupina na studij medicine.\n• Rad u zajednici: Prikupljala pomoć za djecu i vodila crkveni zbor.\n\nNastavljeno nasljeđe — Stipendije i medicinsko obrazovanje:\nA. Stipendijski fond Tamara O’Neal MD — University of Illinois Chicago (UIC): Osnovan u ožujku 2019. od strane dvanaest kolega диплоmanata UIC-a (prikupljeno više od 68.000 USD) za potporu studentima medicine.\nB. MEDPREP stipendija dr. Tamara O’Neal — Southern Illinois University (SIU): Odaje joj priznanje kao bivšoj polaznici MEDPREP-a (2007.–2009.) i pomaže studentima medicine i dentalne medicine.\nUltimateHealth prepoznaje ove stipendijske inicijative kao zaseban i trajan dio njezina nasljeđa.",
+              "factualContext": "Dana 19. studenoga 2018. dr. Tamara O’Neal smrtno je stradala u pucnjavi na parkiralištu bolnice Mercy Hospital & Medical Center u Chicagu.\nNjezin bivši zaručnik Juan Lopez čekao ju je na parkiralištu te je nakon prepirke u nju ispalio više hitaca iz poluautomatskog pištolja. Prema tadašnjim izvješćima, dr. O’Neal nazvala je 911 kako bi prijavila da je njezin bivši zaručnik u bolnici s oružjem.\nNakon toga Lopez je ušao u zgradu bolnice i usmrtio specijalizanticu farmacije Daynu Less u предvorju te policijskog službenika Chicaga Samuela Jimeneza.\nLopeza je potom smrtno pogodio policajac koji je intervenirao (službena istraga okruga Cook potvrdila je da je uporaba smrtonosne sile bila zakonski opravdana).\n\nU incidentu su ubijene tri žrtve:\n• Dr. Tamara O’Neal — Liječnica hitne medicine.\n• Dayna Less — Specijalizantica farmacije.\n• Samuel Jimenez — Policijski službenik Chicaga.",
+              "editorialNotes": "Napomena o objavi: Biografski podaci, podaci o stipendijama i opis događaja temelje se na institucionalnim zapisima i izvješćima iz tog vremena. Predloženi vodič za sigurnost na radnom mjestu inicijativa je UltimateHealtha, a zakonodavni kontekst H.R. 1195 naveden je radi šireg uvida.",
+              "verifiedFacts": [
+                  "38-godišnja specijalistica hitne medicine u bolnici Mercy u Chicagu; diplomirala na UIC College of Medicine (2014.) i pohađala SIU MEDPREP (2007.–2009.).",
+                  "Ubijena 19. studenoga 2018. na parkiralištu bolnice Mercy od strane bivšeg zaručnika Juana Lopeza, koji je potom usmrtio specijalizanticu farmacije Daynu Less i policajca Samuela Jimeneza.",
+                  "Službeni memorandum Državnog odvjetništva okruga Cook dokumentirao je napad, žrtve i opravdanu policijsku intervenciju.",
+                  "U njezinu čast osnovane su memorijalne stipendije na Sveučilištu Illinois u Chicagu (ožujak 2019.) i Sveučilištu Southern Illinois (MEDPREP).",
+                  "Službena priopćenja objavili su ACEP (20. stu 2018.), NMA (21. stu 2018.) i EMRA (26. stu 2018.)."
+              ],
+              "societalImpact": "Strukovni i institucionalni odgovor:\n• American College of Emergency Physicians (ACEP): Službeno priopćenje od 20. studenoga 2018. o prevenciji оруžanog nasilja i zaštitnim mjerama (ERPO/GVRO).\n• EMRA i ENA: Izrazi sućuti i kampanja No Silence on ED Violence (2019.).\n\nZakonodavni kontekst — H.R. 1195:\nPrijedlog zakona H.R. 1195 (Workplace Violence Prevention for Health Care and Social Service Workers Act) upućen je u 117. Kongres SAD-a 22. veljače 2021., a Zastupnički dom usvojio ga je 16. travnja 2021. te uputio u Senat.\nVažna činjenična napomena: H.R. 1195 bio je dio šireg zakonodavnog nastojanja te se ne smije pripisati isključivo smrti dr. O’Neal niti opisivati kao doneseni savezni zakon.",
+              "actionableLesson": "Procjena prijetnji na radnom mjestu i sigurnost bolničkog kampusa:\n1. Povjerljivo prijavljivanje prijetnji, uhođenja ili uznemiravanja bez straha od odmazde.\n2. Podrška na radnom mjestu usmjerena na zaštitu od obiteljskog i partnerskog nasilja.\n3. Koordinirana sigurnosna reakcija između bolničkog osiguranja i policije.\n4. Kontrola pristupa i sigurnost parkirališta te ulaza za osoblje.\n5. Psihološka, medicinska i pravna podrška nakon incidenta.",
+              "memorialPublication": {
+                  "title": "Vodič za procjenu prijetnji na radnom mjestu i sigurnost bolničkog kampusa",
+                  "focus": "Zaštita na radu · Nasilje intimnog partnera · Prijava prijetnji · Hitna pripravnost bolnica",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Svrha: Razviti praktični edukativni vodič za zdravstvene ustanove o prepoznavanju, prijavljivanju i reagiranju na vanjske prijetnje koje mogu ugroziti zaposlenike.\n\nPerspektiva UltimateHealtha:\nSjećanje na dr. Tamaru O’Neal znači prepoznavanje liječnice kakva je bila, zajednice koju je podržavala, studenata kojima pomažu njezine memorijalne stipendije i važnosti stvaranja sigurnijih zdravstvenih radnih mjesta."
+              }
+          }
+      }
+  },
   {
-    id: 4,
+    id: 5,
     slug: "dr-moumita-debnath",
     name: "Dr. Moumita Debnath",
     country: "India",
@@ -898,47 +1195,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       { title: "Supreme Court of India Suo Motu Writ Petition (Crl) No. 2/2024 — National Task Force Orders (20 Aug 2024)", url: "https://main.sci.gov.in/supremecourt/2024/37466/37466_2024_1_1_54652_Order_20-Aug-2024.pdf", publisher: "Supreme Court of India", isPrimary: true },
       { title: "National Task Force on Healthcare Workers' Safety — Terms of Reference", url: "https://main.sci.gov.in", publisher: "Ministry of Health and Family Welfare, India" },
       { title: "The Indian Express: RG Kar Hospital Case Timeline", url: "https://indianexpress.com/article/cities/kolkata/kolkata-doctor-rape-murder-case-timeline-rg-kar-hospital-9520979/", publisher: "The Indian Express" },
-    ],
-  },
-  {
-    id: 5,
-    slug: "dr-tamara-oneal",
-    name: "Dr. Tamara O'Neal",
-    country: "United States",
-    countryFlag: "🇺🇸",
-    category: "healthcare",
-    categoryLabel: "Emergency Medicine & Workplace Defense",
-    eraOrYear: "1980–2018",
-    roleAndField: "Attending Emergency Medicine Physician · Mercy Hospital & Medical Center, Chicago",
-    avatarUrl: "/assets/dr-tamara-oneal.jpeg",
-    whoWasThisPerson:
-      "A 38-year-old emergency room physician in Chicago. Dedicated to urban casualty and acute care, she also served as a church choir leader and volunteer mentor for aspiring medical students.",
-    contributions:
-      "She served as an attending emergency physician treating acute medical emergencies in Chicago, volunteered to teach clinical residents, and raised funds for disadvantaged youth. A memorial scholarship was established in her memory to support future physicians.",
-    factualContext:
-      "On 19 November 2018, she was fatally shot in the Mercy Hospital parking lot by her former fiancé following a domestic dispute. The gunman then entered the hospital, also killing pharmacy resident Dayna Less and Chicago Police Officer Samuel Jimenez, before being wounded and dying by suicide.",
-    societalImpact:
-      "Her death prompted national medical organizations — including the American College of Emergency Physicians (ACEP) and the Emergency Nurses Association (ENA) — to demand comprehensive institutional protections against interpersonal violence and enhanced security screening across healthcare campuses.",
-    verificationStatus: "Verified",
-    lastVerifiedAt: "2026-11-06",
-    verifiedFacts: [
-      "38-year-old attending emergency physician at Mercy Hospital, Chicago, killed on 19 November 2018",
-      "Perpetrator was her former fiancé; also killed pharmacy resident Dayna Less and CPD Officer Samuel Jimenez",
-      "ACEP issued an official condemnation and advocate statement following her death",
-      "Catalyzed lobbying for federal healthcare workplace violence prevention legislation (H.R. 1195)",
-    ],
-    actionableLesson:
-      "Healthcare facilities must establish explicit protocols for handling domestic violence threats, employee threat reporting, and active-threat perimeter security.",
-    coreMessage:
-      "Healthcare workplaces must recognize domestic violence threats as urgent occupational safety hazards and build coordinated campus defense measures.",
-    memorialPublication: {
-      title: "Workplace Threat Screening & Healthcare Campus Security Guide",
-      focus: "Occupational Safety & Domestic Violence Intervention",
-      deliverable: "A clinical guide for healthcare systems to identify, support, and protect staff facing external domestic violence threats.",
-    },
-    references: [
-      { title: "ACEP Statement on the Murder of Dr. Tamara O'Neal (November 2018)", url: "https://www.acep.org/news-media/press-releases/acep-mourns-the-loss-of-tamara-oneal-md-facep/", publisher: "American College of Emergency Physicians", isPrimary: true },
-      { title: "Chicago Tribune: Mercy Hospital Shooting — Victims and Investigation", url: "https://www.chicagotribune.com/news/breaking/ct-met-chicago-mercy-hospital-shooting-20181119-story.html", publisher: "Chicago Tribune" },
     ],
   },
 
