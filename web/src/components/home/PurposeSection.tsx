@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
-import { Heart, Shield, Sparkles, BookOpen, ArrowRight, Clock, Globe2 } from 'lucide-react';
+import { Heart, Shield, Sparkles, BookOpen, ArrowRight, Clock, Globe2, User } from 'lucide-react';
 import { withBasePath } from '@/lib/basePath';
 import MoumitaMemorialModal from './MoumitaMemorialModal';
 
@@ -109,7 +108,7 @@ export default function PurposeSection() {
             boxSizing: 'border-box',
           }}
         >
-          {/* Her Picture */}
+          {/* Memorial Silhouette Placeholder */}
           <div
             style={{
               position: 'relative',
@@ -120,16 +119,28 @@ export default function PurposeSection() {
               border: '2px solid rgba(244, 63, 94, 0.4)',
               flexShrink: 0,
               boxShadow: '0 4px 18px rgba(0,0,0,0.12)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'linear-gradient(180deg, rgba(244, 63, 94, 0.15) 0%, rgba(244, 63, 94, 0.05) 100%)',
+              color: '#e11d48',
             }}
+            aria-label="Memorial silhouette placeholder"
           >
-            <Image
-              src={withBasePath('/assets/moumita-debnath.jpg')}
-              alt="Dr. Moumita Debnath"
-              fill
-              unoptimized
-              style={{ objectFit: 'cover' }}
-              sizes="100px"
-            />
+            <User size={44} strokeWidth={1.5} />
+            <span
+              style={{
+                fontSize: '0.625rem',
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                color: '#be123c',
+                marginTop: '4px',
+              }}
+            >
+              In Memoriam
+            </span>
           </div>
 
           {/* Details, Ethos & Hub Links */}

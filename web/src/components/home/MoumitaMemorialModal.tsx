@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Shield, Sparkles, Stethoscope, Volume2, HeartHandshake, Play, Pause } from 'lucide-react';
+import { X, Shield, Sparkles, Stethoscope, Volume2, HeartHandshake, Play, Pause, User } from 'lucide-react';
 import { withBasePath } from '@/lib/basePath';
 import { useModalAudio } from '@/lib/audio/modalAudioController';
 
@@ -206,17 +205,15 @@ export default function MoumitaMemorialModal({
         >
           {/* 1. Hero Doctor Card - Generously Padded Dignified Profile Frame */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-rose-50/70 via-slate-50/90 to-white dark:from-rose-950/25 dark:via-[#161528] dark:to-[#12111d] border border-rose-200/90 dark:border-rose-900/50 shadow-sm shrink-0">
-            {/* Doctor Portrait */}
-            <div className="relative w-28 h-36 sm:w-32 sm:h-40 rounded-2xl overflow-hidden border-2 border-white dark:border-white/20 shadow-md shrink-0">
-              <Image
-                src={withBasePath('/assets/moumita-debnath.jpg')}
-                alt="Portrait of Dr. Moumita Debnath"
-                fill
-                unoptimized
-                style={{ objectFit: 'cover', objectPosition: 'top' }}
-                sizes="(max-width: 640px) 112px, 128px"
-                priority
-              />
+            {/* Doctor Memorial Silhouette Placeholder */}
+            <div
+              className="relative w-28 h-36 sm:w-32 sm:h-40 rounded-2xl overflow-hidden border-2 border-white dark:border-white/20 shadow-md shrink-0 flex flex-col items-center justify-center bg-gradient-to-b from-rose-100 via-rose-50 to-rose-200/70 dark:from-rose-950/40 dark:via-[#1a1829] dark:to-slate-900 text-rose-500/80 dark:text-rose-400/80"
+              aria-label="Memorial silhouette placeholder"
+            >
+              <User size={52} strokeWidth={1.5} />
+              <span className="text-[10px] font-bold tracking-wider text-rose-700/80 dark:text-rose-300/80 uppercase mt-2">
+                In Memoriam
+              </span>
             </div>
 
             {/* Profile Information with Clear Hierarchy & Breathing Room */}

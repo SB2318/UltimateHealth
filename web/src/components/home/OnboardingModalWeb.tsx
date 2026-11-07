@@ -1476,14 +1476,15 @@ export default function OnboardingModalWeb() {
                       {/* Step 1: Dr. Moumita Debnath Memorial Profile Card */}
                       {activeStepIndex === 0 && (
                         <div className="flex flex-row items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl bg-[#141528]/85 border border-white/10 shadow-lg relative overflow-hidden group">
-                          {/* Profile Image with subtle radiant ring */}
-                          <div className="relative w-22 h-22 sm:w-24 sm:h-24 lg:w-26 lg:h-26 rounded-2xl overflow-hidden ring-2 ring-pink-500/40 shadow-lg shadow-pink-500/20 shrink-0">
-                            <img
-                              src={withBasePath('/assets/moumita-debnath.jpg')}
-                              alt="Dr. Moumita Debnath, Postgraduate Resident Doctor in Pulmonary and Chest Medicine"
-                              className="w-full h-full object-cover object-top"
-                              loading="eager"
-                            />
+                          {/* Profile Memorial Silhouette Placeholder with subtle radiant ring */}
+                          <div
+                            className="relative w-22 h-22 sm:w-24 sm:h-24 lg:w-26 lg:h-26 rounded-2xl overflow-hidden ring-2 ring-pink-500/40 shadow-lg shadow-pink-500/20 shrink-0 flex flex-col items-center justify-center bg-gradient-to-b from-pink-950/60 to-purple-950/70 text-pink-300"
+                            aria-label="Memorial silhouette placeholder"
+                          >
+                            <User size={38} strokeWidth={1.5} />
+                            <span className="text-[9px] font-bold tracking-wider text-pink-300/80 uppercase mt-1">
+                              In Memoriam
+                            </span>
                           </div>
                           {/* Profile Text */}
                           <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
