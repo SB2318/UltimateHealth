@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useRef, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import { X, ExternalLink, Shield, BookOpen, Heart, CheckCircle2, Award, Landmark, User, Clock } from "lucide-react";
 import { TributeProfile } from "@/types/tribute";
+import { getLocalizedProfile } from "@/data/tribute-profiles";
 import { withBasePath } from "@/lib/basePath";
 
 interface ProfileDetailModalProps {
@@ -16,13 +17,18 @@ interface ProfileDetailModalProps {
 }
 
 export default function ProfileDetailModal({
-  profile,
+  profile: rawProfile,
   isOpen,
   onClose,
   onSelectNext,
   onSelectPrev,
 }: ProfileDetailModalProps) {
   const t = useTranslations("tribute");
+  const locale = useLocale();
+  const profile = useMemo(
+    () => (rawProfile ? getLocalizedProfile(rawProfile, locale) : null),
+    [rawProfile, locale]
+  );
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Close on ESC
@@ -214,19 +220,19 @@ export default function ProfileDetailModal({
                         padding: "2px 8px",
                         borderRadius: "4px",
                         background:
-                          profile.verificationStatus === "Verified"
+                          profile.verificationStatus === "Verified" || profile.verificationStatus === "Historically Verified"
                             ? "rgba(16, 185, 129, 0.12)"
                             : profile.verificationStatus === "Partially Verified"
                             ? "rgba(245, 158, 11, 0.12)"
                             : "rgba(59, 130, 246, 0.12)",
                         color:
-                          profile.verificationStatus === "Verified"
+                          profile.verificationStatus === "Verified" || profile.verificationStatus === "Historically Verified"
                             ? "#059669"
                             : profile.verificationStatus === "Partially Verified"
                             ? "#d97706"
                             : "#2563eb",
                         border:
-                          profile.verificationStatus === "Verified"
+                          profile.verificationStatus === "Verified" || profile.verificationStatus === "Historically Verified"
                             ? "1px solid rgba(16, 185, 129, 0.3)"
                             : profile.verificationStatus === "Partially Verified"
                             ? "1px solid rgba(245, 158, 11, 0.3)"
@@ -325,7 +331,7 @@ export default function ProfileDetailModal({
               <Heart size={15} />
               2. What They Contributed to the World
             </h3>
-            <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0 }}>
+            <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0, whiteSpace: "pre-line" }}>
               {profile.contributions}
             </p>
           </div>
@@ -345,6 +351,7 @@ export default function ProfileDetailModal({
                 fontSize: "0.9rem",
                 lineHeight: 1.65,
                 color: "var(--explorer-text-secondary, #475569)",
+                whiteSpace: "pre-line",
               }}
             >
               {profile.factualContext}
@@ -388,7 +395,7 @@ export default function ProfileDetailModal({
               <Landmark size={15} />
               4. Societal Impact & Subsequent Reforms
             </h3>
-            <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0 }}>
+            <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--explorer-text-secondary, #334155)", margin: 0, whiteSpace: "pre-line" }}>
               {profile.societalImpact}
             </p>
           </div>
@@ -409,6 +416,7 @@ export default function ProfileDetailModal({
                 lineHeight: 1.65,
                 color: "var(--site-heading, #1e293b)",
                 fontWeight: 600,
+                whiteSpace: "pre-line",
               }}
             >
               {profile.actionableLesson}
@@ -456,7 +464,7 @@ export default function ProfileDetailModal({
               Focus: {profile.memorialPublication.focus}
             </div>
 
-            <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--explorer-text-secondary, #475569)", margin: 0 }}>
+            <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--explorer-text-secondary, #475569)", margin: 0, whiteSpace: "pre-line" }}>
               {profile.memorialPublication.deliverable}
             </p>
           </div>

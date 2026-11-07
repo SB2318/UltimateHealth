@@ -11,6 +11,7 @@ export type HumanitarianPillar = "remember" | "listen" | "recognise" | "learn" |
 
 export type VerificationStatus =
   | "Verified"
+  | "Historically Verified"
   | "Partially Verified"
   | "Under Review"
   | "Disputed";
@@ -78,6 +79,26 @@ export interface TributeProfile {
   };
 
   references: TributeReference[];
+  translations?: Record<string, TributeProfileTranslation>;
+}
+
+export interface TributeProfileTranslation {
+  name?: string;
+  roleAndField?: string;
+  categoryLabel?: string;
+  coreMessage?: string;
+  whoWasThisPerson?: string;
+  contributions?: string;
+  factualContext?: string;
+  societalImpact?: string;
+  actionableLesson?: string;
+  verifiedFacts?: string[];
+  memorialPublication?: {
+    title?: string;
+    focus?: string;
+    deliverable?: string;
+    initiativeStatus?: "Proposed Initiative" | "Planned Resource" | "In Editorial Review" | "Published Resource";
+  };
 }
 
 export interface SurvivorVoice {

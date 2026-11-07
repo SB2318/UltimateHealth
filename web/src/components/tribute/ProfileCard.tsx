@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { User, ArrowRight, Heart, BookOpen, Clock } from "lucide-react";
 import { TributeProfile } from "@/types/tribute";
+import { getLocalizedProfile } from "@/data/tribute-profiles";
 import { withBasePath } from "@/lib/basePath";
 
 interface ProfileCardProps {
@@ -11,8 +12,10 @@ interface ProfileCardProps {
   onOpenModal: (profile: TributeProfile) => void;
 }
 
-export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) {
+export default function ProfileCard({ profile: rawProfile, onOpenModal }: ProfileCardProps) {
   const t = useTranslations("tribute");
+  const locale = useLocale();
+  const profile = getLocalizedProfile(rawProfile, locale);
   return (
     <div
       onClick={() => onOpenModal(profile)}
@@ -67,16 +70,18 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
                   padding: "2px 6px",
                   borderRadius: "4px",
                   background:
-                    profile.verificationStatus === "Verified"
+                    profile.verificationStatus === "Verified" || profile.verificationStatus === "Historically Verified"
                       ? "rgba(16, 185, 129, 0.12)"
                       : "rgba(245, 158, 11, 0.12)",
                   color:
-                    profile.verificationStatus === "Verified"
+                    profile.verificationStatus === "Verified" || profile.verificationStatus === "Historically Verified"
                       ? "#059669"
                       : "#d97706",
                 }}
               >
-                {profile.verificationStatus === "Verified" ? "✓ Verified" : "⚠ Qualified"}
+                {profile.verificationStatus === "Verified" || profile.verificationStatus === "Historically Verified"
+                  ? "✓ Verified"
+                  : "⚠ Qualified"}
               </span>
             )}
           </div>

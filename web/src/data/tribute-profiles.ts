@@ -47,8 +47,274 @@ export const TRIBUTE_CATEGORIES: { id: TributeCategory; label: string; count: nu
 
 export const TRIBUTE_PROFILES: TributeProfile[] = [
   // ── 1. Healthcare Professionals ──
+    {
+      "id": 1,
+      "slug": "aruna-shanbaug",
+      "name": "Aruna Shanbaug",
+      "country": "India",
+      "countryFlag": "🇮🇳",
+      "category": "healthcare",
+      "categoryLabel": "Healthcare Ethics & Nursing Dignity",
+      "eraOrYear": "1948–2015",
+      "roleAndField": "Staff Nurse · King Edward Memorial (KEM) Hospital, Mumbai",
+      "avatarUrl": "https://images.openai.com/static-rsc-4/bEkHZq8tlmEVDlWf0AtrWa1IJz9nUsL0PLkkx0mJNud9itRRtfKkb-8Q9gTdVOgYSchOJ3_i21FGiPD0IAC6A4n1k-MAgBWK4FmRStyYyayReuSD0k9pr8_V7YanoRqVnK03NHQ7FCA90lUQNm9A4WJX7xvrUfNSXE12PGEypFg?purpose=inline",
+      "verificationStatus": "Historically Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "coreMessage": "Healthcare workers deserve safe working environments, and long-term patient care must preserve human dignity, compassion and individual rights at every stage of life.",
+      "whoWasThisPerson": "Born on 1 June 1948 in Haldipur, Karnataka, Aruna Shanbaug was a staff nurse at King Edward Memorial (KEM) Hospital in Mumbai.\nShe was known among her colleagues for her professional commitment to nursing and was engaged to be married at the time of the attack that changed the course of her life.",
+      "contributions": "Before the attack, Aruna worked in frontline public healthcare, caring for patients as part of her professional responsibilities at KEM Hospital.\nHer subsequent case became a significant milestone in India's legal and ethical discussions surrounding patient dignity, medical decision-making and end-of-life care.\nThe dedication of successive generations of KEM Hospital nursing staff, who cared for her for more than four decades, remains an important part of her legacy.",
+      "factualContext": "On 27 November 1973, while on duty at KEM Hospital, Aruna was sexually assaulted and strangled using a dog chain by a hospital sweeper. The assault caused severe oxygen deprivation to her brain, resulting in permanent neurological damage.\nShe subsequently remained in a severely impaired neurological state, later assessed by a Supreme Court-appointed medical team as meeting most criteria for a permanent vegetative state.\nFor approximately 41 years and six months, she received continuous care from KEM Hospital's nursing and medical staff.\nIn May 2015, she developed severe pneumonia and was admitted to intensive care. She suffered a cardiac arrest and died on 18 May 2015 at KEM Hospital, aged 66.",
+      "verifiedFacts": [
+          "Birth: 1 June 1948, Haldipur, Karnataka.",
+          "Profession: Staff Nurse at KEM Hospital, Mumbai.",
+          "Attack: 27 November 1973, resulting in severe brain injury due to oxygen deprivation.",
+          "Medical condition: Persistent vegetative state, with findings documented by a Supreme Court-appointed medical team.",
+          "Duration of care: Approximately 41 years and six months.",
+          "Death: 18 May 2015, following severe pneumonia and cardiac arrest.",
+          "Age at death: 66 years."
+      ],
+      "societalImpact": "2011 — Aruna Ramchandra Shanbaug v. Union of India, (2011) 4 SCC 454\nOn 7 March 2011, the Supreme Court of India delivered a landmark judgment concerning passive euthanasia.\nThe Court rejected the petition seeking withdrawal of Aruna's life-sustaining feeding, respecting the position of KEM Hospital's nursing staff, who wished to continue caring for her.\nHowever, the judgment recognised a procedure for passive euthanasia under strict judicial safeguards, including High Court oversight.\n\n2018 — Common Cause v. Union of India, (2018) 5 SCC 1\nOn 9 March 2018, a separate five-judge Constitution Bench of the Supreme Court recognised advance medical directives (living wills) and established procedures for their implementation.\nThis was a subsequent legal milestone, distinct from the 2011 Shanbaug judgment.\n\nTogether, these cases became important milestones in India's legal discussion of patient autonomy, medical ethics and end-of-life decision-making.",
+      "actionableLesson": "Healthcare institutions should prioritise both workplace security and the dignity of patients receiving long-term medical care.\n\nHealthcare Workplace Safety:\n• Ensure appropriate security coverage across hospital corridors and restricted clinical areas.\n• Establish emergency response mechanisms for night-shift personnel.\n• Conduct regular workplace safety assessments.\n• Provide confidential incident-reporting mechanisms and institutional accountability.\n\nLong-Term Patient Dignity:\n• Ensure individualised medical assessment and appropriate nursing care.\n• Respect patient rights and applicable medical decision-making procedures.\n• Maintain transparent communication with families and caregivers.\n• Follow evidence-based clinical and ethical standards for long-term neurological care.",
+      "memorialPublication": {
+          "title": "Long-Term Patient Dignity & Healthcare Workplace Safety Initiative",
+          "focus": "Medical Ethics, Long-Term Care and Healthcare Worker Safety",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "A proposed initiative inspired by Aruna's experience, addressing two interconnected responsibilities:\n\nA. Long-Term Patient Care\n• Respectful nursing and personal care.\n• Individualised clinical assessment and treatment decisions.\n• Ethical end-of-life decision-making.\n• Appropriate family involvement and medical oversight.\n\nB. Healthcare Workplace Safety\n• Night-shift workplace security standards.\n• Restricted-area access controls.\n• Emergency response and incident-reporting mechanisms.\n• Regular institutional safety assessments.\n\nThis is a proposed social and institutional initiative by UltimateHealth, not an existing clinical protocol or a claim that these measures were directly introduced through the Shanbaug judgment."
+      },
+      "references": [
+          {
+              "title": "Aruna Ramchandra Shanbaug v. Union of India (2011), (2011) 4 SCC 454 — Supreme Court of India",
+              "url": "https://indiankanoon.org/doc/1359740/",
+              "publisher": "Supreme Court of India",
+              "isPrimary": true
+          },
+          {
+              "title": "Common Cause v. Union of India (2018), (2018) 5 SCC 1 — Advance Medical Directives and Passive Euthanasia",
+              "url": "https://indiankanoon.org/doc/184449972/",
+              "publisher": "Supreme Court of India",
+              "isPrimary": true
+          },
+          {
+              "title": "BBC News — Aruna Shanbaug: The Story of a Brain-Damaged Indian Nurse",
+              "url": "https://www.bbc.com/news/world-asia-india-32776897",
+              "publisher": "BBC News"
+          },
+          {
+              "title": "The Indian Express — Reporting on Aruna Shanbaug's death and final days",
+              "url": "https://indianexpress.com/article/cities/mumbai/against-mercy-death-kem-remembers-aruna-as-she-was/",
+              "publisher": "The Indian Express"
+          },
+          {
+              "title": "The Times of India — KEM nurses remember Aruna",
+              "url": "https://timesofindia.indiatimes.com/city/mumbai/year-on-kem-nurses-still-miss-aruna-feel-sense-of-emptiness/articleshow/52316161.cms",
+              "publisher": "The Times of India"
+          }
+      ],
+      "translations": {
+          "hi": {
+              "name": "अरुणा शानबाग",
+              "roleAndField": "स्टाफ नर्स · किंग एडवर्ड मेमोरियल (केईएम) अस्पताल, मुंबई",
+              "categoryLabel": "स्वास्थ्य सेवा नैतिकता एवं नर्सिंग गरिमा",
+              "coreMessage": "स्वास्थ्य सेवा कर्मियों को सुरक्षित कार्य वातावरण मिलना चाहिए, और दीर्घकालिक रोगी देखभाल में जीवन के हर चरण में मानवीय गरिमा, करुणा और व्यक्तिगत अधिकारों की रक्षा होनी चाहिए।",
+              "whoWasThisPerson": "1 जून 1948 को कर्नाटक के हल्दीपुर में जन्मी अरुणा शानबाग मुंबई के किंग एडवर्ड मेमोरियल (केईएम) अस्पताल में एक स्टाफ नर्स थीं।\nवे अपने सहयोगियों के बीच नर्सिंग के प्रति अपनी पेशेवर प्रतिबद्धता के लिए जानी जाती थीं और उस हमले के समय उनका विवाह तय हो चुका था जिसने उनके जीवन की दिशा बदल दी।",
+              "contributions": "हमले से पहले, अरुणा ने केईएम अस्पताल में अपनी पेशेवर जिम्मेदारियों के हिस्से के रूप में रोगियों की देखभाल करते हुए अग्रिम पंक्ति की सार्वजनिक स्वास्थ्य सेवा में काम किया।\nउनका मामला आगे चलकर रोगी की गरिमा, चिकित्सा निर्णय लेने और जीवन के अंतिम क्षणों की देखभाल से जुड़ी भारत की कानूनी और नैतिक चर्चाओं में एक महत्वपूर्ण मील का पत्थर बन गया।\nकेईएम अस्पताल के नर्सिंग स्टाफ की लगातार पीढ़ियों का समर्पण, जिन्होंने चार दशकों से अधिक समय तक उनकी देखभाल की, उनकी विरासत का एक महत्वपूर्ण हिस्सा बना हुआ है।",
+              "factualContext": "27 नवंबर 1973 को केईएम अस्पताल में ड्यूटी के दौरान, अस्पताल के एक सफाईकर्मी ने अरुणा पर हमला किया और कुत्ते की जंजीर से उनका गला घोंट दिया। इस हमले से उनके मस्तिष्क में ऑक्सीजन की गंभीर कमी हो गई, जिसके परिणामस्वरूप स्थायी तंत्रिका क्षति हुई।\nइसके बाद वे गंभीर रूप से दुर्बल तंत्रिका संबंधी स्थिति में रहीं, जिसका बाद में सुप्रीम कोर्ट द्वारा नियुक्त मेडिकल टीम ने मूल्यांकन किया और पाया कि वे स्थायी वानस्पतिक अवस्था (PVS) के अधिकांश मानदंडों को पूरा करती हैं।\nलगभग 41 वर्ष और छह महीने तक, उन्हें केईएम अस्पताल के नर्सिंग और मेडिकल स्टाफ से निरंतर देखभाल मिली।\nमई 2015 में, उन्हें गंभीर निमोनिया हो गया और उन्हें गहन चिकित्सा इकाई (ICU) में भर्ती कराया गया। कार्डियक अरेस्ट के बाद 18 मई 2015 को 66 वर्ष की आयु में केईएम अस्पताल में उनका निधन हो गया।",
+              "verifiedFacts": [
+                  "जन्म: 1 जून 1948, हल्दीपुर, कर्नाटक।",
+                  "पेशा: स्टाफ नर्स, केईएम अस्पताल, मुंबई।",
+                  "हमला: 27 नवंबर 1973, ऑक्सीजन की कमी से मस्तिष्क को गंभीर क्षति।",
+                  "चिकित्सा स्थिति: स्थायी वानस्पतिक अवस्था (PVS), सुप्रीम कोर्ट की मेडिकल टीम द्वारा प्रलेखित।",
+                  "देखभाल की अवधि: लगभग 41 वर्ष और छह महीने।",
+                  "निधन: 18 मई 2015, गंभीर निमोनिया और कार्डियक अरेस्ट के बाद।",
+                  "मृत्यु के समय आयु: 66 वर्ष।"
+              ],
+              "societalImpact": "2011 — अरुणा रामचंद्र शानबाग बनाम भारत संघ, (2011) 4 SCC 454\n7 मार्च 2011 को, भारत के सर्वोच्च न्यायालय ने पैसिव इच्छामृत्यु (पैसिव यूथेनेशिया) के संबंध में एक ऐतिहासिक निर्णय सुनाया।\nन्यायालय ने अरुणा के जीवन-रक्षक आहार को रोकने की याचिका को खारिज कर दिया और केईएम अस्पताल के नर्सिंग स्टाफ के रुख का सम्मान किया, जो उनकी देखभाल जारी रखना चाहते थे।\nहालांकि, फैसले ने उच्च न्यायालय की निगरानी सहित सख्त न्यायिक सुरक्षा उपायों के तहत पैसिव इच्छामृत्यु की प्रक्रिया को मान्यता दी।\n\n2018 — कॉमन कॉज़ बनाम भारत संघ, (2018) 5 SCC 1\n9 मार्च 2018 को, सर्वोच्च न्यायालय की पांच-न्यायाधीशों की संविधान पीठ ने अग्रिम चिकित्सा निर्देशों (लिविंग विल्स) को कानूनी मान्यता दी और उनके कार्यान्वयन की प्रक्रिया स्थापित की।\nयह 2011 के शानबाग फैसले से अलग एक बाद का कानूनी मील का पत्थर था।\n\nसाथ मिलकर, ये मामले रोगी की स्वायत्तता, चिकित्सा नैतिकता और जीवन के अंत के निर्णयों पर भारत की कानूनी चर्चा के ऐतिहासिक आधार बने।",
+              "actionableLesson": "स्वास्थ्य सेवा संस्थानों को कार्यस्थल सुरक्षा और दीर्घकालिक चिकित्सा देखभाल प्राप्त करने वाले रोगियों की गरिमा दोनों को प्राथमिकता देनी चाहिए।\n\nस्वास्थ्य सेवा कार्यस्थल सुरक्षा:\n• अस्पताल के गलियारों और प्रतिबंधित नैदानिक क्षेत्रों में उचित सुरक्षा कवरेज सुनिश्चित करें।\n• रात्रि पाली के कर्मियों के लिए आपातकालीन प्रतिक्रिया तंत्र स्थापित करें।\n• नियमित कार्यस्थल सुरक्षा मूल्यांकन आयोजित करें।\n• गोपनीय घटना-रिपोर्टिंग तंत्र और संस्थागत जवाबदेही प्रदान करें।\n\nदीर्घकालिक रोगी गरिमा:\n• व्यक्तिगत चिकित्सा मूल्यांकन और उचित नर्सिंग देखभाल सुनिश्चित करें।\n• रोगी के अधिकारों और लागू चिकित्सा निर्णय प्रक्रियाओं का सम्मान करें।\n• परिवारों और देखभाल करने वालों के साथ पारदर्शी संवाद बनाए रखें।\n• दीर्घकालिक तंत्रिका संबंधी देखभाल के लिए साक्ष्य-आधारित नैदानिक और नैतिक मानकों का पालन करें।",
+              "memorialPublication": {
+                  "title": "दीर्घकालिक रोगी गरिमा एवं स्वास्थ्य सेवा कार्यस्थल सुरक्षा पहल",
+                  "focus": "चिकित्सा नैतिकता, दीर्घकालिक देखभाल एवं स्वास्थ्य सेवा कर्मी सुरक्षा",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "अरुणा के अनुभव से प्रेरित एक प्रस्तावित पहल, जो दो परस्पर जुड़ी जिम्मेदारियों को संबोधित करती है:\n\nA. दीर्घकालिक रोगी देखभाल\n• सम्मानजनक नर्सिंग और व्यक्तिगत देखभाल।\n• व्यक्तिगत नैदानिक मूल्यांकन और उपचार निर्णय।\n• नैतिक अंत-जीवन निर्णय लेना।\n• उचित पारिवारिक भागीदारी और चिकित्सा निरीक्षण।\n\nB. स्वास्थ्य सेवा कार्यस्थल सुरक्षा\n• रात्रि पाली कार्यस्थल सुरक्षा मानक।\n• प्रतिबंधित क्षेत्र पहुंच नियंत्रण।\n• आपातकालीन प्रतिक्रिया और घटना रिपोर्टिंग तंत्र।\n• नियमित संस्थागत सुरक्षा मूल्यांकन।\n\nयह अल्टीमेटहेल्थ द्वारा एक प्रस्तावित सामाजिक और संस्थागत पहल है, न कि कोई मौजूदा नैदानिक प्रोटोकॉल या दावा कि ये उपाय सीधे शानबाग फैसले से शुरू किए गए थे।"
+              }
+          },
+          "bn": {
+              "name": "অরুণা শানবাগ",
+              "roleAndField": "স্টাফ নার্স · কিং এডওয়ার্ড মেমোরিয়াল (কেইএম) হাসপাতাল, মুম্বই",
+              "categoryLabel": "স্বাস্থ্যসেবা নীতি ও নার্সিং মর্যাদা",
+              "coreMessage": "স্বাস্থ্যসেবা কর্মীদের নিরাপদ কর্মপরিবেশ প্রাপ্য, এবং দীর্ঘমেয়াদী রোগীর সেবায় জীবনের প্রতিটি পর্যায়ে মানবিক মর্যাদা, সহানুভূতি ও ব্যক্তিগত অধিকার রক্ষা করতে হবে।",
+              "whoWasThisPerson": "১৯৪৮ সালের ১ জুন কর্ণাটকের হালদিপুরে জন্মগ্রহণকারী অরুণা শানবাগ মুম্বইয়ের কিং এডওয়ার্ড মেমোরিয়াল (কেইএম) হাসপাতালের একজন স্টাফ নার্স ছিলেন।\nতিনি সহকর্মীদের মধ্যে নার্সিং সেবায় নিষ্ঠার জন্য পরিচিত ছিলেন এবং যে বর্বর হামলার শিকার হয়ে তার জীবন বদলে যায়, সে সময় তিনি বিবাহবন্ধনে আবদ্ধ হতে যাচ্ছিলেন।",
+              "contributions": "আক্রমণের পূর্বে অরুণা কেইএম হাসপাতালে ফ্রন্টলাইন জনস্বাস্থ্য সেবায় রোগীদের যত্ন নিতেন।\nপরবর্তীতে তার মামলাটি রোগীর মর্যাদা, চিকিৎসা সংক্রান্ত সিদ্ধান্ত গ্রহণ এবং জীবনের অন্তিম মুহূর্তের শুশ্রূষা বিষয়ক ভারতের আইনি ও নৈতিক আলোচনায় একটি ঐতিহাসিক মাইলফলক হয়ে ওঠে।\nচার দশকেরও বেশি সময় ধরে কেইএম হাসপাতালের নার্সদের প্রজন্মের পর প্রজন্ম যেভাবে তার সেবা করে গেছেন, তা তার স্মৃতির এক অবিচ্ছেদ্য অংশ।",
+              "factualContext": "১৯৭৩ সালের ২৭ নভেম্বর কেইএম হাসপাতালে দায়িত্ব পালনকালে এক হাসপাতাল কর্মী অরুণার ওপর পাশবিক অত্যাচার চালায় এবং কুকুরের শিকল দিয়ে শ্বাসরোধ করে। এতে তার মস্তিষ্কে অক্সিজেনের তীব্র ঘাটতি দেখা দেয় এবং স্থায়ী স্নায়বিক ক্ষতি হয়।\nপরবর্তীতে তিনি স্থায়ী সংজ্ঞাহীন অবস্থায় (PVS) থাকেন, যা সুপ্রিম কোর্ট নিযুক্ত মেডিকেল টিম দ্বারা নথিভুক্ত করা হয়।\nপ্রায় ৪১ বছর ছয় মাস কেইএম হাসপাতালের নার্স ও চিকিৎসকরা নিরবচ্ছিন্নভাবে তার সেবা করেন।\n২০১৫ সালের মে মাসে তীব্র নিউমোনিয়ায় আক্রান্ত হয়ে সিসিইউতে চিকিৎসাধীন অবস্থায় ১৮ মে ২০১৫ তারিখে ৬৬ বছর বয়সে কেইএম হাসপাতালে তিনি শেষ নিঃশ্বাস ত্যাগ করেন।",
+              "verifiedFacts": [
+                  "জন্ম: ১ জুন ১৯৪৮, হালদিপুর, কর্ণাটক।",
+                  "পেশা: স্টাফ নার্স, কেইএম হাসপাতাল, মুম্বই।",
+                  "আক্রমণ: ২৭ নভেম্বর ১৯৭৩, অক্সিজেনের অভাবে মস্তিষ্কে স্থায়ী স্নায়বিক ক্ষতি।",
+                  "চিকিৎসা অবস্থা: স্থায়ী সংজ্ঞাহীন অবস্থা (PVS), সুপ্রিম কোর্টের মেডিকেল টিম কর্তৃক প্রমাণিত।",
+                  "সেবার মেয়াদ: প্রায় ৪১ বছর ছয় মাস।",
+                  "মৃত্যু: ১৮ মে ২০১৫, তীব্র নিউমোনিয়া ও কার্ডিয়াক অ্যারেস্টে।",
+                  "মৃত্যুকালে বয়স: ৬৬ বছর।"
+              ],
+              "societalImpact": "২০১১ — অরুণা রামচন্দ্র শানবাগ বনাম ভারত রাষ্ট্র, (২০১১) 4 SCC 454\n২০১১ সালের ৭ মার্চ ভারতের সুপ্রিম কোর্ট নিষ্ক্রিয় ইচ্ছামৃত্যু (প্যাসিভ ইউথানেশিয়া) সংক্রান্ত ঐতিহাসিক রায় প্রদান করে।\nআদালত অরুণার জীবনদায়ী খাদ্য সরবরাহ বন্ধের আবেদন প্রত্যাখ্যান করে কেইএম হাসপাতালের নার্সদের সেবার ইচ্ছাকে সম্মান জানায়।\nতবে রায়ে কঠোর বিচারিক সুরক্ষার অধীনে নিষ্ক্রিয় ইচ্ছামৃত্যুর নীতিমালা স্বীকৃতি পায়।\n\n২০১৮ — কমন কজ বনাম ভারত রাষ্ট্র, (২০১৮) 5 SCC 1\n২০১৮ সালের ৯ মার্চ সুপ্রিম কোর্টের ৫ বিচারপতির সংবিধান বেঞ্চ আগাম চিকিৎসা নির্দেশিকা (লিভিং উইল) স্বীকৃতি দেয়।\nএটি ২০১১ সালের মামলার পরবর্তী একটি পৃথক আইনি মাইলফলক।\n\nএকত্রে এই রায় দুটি রোগীর স্বায়ত্তশাসন ও চিকিৎসা নীতিশাস্ত্রে ভারতের আইনের ভিত্তি স্থাপন করে।",
+              "actionableLesson": "স্বাস্থ্য প্রতিষ্ঠানগুলোকে কর্মক্ষেত্রের নিরাপত্তা এবং দীর্ঘমেয়াদী রোগীদের মর্যাদা উভয়কেই অগ্রাধিকার দিতে হবে।\n\nস্বাস্থ্যসেবা কর্মীদের কর্মক্ষেত্রের নিরাপত্তা:\n• হাসপাতালের করিডোর ও সংরক্ষিত ওয়ার্ডে উপযুক্ত নিরাপত্তা ব্যবস্থা নিশ্চিত করা।\n• নাইট শিফটের কর্মীদের জন্য জরুরি সহায়তা ব্যবস্থা গড়ে তোলা।\n• নিয়মিত নিরাপত্তা মূল্যায়ন ও গোপনীয় অভিযোগ জানানোর ব্যবস্থা রাখা।\n\nদীর্ঘমেয়াদী রোগীর মর্যাদা:\n• ব্যক্তিগত চিকিৎসা মূল্যায়ন ও উপযুক্ত নার্সিং কেয়ার নিশ্চিত করা।\n• রোগীর অধিকার ও নৈতিক চিকিৎসা মানদণ্ড কঠোরভাবে অনুসরণ করা।",
+              "memorialPublication": {
+                  "title": "দীর্ঘমেয়াদী রোগীর মর্যাদা ও স্বাস্থ্যসেবা কর্মক্ষেত্রের নিরাপত্তা উদ্যোগ",
+                  "focus": "চিকিৎসা নীতিশাস্ত্র, দীর্ঘমেয়াদী যত্ন ও স্বাস্থ্যকর্মী সুরক্ষা",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "অরুণার জীবন থেকে অনুপ্রাণিত হয়ে দীর্ঘমেয়াদী রোগীর মানবিক শুশ্রূষা এবং চিকিৎসাকর্মীদের নৈশকালীন নিরাপত্তা নিশ্চিত করার একটি সমন্বিত প্রস্তাবনা।"
+              }
+          },
+          "ta": {
+              "name": "அருணா ஷான்பாக்",
+              "roleAndField": "பணி செவிலியர் · கிங் எட்வர்ட் மெமோரியல் (KEM) மருத்துவமனை, மும்பை",
+              "categoryLabel": "சுகாதார நெறிமுறைகள் & செவிலியர் கண்ணியம்",
+              "coreMessage": "சுகாதாரப் பணியாளர்களுக்குப் பாதுகாப்பான பணிச்சூழல் அவசியமானது; மேலும் நீண்டகால நோயாளிப் பராமரிப்பு வாழ்வின் ஒவ்வொரு கட்டத்திலும் மனித கண்ணியம், இரக்கம் மற்றும் தனிநபர் உரிமைகளைப் பாதுகாக்க வேண்டும்.",
+              "whoWasThisPerson": "ஜூன் 1, 1948 இல் கர்நாடகாவின் ஹல்திபூரில் பிறந்த அருணா ஷான்பாக், மும்பையில் உள்ள கே.இ.எம் மருத்துவமனையில் பணி செவிலியராகப் பணியாற்றினார்.\nசக ஊழியர்களால் போற்றப்பட்ட அவர், அவரது வாழ்க்கையை மாற்றிய தாக்குதலின் போது திருமண நிச்சயிக்கப்பட்டிருந்தார்.",
+              "contributions": "தாக்குதலுக்கு முன்பு, அருணா கே.இ.எம் மருத்துவமனையில் தீவிர பொது சுகாதாரப் பிரிவில் நோயாளிகளுக்குப் பரிவோடு சேவை செய்தார்.\nஅவரது வழக்கு இந்தியாவின் நோயாளி கண்ணியம் மற்றும் மருத்துவ முடிவெடுக்கும் நெறிமுறைகளில் ஒரு வரலாற்று மைல்கல்லாக மாறியது.\nநான்கு தசாப்தங்களுக்கும் மேலாக அவரைப் பராமரித்த கே.இ.எம் மருத்துவமனை செவிலியர்களின் அர்ப்பணிப்பு அவரது நினைவின் முக்கிய பகுதியாகும்.",
+              "factualContext": "நவம்பர் 27, 1973 அன்று, கே.இ.எம் மருத்துவமனையில் பணியில் இருந்தபோது, அருணா தாக்கப்பட்டுக் கழுத்து நெரிக்கப்பட்டார். இதனால் மூளைக்கு ஆக்சிஜன் தடைபட்டு நிரந்தர நரம்பியல் பாதிப்பு ஏற்பட்டது.\nசுமார் 41 ஆண்டுகள் ஆறு மாதங்கள் அவர் கே.இ.எம் மருத்துவமனை ஊழியர்களின் தொடர் கவனிப்பில் இருந்தார்.\nமே 18, 2015 அன்று தீவிர நிமோனியா மற்றும் மாரடைப்பால் தனது 66வது வயதில் காலமானார்.",
+              "verifiedFacts": [
+                  "பிறப்பு: ஜூன் 1, 1948, ஹல்திபூர், கர்நாடகா.",
+                  "பணி: செவிலியர், கே.இ.எம் மருத்துவமனை, மும்பை.",
+                  "தாக்குதல்: நவம்பர் 27, 1973, மூளைக்கு ஆக்சிஜன் இழப்பு.",
+                  "மருத்துவ நிலை: நிரந்தர உணர்வற்ற நிலை (PVS).",
+                  "பராமரிப்பு காலம்: சுமார் 41 ஆண்டுகள் 6 மாதங்கள்.",
+                  "மறைவு: மே 18, 2015, வயது 66."
+              ],
+              "societalImpact": "2011 அருணா ஷான்பாக் வழக்கு மற்றும் 2018 காமன் காஸ் வழக்கின் மூலம் உச்சநீதிமன்றம் இந்தியாவில் செயலற்ற கருணைக்கொலை மற்றும் வாழும் உயில் (Living Wills) குறித்த வரலாற்றுச் சிறப்புமிக்க சட்ட விதிகளை வகுத்தது.",
+              "actionableLesson": "மருத்துவமனைகளில் இரவுப் பணி ஊழியர்களின் பாதுகாப்பு மற்றும் நீண்டகால நோயாளிகளின் மனித கண்ணியத்தைப் பேணுதல் ஆகியவற்றை நிறுவனங்கள் உறுதிப்படுத்த வேண்டும்.",
+              "memorialPublication": {
+                  "title": "நீண்டகால நோயாளி கண்ணியம் & சுகாதாரப் பணியாளர் பாதுகாப்பு முன்முயற்சி",
+                  "focus": "மருத்துவ நெறிமுறைகள் & பணியிட பாதுகாப்பு",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "நீண்டகால நோயாளிகளின் கண்ணியமான பராமரிப்பு மற்றும் மருத்துவப் பணியாளர்களின் இரவு நேரப் பாதுகாப்பை உறுதி செய்யும் சமூக முன்முயற்சி."
+              }
+          },
+          "or": {
+              "name": "ଅରୁଣା ଶାନବାଗ",
+              "roleAndField": "ଷ୍ଟାଫ୍ ନର୍ସ · କିଙ୍ଗ୍ ଏଡୱାର୍ଡ ମେମୋରିଆଲ୍ (KEM) ହସ୍ପିଟାଲ, ମୁମ୍ବାଇ",
+              "categoryLabel": "ସ୍ୱାସ୍ଥ୍ୟସେବା ନୈତିକତା ଏବଂ ନର୍ସିଂ ମର୍ଯ୍ୟାଦା",
+              "coreMessage": "ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀମାନଙ୍କୁ ସୁରକ୍ଷିତ କାର୍ଯ୍ୟ ପରିବେଶ ମିଳିବା ଉଚିତ ଏବଂ ଦୀର୍ଘକାଳୀନ ରୋଗୀ ସେବାରେ ପ୍ରତ୍ୟେକ ପର୍ଯ୍ୟାୟରେ ମାନବୀୟ ମର୍ଯ୍ୟାଦା, ସହାନୁଭୂତି ଓ ବ୍ୟକ୍ତିଗତ ଅଧିକାରକୁ ସୁରକ୍ଷା ଦିଆଯିବା ଆବଶ୍ୟକ।",
+              "whoWasThisPerson": "୧ ଜୁନ୍ ୧୯୪୮ ରେ କର୍ଣ୍ଣାଟକର ହାଲଦିପୁରରେ ଜନ୍ମିତ ଅରୁଣା ଶାନବାଗ ମୁମ୍ବାଇର KEM ହସ୍ପିଟାଲରେ ଜଣେ କର୍ତ୍ତବ୍ୟନିଷ୍ଠ ଷ୍ଟାଫ୍ ନର୍ସ ଥିଲେ।",
+              "contributions": "ଅରୁଣା KEM ହସ୍ପିଟାଲରେ ରୋଗୀମାନଙ୍କ ନିଷ୍ଠାପର ସେବା କରିଥିଲେ। ତାଙ୍କ ମାମଲା ପରବର୍ତ୍ତୀ ସମୟରେ ଭାରତର ଚିକିତ୍ସା ନୈତିକତା ଏବଂ ରୋଗୀ ମର୍ଯ୍ୟାଦା କ୍ଷେତ୍ରରେ ଏକ ଐତିହାସିକ ମାଇଲଖୁଣ୍ଟ ସାବ୍ୟସ୍ତ ହୋଇଥିଲା।",
+              "factualContext": "୨୭ ନଭେମ୍ବର ୧୯୭୩ ରେ କର୍ତ୍ତବ୍ୟରତ ଥିବା ବେଳେ ତାଙ୍କ ଉପରେ ହୋଇଥିବା ଆକ୍ରମଣ ଯୋଗୁଁ ମସ୍ତିଷ୍କରେ ଅମ୍ଳଜାନ ଅଭାବରୁ ସେ ସ୍ଥାୟୀ ନିଷ୍କ୍ରିୟ ଅବସ୍ଥା (PVS) ରେ ରହିଥିଲେ। ପ୍ରାୟ ୪୧ ବର୍ଷ ୬ ମାସ KEM ନର୍ସମାନଙ୍କ ଯତ୍ନ ପରେ ୧୮ ମଇ ୨୦୧୫ ରେ ୬୬ ବର୍ଷ ବୟସରେ ତାଙ୍କର ଦେହାନ୍ତ ହୋଇଥିଲା।",
+              "verifiedFacts": [
+                  "ଜନ୍ମ: ୧ ଜୁନ୍ ୧୯୪୮, ହାଲଦିପୁର, କର୍ଣ୍ଣାଟକ।",
+                  "ପେଶା: ଷ୍ଟାଫ୍ ନର୍ସ, KEM ହସ୍ପିଟାଲ, ମୁମ୍ବାଇ।",
+                  "ସେବା ଯତ୍ନ ଅବଧି: ପ୍ରାୟ ୪୧ ବର୍ଷ ୬ ମାସ।",
+                  "ମୃତ୍ୟୁ: ୧୮ ମଇ ୨୦୧୫, ବୟସ ୬୬ ବର୍ଷ।"
+              ],
+              "societalImpact": "୨୦୧୧ ସୁପ୍ରିମକୋର୍ଟ ରାୟ ଦ୍ୱାରା ପାସିଭ୍ ଇଚ୍ଛାମୃତ୍ୟୁ ଏବଂ ୨୦୧୮ ରାୟ ଦ୍ୱାରା ଲିଭିଂ ୱିଲ୍ ସମ୍ପର୍କରେ ଐତିହାସିକ ଆଇନ ପ୍ରଣୟନ ହୋଇଥିଲା।",
+              "actionableLesson": "ସ୍ୱାସ୍ଥ୍ୟ ଅନୁଷ୍ଠାନଗୁଡ଼ିକ ରାତ୍ରିକାଳୀନ ସୁରକ୍ଷା ଏବଂ ଦୀର୍ଘକାଳୀନ ରୋଗୀଙ୍କ ମର୍ଯ୍ୟାଦାପୂର୍ଣ୍ଣ ସେବାକୁ ସର୍ବୋଚ୍ଚ ପ୍ରାଥମିକତା ଦେବା ଉଚିତ।",
+              "memorialPublication": {
+                  "title": "ଦୀର୍ଘକାଳୀନ ରୋଗୀ ମର୍ଯ୍ୟାଦା ଓ ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀ ସୁରକ୍ଷା ପଦକ୍ଷେପ",
+                  "focus": "ଚିକିତ୍ସା ନୈତିକତା ଏବଂ କାର୍ଯ୍ୟସ୍ଥଳୀ ସୁରକ୍ଷା",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ଅରୁଣାଙ୍କ ଜୀବନରୁ ପ୍ରେରିତ ଏକ ସାମାଜିକ ଓ ସାଂସ୍ଥାନିକ ସୁରକ୍ଷା ପ୍ରସ୍ତାବନା।"
+              }
+          },
+          "es": {
+              "name": "Aruna Shanbaug",
+              "roleAndField": "Enfermera de Planta · Hospital King Edward Memorial (KEM), Bombay",
+              "categoryLabel": "Ética Médica y Dignidad en la Enfermería",
+              "coreMessage": "Los trabajadores de la salud merecen entornos laborales seguros, y la atención médica a largo plazo debe preservar la dignidad humana, la compasión y los derechos individuales en cada etapa de la vida.",
+              "whoWasThisPerson": "Nacida el 1 de junio de 1948 en Haldipur, Karnataka, Aruna Shanbaug fue enfermera de planta en el Hospital King Edward Memorial (KEM) de Bombay.\nEra admirada entre sus compañeras por su compromiso vocacional y estaba comprometida para contraer matrimonio cuando el ataque cambió el rumbo de su vida.",
+              "contributions": "Antes del ataque, Aruna trabajó en primera línea de la salud pública, cuidando a pacientes en el Hospital KEM.\nSu caso posterior se convirtió en un hito trascendental en los debates legales y éticos de la India sobre la dignidad del paciente, la toma de decisiones médicas y los cuidados al final de la vida.\nLa dedicación de sucesivas generaciones de enfermeras del Hospital KEM, que la cuidaron durante más de cuatro décadas, constituye una parte fundamental de su legado.",
+              "factualContext": "El 27 de noviembre de 1973, durante su turno en el Hospital KEM, Aruna sufrió una agresión brutal y fue estrangulada con una cadena por un empleado del hospital. La agresión causó una grave privación de oxígeno en el cerebro, provocando daño neurológico permanente.\nPermaneció en un estado neurológico gravemente deteriorado, evaluado posteriormente por peritos de la Corte Suprema como estado vegetativo persistente.\nDurante aproximadamente 41 años y seis meses, recibió cuidados constantes del personal médico y de enfermería de KEM.\nEn mayo de 2015 contrajo neumonía grave y falleció tras un paro cardíaco el 18 de mayo de 2015 en el Hospital KEM, a los 66 años.",
+              "verifiedFacts": [
+                  "Nacimiento: 1 de junio de 1948, Haldipur, Karnataka.",
+                  "Profesión: Enfermera de planta en el Hospital KEM, Bombay.",
+                  "Ataque: 27 de noviembre de 1973, con lesión cerebral por anoxia.",
+                  "Condición médica: Estado vegetativo persistente (PVS) certificado judicialmente.",
+                  "Duración de los cuidados: Aproximadamente 41 años y seis meses.",
+                  "Fallecimiento: 18 de mayo de 2015, por neumonía y paro cardíaco.",
+                  "Edad al fallecer: 66 años."
+              ],
+              "societalImpact": "2011 — Aruna Ramchandra Shanbaug v. Union of India, (2011) 4 SCC 454\nEl 7 de marzo de 2011, la Corte Suprema de la India dictó una sentencia histórica sobre la eutanasia pasiva, rechazando retirar el soporte vital pero reconociendo el procedimiento legal bajo estrictas salvaguardas judiciales.\n\n2018 — Common Cause v. Union of India, (2018) 5 SCC 1\nEl 9 de marzo de 2018, la Corte Suprema reconoció legalmente las directivas médicas anticipadas (testamentos vitales).\n\nJuntos, estos casos marcaron la jurisprudencia india sobre autonomía del paciente y bioética.",
+              "actionableLesson": "Las instituciones de salud deben priorizar tanto la seguridad física del personal sanitario como la dignidad de los pacientes en cuidados neurológicos de larga duración.",
+              "memorialPublication": {
+                  "title": "Iniciativa de Dignidad del Paciente y Seguridad Laboral en Salud",
+                  "focus": "Ética Médica, Cuidados Crónicos y Seguridad de los Trabajadores Sanitarios",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Una propuesta institucional y social inspirada en la experiencia de Aruna para garantizar cuidados de enfermería dignos y protocolos de seguridad en turnos nocturnos."
+              }
+          },
+          "fr": {
+              "name": "Aruna Shanbaug",
+              "roleAndField": "Infirmière Hospitalière · Hôpital King Edward Memorial (KEM), Mumbai",
+              "categoryLabel": "Éthique Médicale et Dignité des Soignants",
+              "coreMessage": "Les soignants méritent des environnements de travail sûrs, et les soins de longue durée doivent préserver la dignité humaine, la compassion et les droits individuels à chaque étape de la vie.",
+              "whoWasThisPerson": "Née le 1er juin 1948 à Haldipur, dans le Karnataka, Aruna Shanbaug était une infirmière dévouée à l'hôpital King Edward Memorial (KEM) de Mumbai.\nElle était reconnue pour son dévouement professionnel et était fiancée au moment de l'agression qui bouleversa son existence.",
+              "contributions": "Avant l'agression, Aruna travaillait en première ligne des soins de santé publique au KEM Hospital.\nSon histoire est devenue un repère majeur dans l'évolution juridique et éthique indienne sur la fin de vie, l'autonomie et la dignité des patients.\nLe dévouement sans faille de générations d'infirmières du KEM, qui ont veillé sur elle pendant plus de quatre décennies, fait partie intégrante de sa mémoire.",
+              "factualContext": "Le 27 novembre 1973, pendant son service à l'hôpital KEM, Aruna fut sauvagement agressée et étranglée à l'aide d'une chaîne par un employé. La privation d'oxygène provoqua des lésions cérébrales irréversibles.\nElle vécut pendant près de 41 ans et six mois dans un état végétatif persistant, entourée de l'affection des soignants de l'hôpital, jusqu'à son décès le 18 mai 2015 à l'âge de 66 ans des suites d'une pneumonie.",
+              "verifiedFacts": [
+                  "Naissance : 1er juin 1948, Haldipur, Karnataka.",
+                  "Profession : Infirmière au King Edward Memorial Hospital, Mumbai.",
+                  "Agression : 27 novembre 1973, lésions cérébrales anoxiques permanentes.",
+                  "État médical : État végétatif persistant attesté par expertise médicale judiciaire.",
+                  "Durée des soins : Environ 41 ans et 6 mois.",
+                  "Décès : 18 mai 2015, à l'âge de 66 ans."
+              ],
+              "societalImpact": "Son cas a abouti à l'arrêt historique de la Cour suprême de l'Inde de 2011 reconnaissant la procédure d'euthanasie passive sous strict contrôle judiciaire, complété en 2018 par la reconnaissance des directives anticipées (testaments de vie).",
+              "actionableLesson": "Les établissements hospitaliers doivent garantir une sécurité absolue aux soignants de nuit tout en maintenant les plus hauts standards d'éthique et de respect pour les patients de longue durée.",
+              "memorialPublication": {
+                  "title": "Initiative pour la Dignité des Soins Longue Durée et la Sécurité des Soignants",
+                  "focus": "Éthique Médicale, Soins Palliatifs et Sécurité Hospitalière",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Un cadre de recommandations alliant protocoles de sécurité pour le personnel de garde et respect inconditionnel de la personne vulnérable."
+              }
+          },
+          "de": {
+              "name": "Aruna Shanbaug",
+              "roleAndField": "Krankenschwester · King Edward Memorial (KEM) Hospital, Mumbai",
+              "categoryLabel": "Medizinethik und Würde in der Pflege",
+              "coreMessage": "Pflegekräfte verdienen sichere Arbeitsbedingungen, und die langfristige Patientenversorgung muss die Menschenwürde, das Mitgefühl und die Rechte des Einzelnen in jeder Lebensphase wahren.",
+              "whoWasThisPerson": "Geboren am 1. Juni 1948 in Haldipur, Karnataka, war Aruna Shanbaug Krankenschwester am King Edward Memorial (KEM) Hospital in Mumbai.\nSie war für ihre pflegerische Hingabe bekannt und stand kurz vor ihrer Heirat, als der verhängnisvolle Angriff ihr Leben veränderte.",
+              "contributions": "Aruna leistete engagierten Dienst in der öffentlichen Gesundheitsversorgung.\nIhr Fall wurde zu einem historischen Wendepunkt in der indischen Debatte über Patientenwürde, medizinische Ethik und Entscheidungen am Lebensende.\nDie jahrzehntelange Pflege durch Generationen von KEM-Pflegekräften bleibt ein lebendiges Denkmal gelebter Solidarität.",
+              "factualContext": "Am 27. November 1973 wurde Aruna während ihres Dienstes im KEM Hospital angegriffen und gewürgt, was zu einem schweren hypoxischen Hirnschaden führte.\nSie verblieb über 41 Jahre und sechs Monate in einem persistenten vegetativen Zustand unter der Fürsorge des KEM-Personals, bis sie am 18. Mai 2015 im Alter von 66 Jahren verstarb.",
+              "verifiedFacts": [
+                  "Geburt: 1. Juni 1948, Haldipur, Karnataka.",
+                  "Beruf: Krankenschwester am KEM Hospital, Mumbai.",
+                  "Angriff: 27. November 1973 mit dauerhaftem hypoxischem Hirnschaden.",
+                  "Zustand: Persistenter vegetativer Status (Wachkoma), gerichtlich festgestellt.",
+                  "Pflegedauer: Rund 41 Jahre und 6 Monate.",
+                  "Tod: 18. Mai 2015 im Alter von 66 Jahren."
+              ],
+              "societalImpact": "Ihr Fall führte zum Grundsatzurteil des Obersten Gerichtshofs Indiens von 2011 zur passiven Sterbehilfe sowie zum Urteil von 2018 über Patientenverfügungen.",
+              "actionableLesson": "Gesundheitseinrichtungen müssen sowohl den Schutz von Nachtdienstkräften als auch die Würde von Langzeitpflegepatienten bedingungslos gewährleisten.",
+              "memorialPublication": {
+                  "title": "Initiative für Patientenwürde in der Langzeitpflege und Arbeitssicherheit",
+                  "focus": "Medizinethik, Langzeitpflege und Schutz von Gesundheitspersonal",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Ein Handlungsrahmen zur Gewährleistung sicherer Arbeitsbedingungen für Klinikpersonal und würdevoller Versorgung von Wachkomapatienten."
+              }
+          },
+          "hr": {
+              "name": "Aruna Shanbaug",
+              "roleAndField": "Medicinska sestra · King Edward Memorial (KEM) bolnica, Mumbai",
+              "categoryLabel": "Medicinska etika i dostojanstvo sestrinstva",
+              "coreMessage": "Zdravstveni radnici zaslužuju sigurno radno okruženje, a dugotrajna skrb za pacijente mora očuvati ljudsko dostojanstvo, suosjećanje i prava pojedinca u svakoj fazi života.",
+              "whoWasThisPerson": "Rođena 1. lipnja 1948. u Haldipuru, Karnataka, Aruna Shanbaug bila je medicinska sestra u bolnici King Edward Memorial (KEM) u Mumbaiju.",
+              "contributions": "Aruna je radila u javnom zdravstvu brinući se o pacijentima. Njezin slučaj postao je povijesna prekretnica u pravnim i etičkim raspravama o dostojanstvu pacijenata i donošenju odluka na kraju života u Indiji.",
+              "factualContext": "Dana 27. studenoga 1973. na radnom mjestu doživjela je težak napad koji je uzrokovao trajno oštećenje mozga zbog nedostatka kisika. U trajnom vegetativnom stanju ostala je približno 41 godinu i šest mjeseci uz neprekidnu skrb osoblja KEM bolnice, sve do smrti 18. svibnja 2015. u dobi od 66 godina.",
+              "verifiedFacts": [
+                  "Rođenje: 1. lipnja 1948., Haldipur, Karnataka.",
+                  "Zanimanje: Medicinska sestra, KEM bolnica, Mumbai.",
+                  "Napad: 27. studenoga 1973., teško hipoksično oštećenje mozga.",
+                  "Trajanje skrbi: Približno 41 godina i 6 mjeseci.",
+                  "Smrt: 18. svibnja 2015., u dobi od 66 godina."
+              ],
+              "societalImpact": "Presuda Vrhovnog suda Indije iz 2011. i 2018. postavila je temelje pasivne eutanazije i prava na institute naprednih medicinskih direktiva.",
+              "actionableLesson": "Zdravstvene ustanove moraju osigurati zaštitu osoblja i očuvanje dostojanstva pacijenata u dugotrajnoj skrbi.",
+              "memorialPublication": {
+                  "title": "Inicijativa za dostojanstvo pacijenata i sigurnost zdravstvenih radnika",
+                  "focus": "Medicinska etika i sigurnost na radnom mjestu",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Preporučeni institucionalni okvir za dostojanstvenu dugotrajnu skrb i sigurnost zdravstvenih djelatnika."
+              }
+          }
+      }
+  },
   {
-    id: 1,
+    id: 2,
     slug: "dr-moumita-debnath",
     name: "Dr. Moumita Debnath",
     country: "India",
@@ -89,49 +355,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       { title: "Supreme Court of India Suo Motu Writ Petition (Crl) No. 2/2024 — National Task Force Orders (20 Aug 2024)", url: "https://main.sci.gov.in/supremecourt/2024/37466/37466_2024_1_1_54652_Order_20-Aug-2024.pdf", publisher: "Supreme Court of India", isPrimary: true },
       { title: "National Task Force on Healthcare Workers' Safety — Terms of Reference", url: "https://main.sci.gov.in", publisher: "Ministry of Health and Family Welfare, India" },
       { title: "The Indian Express: RG Kar Hospital Case Timeline", url: "https://indianexpress.com/article/cities/kolkata/kolkata-doctor-rape-murder-case-timeline-rg-kar-hospital-9520979/", publisher: "The Indian Express" },
-    ],
-  },
-  {
-    id: 2,
-    slug: "aruna-shanbaug",
-    name: "Aruna Shanbaug",
-    country: "India",
-    countryFlag: "🇮🇳",
-    category: "healthcare",
-    categoryLabel: "Healthcare Ethics & Nursing Dignity",
-    eraOrYear: "1948–2015",
-    roleAndField: "Staff Nurse · King Edward Memorial (KEM) Hospital, Mumbai",
-    avatarUrl: "https://images.openai.com/static-rsc-4/bEkHZq8tlmEVDlWf0AtrWa1IJz9nUsL0PLkkx0mJNud9itRRtfKkb-8Q9gTdVOgYSchOJ3_i21FGiPD0IAC6A4n1k-MAgBWK4FmRStyYyayReuSD0k9pr8_V7YanoRqVnK03NHQ7FCA90lUQNm9A4WJX7xvrUfNSXE12PGEypFg?purpose=inline",
-    whoWasThisPerson:
-      "Born on 1 June 1948 in Haldipur, Karnataka, she was a dedicated staff nurse at King Edward Memorial (KEM) Hospital in Mumbai. Admired by colleagues for her professional commitment and compassionate bedside care, she was engaged to be married at the time of the attack.",
-    contributions:
-      "She dedicated her career to frontline public healthcare as a staff nurse at KEM Hospital, providing compassionate care to neurosurgical and critical patients. Her life and the extraordinary four-decade dedication of her nursing peers transformed Indian legal history, establishing enduring standards for nursing dignity, patient autonomy, and compassionate end-of-life care.",
-    factualContext:
-      "On 27 November 1973, while on duty in the basement surgery department of KEM Hospital, she was brutally assaulted by a hospital contract worker, suffering severe cerebral hypoxia that left her in a persistent vegetative state (PVS). For nearly 42 years, she was cared for with extraordinary devotion by generations of KEM Hospital nurses and doctors in Ward 4, until her passing from pneumonia on 18 May 2015 at age 66.",
-    societalImpact:
-      "Her case produced the landmark 2011 Supreme Court of India ruling (Aruna Ramchandra Shanbaug v. Union of India, (2011) 4 SCC 454) that legally recognised a procedure for passive euthanasia under strict safeguards — though the bench denied withdrawal of Aruna's own treatment as the KEM nurses wished to continue caring for her. The separate legal recognition of living wills and advance medical directives came later, in Common Cause v. Union of India (2018) 5 SCC 1.",
-    verificationStatus: "Verified",
-    lastVerifiedAt: "2026-11-06",
-    verifiedFacts: [
-      "Born 1 June 1948 in Haldipur, Karnataka; Staff Nurse at KEM Hospital, Mumbai",
-      "Assaulted on night duty on 27 November 1973, suffering severe cerebral hypoxia",
-      "Remained in a persistent vegetative state for nearly 42 years under the dedicated care of KEM nursing staff",
-      "Passed away on 18 May 2015 at age 66 from severe pneumonia",
-      "Case was the subject of the landmark 2011 Supreme Court passive euthanasia decision (4 SCC 454)",
-    ],
-    actionableLesson:
-      "Long-term and acute healthcare facilities must implement proactive staff safety measures, eliminating isolated blind spots and ensuring continuous security across all operational corridors.",
-    coreMessage:
-      "Healthcare workers deserve unconditional workplace security, and long-term palliative care must preserve human dignity at every stage of life.",
-    memorialPublication: {
-      title: "Long-Term Palliative Care & Patient Dignity Protocol",
-      focus: "Medical Ethics & End-of-Life Palliative Care",
-      deliverable: "Clinical protocol for respectful long-term vegetative patient management and healthcare worker night-shift surveillance standards.",
-    },
-    references: [
-      { title: "Aruna Ramchandra Shanbaug v. Union of India (2011) 4 SCC 454", url: "https://indiankanoon.org/doc/1359740/", publisher: "Supreme Court of India", isPrimary: true },
-      { title: "Common Cause v. Union of India (2018) 5 SCC 1 — Living Wills and Advance Directives", url: "https://indiankanoon.org/doc/184449972/", publisher: "Supreme Court of India", isPrimary: true },
-      { title: "BBC News: Aruna Shanbaug — The Story of a Brain-Damaged Indian Nurse", url: "https://www.bbc.com/news/world-asia-india-32776897", publisher: "BBC News" },
     ],
   },
   {
@@ -1584,3 +1807,33 @@ export const CHANGEMAKERS: Changemaker[] = [
     ],
   },
 ];
+
+
+export function getLocalizedProfile(profile: TributeProfile, locale?: string): TributeProfile {
+  if (!locale || !profile.translations || !profile.translations[locale]) {
+    return profile;
+  }
+  const t = profile.translations[locale];
+  return {
+    ...profile,
+    name: t.name ?? profile.name,
+    roleAndField: t.roleAndField ?? profile.roleAndField,
+    categoryLabel: t.categoryLabel ?? profile.categoryLabel,
+    coreMessage: t.coreMessage ?? profile.coreMessage,
+    whoWasThisPerson: t.whoWasThisPerson ?? profile.whoWasThisPerson,
+    contributions: t.contributions ?? profile.contributions,
+    factualContext: t.factualContext ?? profile.factualContext,
+    societalImpact: t.societalImpact ?? profile.societalImpact,
+    actionableLesson: t.actionableLesson ?? profile.actionableLesson,
+    verifiedFacts: t.verifiedFacts ?? profile.verifiedFacts,
+    memorialPublication: t.memorialPublication
+      ? {
+          ...profile.memorialPublication,
+          title: t.memorialPublication.title ?? profile.memorialPublication.title,
+          focus: t.memorialPublication.focus ?? profile.memorialPublication.focus,
+          deliverable: t.memorialPublication.deliverable ?? profile.memorialPublication.deliverable,
+          initiativeStatus: (t.memorialPublication.initiativeStatus as any) ?? profile.memorialPublication.initiativeStatus,
+        }
+      : profile.memorialPublication,
+  };
+}

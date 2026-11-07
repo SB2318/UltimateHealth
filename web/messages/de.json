@@ -291,5 +291,43 @@
         "tag3": "Kein Werbetracking oder Datenverkauf"
       }
     }
+  },
+  "tribute": {
+    "badgeTribute": "Ein internationales Gedenkprojekt für Menschenleben",
+    "badgeNations": "30 Dokumentierte Leben · 19 Nationen und Territorien",
+    "badgeCurriculum": "Lebendiges Gedenkcurriculum",
+    "heroTitlePrefix": "Leben jenseits",
+    "heroTitleHighlight": "der Schlagzeilen",
+    "heroCoreMessage": "Das Leben eines Menschen muss für seine Beiträge zur Welt gewürdigt werden, nicht nur für die Tragödie, die es beendete.",
+    "heroSubtitle": "Ein zutiefst menschliches Projekt über Träume, Mut und institutionelle Lehren für unsere Gegenwart.",
+    "startingPointBadge": "Der Ausgangspunkt unseres Gedenkens",
+    "startingPointMoumita1": "Dr. Moumita Debnath war Assistenzärztin für Lungenheilkunde in Kalkutta.",
+    "startingPointMoumita2": "Dieses Gedenken erinnert an ihre Ideale und den Schutz von medizinischem Personal.",
+    "startingPointCommitment": "UltimateHealth ehrt ihr Andenken durch Engagement für Patientensicherheit und Schutz am Arbeitsplatz.",
+    "tabStories": "Menschliche Geschichten",
+    "tabStoriesCount": "30 Profile",
+    "tabMemorial": "Gedenkleitfäden",
+    "tabMemorialCount": "30 Leitfäden",
+    "tabLessons": "Gesellschaftliche Lehren",
+    "tabLessonsCount": "10 Initiativen",
+    "tabCharter": "Redaktionelle Charta",
+    "tabCharterCount": "10 Würdegrundsätze",
+    "contributionLabel": "Berufliche & gesellschaftliche Beiträge",
+    "editorialLessonLabel": "UltimateHealth Leitgedanke",
+    "verifiedQuoteLabel": "Verifiziertes Primärzitat",
+    "readStory": "Vollständige Biografie lesen",
+    "searchPlaceholder": "Nach Name, Land oder Fachgebiet suchen...",
+    "categoryAll": "Alle Profile",
+    "categoryHealthcare": "Gesundheitswesen & Patientenwürde",
+    "categorySafety": "Sicherheit & Gerechtigkeit",
+    "categoryJournalism": "Journalismus & Wahrheit",
+    "categoryEnvironment": "Umweltschützer",
+    "categoryEducation": "Bildung & Menschenwürde",
+    "categorySurvivors": "Überlebende & Vorbilder",
+    "pillarRemember": "Erinnern — 30 Leben",
+    "pillarListen": "Zuhören — Stimmen Überlebender",
+    "pillarRecognise": "Anerkennen — Gestalter des Wandels",
+    "pillarLearn": "Lernen — 10 Gesellschaftliche Lehren",
+    "fourPillarsSubtitle": "Vier Säulen, die Erinnerung in gelebte institutionelle Reformen übersetzen."
   }
 }

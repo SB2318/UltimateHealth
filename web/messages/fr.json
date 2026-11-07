@@ -291,5 +291,43 @@
         "tag3": "Zéro pistage publicitaire ou vente de données"
       }
     }
+  },
+  "tribute": {
+    "badgeTribute": "Un Hommage International aux Trajectoires Humaines",
+    "badgeNations": "30 Vies Documentées · 19 Nations et Territoires",
+    "badgeCurriculum": "Programme Mémorial Vivant",
+    "heroTitlePrefix": "Des Vies au-delà",
+    "heroTitleHighlight": "des Titres",
+    "heroCoreMessage": "La vie d'une personne doit être célébrée pour ce qu'elle a apporté au monde, et non réduite à la tragédie qui l'a fauchée.",
+    "heroSubtitle": "Ce projet humaniste met en lumière les rêves, les engagements et les leçons concrètes que nos sociétés doivent bâtir aujourd'hui.",
+    "startingPointBadge": "Le Point de Départ de Notre Hommage",
+    "startingPointMoumita1": "La Dre Moumita Debnath était interne en pneumologie à Calcutta. Sa disparition a réaffirmé l'urgence de protéger les soignants.",
+    "startingPointMoumita2": "Cet hommage célèbre sa vocation et invite à repenser la sécurité au sein des structures hospitalières.",
+    "startingPointCommitment": "UltimateHealth honore sa mémoire par la promotion de la sécurité des professionnels de santé.",
+    "tabStories": "Histoires Humaines",
+    "tabStoriesCount": "30 Profils",
+    "tabMemorial": "Guides Mémoriaux",
+    "tabMemorialCount": "30 Guides",
+    "tabLessons": "Leçons Sociétales",
+    "tabLessonsCount": "10 Initiatives",
+    "tabCharter": "Charte Éditoriale",
+    "tabCharterCount": "10 Principes de Dignité",
+    "contributionLabel": "Contributions Professionnelles et Sociales",
+    "editorialLessonLabel": "Réflexion Éditoriale UltimateHealth",
+    "verifiedQuoteLabel": "Citation Source Vérifiée",
+    "readStory": "Lire le Profil Complet",
+    "searchPlaceholder": "Rechercher par nom, pays, domaine...",
+    "categoryAll": "Toutes les Vies",
+    "categoryHealthcare": "Santé et Dignité des Patients",
+    "categorySafety": "Sécurité et Justice",
+    "categoryJournalism": "Journalisme et Vérité",
+    "categoryEnvironment": "Défenseurs de l'Environnement",
+    "categoryEducation": "Éducation et Dignité Humaine",
+    "categorySurvivors": "Survies et Résilience",
+    "pillarRemember": "Se Souvenir — 30 Vies",
+    "pillarListen": "Écouter — Paroles de Survivants",
+    "pillarRecognise": "Reconnaître — Acteurs du Changement",
+    "pillarLearn": "Apprendre — 10 Leçons Sociétales",
+    "fourPillarsSubtitle": "Quatre piliers humanitaires pour transformer la mémoire en réformes pérennes."
   }
 }

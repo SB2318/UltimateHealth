@@ -291,5 +291,43 @@
         "tag3": "Bez praćenja i prodaje podataka"
       }
     }
+  },
+  "tribute": {
+    "badgeTribute": "Međunarodna posveta ljudskim životima",
+    "badgeNations": "30 Dokumentiranih života · 19 Nacija i teritorija",
+    "badgeCurriculum": "Živi memorijalni kurikulum",
+    "heroTitlePrefix": "Životi izvan",
+    "heroTitleHighlight": "naslova",
+    "heroCoreMessage": "Život osobe treba pamtiti po onome što je doprinijela svijetu, a ne samo po tragediji koja ga je prekinula.",
+    "heroSubtitle": "Ovo je humanistički projekt o snovima, hrabrosti i lekcijama koje društvo mora primijeniti danas.",
+    "startingPointBadge": "Polazište našeg odavanja počasti",
+    "startingPointMoumita1": "Dr. Moumita Debnath bila je mlada liječnica na specijalizaciji u Kolkati.",
+    "startingPointMoumita2": "Ova posveta čuva uspomenu na njezin profesionalni poziv i pravo na siguran radni prostor.",
+    "startingPointCommitment": "UltimateHealth odaje počast promicanjem sigurnosti i dostojanstva zdravstvenih djelatnika.",
+    "tabStories": "Ljudske priče",
+    "tabStoriesCount": "30 Profila",
+    "tabMemorial": "Memorijalni vodiči",
+    "tabMemorialCount": "30 Vodiča",
+    "tabLessons": "Društvene lekcije",
+    "tabLessonsCount": "10 Inicijativa",
+    "tabCharter": "Urednička povelja",
+    "tabCharterCount": "10 Načela dostojanstva",
+    "contributionLabel": "Profesionalni i društveni doprinosi",
+    "editorialLessonLabel": "UltimateHealth Urednička pouka",
+    "verifiedQuoteLabel": "Provjereni primarni citat",
+    "readStory": "Pročitajte cijelu priču",
+    "searchPlaceholder": "Pretražite po imenu, zemlji ili pouci...",
+    "categoryAll": "Svi životi",
+    "categoryHealthcare": "Zdravstvo i dostojanstvo pacijenata",
+    "categorySafety": "Sigurnost i pravda",
+    "categoryJournalism": "Novinarstvo i istina",
+    "categoryEnvironment": "Zaštitnici okoliša",
+    "categoryEducation": "Obrazovanje i ljudsko dostojanstvo",
+    "categorySurvivors": "Preživjeli i predvodnici",
+    "pillarRemember": "Zapamtiti — 30 Života",
+    "pillarListen": "Slušati — Glasovi preživjelih",
+    "pillarRecognise": "Prepoznati — Pokretači promjena",
+    "pillarLearn": "Učiti — 10 Društvenih lekcija",
+    "fourPillarsSubtitle": "Četiri humanitarna stupa koji pretvaraju sjećanje u trajne institucionalne reforme."
   }
 }

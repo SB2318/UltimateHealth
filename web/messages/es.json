@@ -291,5 +291,43 @@
         "tag3": "Sin rastreo publicitario ni venta de datos"
       }
     }
+  },
+  "tribute": {
+    "badgeTribute": "Un Homenaje Internacional a Vidas Humanas",
+    "badgeNations": "30 Vidas Documentadas · 19 Naciones y Territorios",
+    "badgeCurriculum": "Currículo Memorial Vivo",
+    "heroTitlePrefix": "Vidas Más Allá de",
+    "heroTitleHighlight": "los Titulares",
+    "heroCoreMessage": "La vida de una persona debe recordarse por lo que aportó al mundo, no solo por la tragedia que la truncó o cambió su curso.",
+    "heroSubtitle": "No es una campaña política ni una recopilación de sucesos. Es un proyecto profundamente humano sobre sueños, vocaciones, dignidad y lo que la sociedad debe aprender y construir hoy.",
+    "startingPointBadge": "El Punto de Partida de Nuestro Homenaje",
+    "startingPointMoumita1": "La Dra. Moumita Debnath era médica residente de neumología en Calcuta. Su pérdida en agosto de 2024 renovó la atención sobre la seguridad de los sanitarios.",
+    "startingPointMoumita2": "Este tributo la recuerda como una profesional con un futuro prometedor y nos invita a reflexionar sobre la seguridad en las instituciones de salud.",
+    "startingPointCommitment": "UltimateHealth honra su memoria promoviendo educación sanitaria responsable y entornos clínicos seguros.",
+    "tabStories": "Historias Humanas",
+    "tabStoriesCount": "30 Perfiles",
+    "tabMemorial": "Guías Memoriales",
+    "tabMemorialCount": "30 Guías · En Desarrollo",
+    "tabLessons": "Lecciones Sociales",
+    "tabLessonsCount": "10 Iniciativas",
+    "tabCharter": "Carta Editorial",
+    "tabCharterCount": "10 Principios de Dignidad",
+    "contributionLabel": "Contribuciones Profesionales y Sociales",
+    "editorialLessonLabel": "Lección Editorial de UltimateHealth",
+    "verifiedQuoteLabel": "Cita Primaria Verificada",
+    "readStory": "Leer Historia Completa",
+    "searchPlaceholder": "Buscar por nombre, país, campo o aprendizaje...",
+    "categoryAll": "Todas las Vidas",
+    "categoryHealthcare": "Salud y Dignidad del Paciente",
+    "categorySafety": "Seguridad y Justicia",
+    "categoryJournalism": "Periodismo y Verdad Cívica",
+    "categoryEnvironment": "Defensores de la Tierra",
+    "categoryEducation": "Educación y Dignidad Humana",
+    "categorySurvivors": "Líderes de la Resiliencia",
+    "pillarRemember": "Recordar — 30 Vidas",
+    "pillarListen": "Escuchar — Voces de Sobrevivientes",
+    "pillarRecognise": "Reconocer — Creadores de Cambio",
+    "pillarLearn": "Aprender — 10 Lecciones Sociales",
+    "fourPillarsSubtitle": "Cuatro pilares humanos que honran la memoria y promueven reformas institucionales."
   }
 }

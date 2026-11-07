@@ -291,5 +291,43 @@
         "tag3": "ବ୍ୟବସାୟିକ ବିଜ୍ଞାପନ ଟ୍ରାକିଂ ନାହିଁ"
       }
     }
+  },
+  "tribute": {
+    "badgeTribute": "ଏକ ଆନ୍ତର୍ଜାତୀୟ ମାନବିକ ଶ୍ରଦ୍ଧାଞ୍ଜଳି",
+    "badgeNations": "୩୦ ପ୍ରଲେଖିତ ଜୀବନ · ୧୯ ରାଷ୍ଟ୍ର ଓ କ୍ଷେତ୍ର",
+    "badgeCurriculum": "ସ୍ମାରକ ପାଠ୍ୟକ୍ରମ",
+    "heroTitlePrefix": "ଖବର ଶିରୋନାମା ବାହାରେ",
+    "heroTitleHighlight": "ଜୀବନ",
+    "heroCoreMessage": "ଜଣେ ବ୍ୟକ୍ତିଙ୍କ ଜୀବନ କେବଳ ଘଟିଥିବା ଦୁର୍ଘଟଣା ପାଇଁ ନୁହେଁ, ବରଂ ସେମାନେ ବିଶ୍ୱକୁ ଦେଇଥିବା ଅବଦାନ ପାଇଁ ସ୍ମରଣ କରାଯିବା ଉଚିତ।",
+    "heroSubtitle": "ଏହା ଏକ ରାଜନୈତିକ ଅଭିଯାନ ନୁହେଁ। ଏହା ସ୍ୱପ୍ନ, ଅବଦାନ, ସାହସ ଏବଂ ସମାଜ ଆଜି କ’ଣ ଶିଖିବା ଉଚିତ ତାହା ଉପରେ ଏକ ମାନବୀୟ ପ୍ରୟାସ।",
+    "startingPointBadge": "ଆମ ଶ୍ରଦ୍ଧାଞ୍ଜଳିର ଆରମ୍ଭ ବିନ୍ଦୁ",
+    "startingPointMoumita1": "ଡା. ମୌମିତା ଦେବନାଥ କୋଲକାତାର ଜଣେ ଯୁବ ଡାକ୍ତର ଥିଲେ।",
+    "startingPointMoumita2": "ଏହି ଶ୍ରଦ୍ଧାଞ୍ଜଳି ତାଙ୍କ ସ୍ମୃତିକୁ ସମ୍ମାନ ଜଣାଇବା ସହ ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀଙ୍କ ସୁରକ୍ଷା ପାଇଁ ଆହ୍ୱାନ ଦିଏ।",
+    "startingPointCommitment": "ଅଲଟିମେଟହେଲଥ୍ ଦାୟିତ୍ୱପୂର୍ଣ୍ଣ ସ୍ୱାସ୍ଥ୍ୟଶିକ୍ଷା ଓ କର୍ମକ୍ଷେତ୍ର ସୁରକ୍ଷା ମାଧ୍ୟମରେ ତାଙ୍କୁ ସ୍ମରଣ କରେ।",
+    "tabStories": "ମାନବିକ କାହାଣୀ",
+    "tabStoriesCount": "୩୦ ପ୍ରୋଫାଇଲ୍",
+    "tabMemorial": "ସ୍ମାରକ ମାର୍ଗଦର୍ଶିକା",
+    "tabMemorialCount": "୩୦ ମାର୍ଗଦର୍ଶିକା",
+    "tabLessons": "ସାମାଜିକ ଶିକ୍ଷା",
+    "tabLessonsCount": "୧୦ ପଦକ୍ଷେପ",
+    "tabCharter": "ସମ୍ପାଦକୀୟ ଚାର୍ଟର",
+    "tabCharterCount": "୧୦ ନୀତି",
+    "contributionLabel": "ପେଶାଗତ ଓ ସାମାଜିକ ଅବଦାନ",
+    "editorialLessonLabel": "ସମ୍ପାଦକୀୟ ଶିକ୍ଷା",
+    "verifiedQuoteLabel": "ପ୍ରମାଣିତ ଉଦ୍ଧୃତି",
+    "readStory": "ସମ୍ପୂର୍ଣ୍ଣ କାହାଣୀ ପଢ଼ନ୍ତୁ",
+    "searchPlaceholder": "ନାମ, ଦେଶ କିମ୍ବା ଶିକ୍ଷାରୁ ଖୋଜନ୍ତୁ...",
+    "categoryAll": "ସମସ୍ତ ଜୀବନ",
+    "categoryHealthcare": "ସ୍ୱାସ୍ଥ୍ୟସେବା ଓ ରୋଗୀ ମର୍ଯ୍ୟାଦା",
+    "categorySafety": "ସୁରକ୍ଷା ଓ ନ୍ୟାୟ",
+    "categoryJournalism": "ସାମ୍ବାଦିକତା ଓ ସତ୍ୟ",
+    "categoryEnvironment": "ପରିବେଶ ରକ୍ଷକ",
+    "categoryEducation": "ଶିକ୍ଷା ଓ ମର୍ଯ୍ୟାଦା",
+    "categorySurvivors": "ଜୀବନ୍ତ ଆଦର୍ଶ",
+    "pillarRemember": "ମନେରଖନ୍ତୁ — ୩୦ ଜୀବନ",
+    "pillarListen": "ଶୁଣନ୍ତୁ — ଜୀବନ୍ତ କଣ୍ଠ",
+    "pillarRecognise": "ଚିହ୍ନନ୍ତୁ — ପରିବର୍ତ୍ତନକାରୀ",
+    "pillarLearn": "ଶିଖନ୍ତୁ — ୧୦ ସାମାଜିକ ଶିକ୍ଷା",
+    "fourPillarsSubtitle": "ମାନବ ମର୍ଯ୍ୟାଦା ଓ ସାଂସ୍ଥାନିକ ସଂସ୍କାରକୁ ଆଗେଇ ନେଉଥିବା ଚାରୋଟି ମୁଖ୍ୟ ସ୍ତମ୍ଭ।"
   }
 }

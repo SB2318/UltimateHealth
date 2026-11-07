@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Search, X, ChevronLeft, ChevronRight, User } from "lucide-react";
-import { TRIBUTE_CATEGORIES, TRIBUTE_PROFILES } from "@/data/tribute-profiles";
+import { TRIBUTE_CATEGORIES, TRIBUTE_PROFILES, getLocalizedProfile } from "@/data/tribute-profiles";
 import { TributeCategory, TributeProfile } from "@/types/tribute";
 import ProfileCard from "./ProfileCard";
 import ProfileDetailModal from "./ProfileDetailModal";
@@ -16,14 +16,20 @@ interface TributeExplorerProps {
 
 export default function TributeExplorer({ initialCategory = "all" }: TributeExplorerProps) {
   const t = useTranslations("tribute");
+  const locale = useLocale();
   const [activeCategory, setActiveCategory] = useState<TributeCategory>(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProfile, setSelectedProfile] = useState<TributeProfile | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Localize profiles according to current language
+  const localizedAllProfiles = useMemo(() => {
+    return TRIBUTE_PROFILES.map((p) => getLocalizedProfile(p, locale));
+  }, [locale]);
+
   // Filter profiles
   const filteredProfiles = useMemo(() => {
-    return TRIBUTE_PROFILES.filter((profile) => {
+    return localizedAllProfiles.filter((profile) => {
       const matchesCategory =
         activeCategory === "all" || profile.category === activeCategory;
 
@@ -38,7 +44,7 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
 
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [localizedAllProfiles, activeCategory, searchQuery]);
 
   // Reset to page 1 on filter/search change
   useEffect(() => {
