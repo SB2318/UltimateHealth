@@ -1,9 +1,9 @@
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 
 import {
   Image,
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -45,7 +45,7 @@ import {
   storeItem,
 } from '../../lib/utils/Utils';
 //import CommentScreen from '../CommentScreen';
-import Tts from 'react-native-tts';
+import MultiLanguageTTSService from '../../lib/platform/MultiLanguageService';
 import SpeedSelector from '../../components/podcast/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
@@ -82,10 +82,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 const CHUNK_SIZE = 120;
-
-type TtsSubscription = {
-  remove?: () => void;
-};
 
 const isHtmlContentEmpty = (html?: string | null) => {
   if (!html) {
@@ -217,40 +213,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const chunkIndexRef = useRef(0);
   const wordsRef = useRef<string[]>([]);
   const readEventFiredRef = useRef(false);
-  const finishSubscriptionRef = useRef<TtsSubscription | null>(null);
-  const errorSubscriptionRef = useRef<TtsSubscription | null>(null);
   const finishHandlerRef = useRef<(() => void) | null>(null);
   const errorHandlerRef = useRef<((event: unknown) => void) | null>(null);
 
   const clearArticleTtsSubscriptions = useCallback(() => {
-    if (finishSubscriptionRef.current && typeof finishSubscriptionRef.current.remove === 'function') {
-      finishSubscriptionRef.current.remove();
-    } else if (
-      finishHandlerRef.current &&
-      typeof Tts.removeEventListener === 'function'
-    ) {
-      try {
-        Tts.removeEventListener('tts-finish', finishHandlerRef.current as any);
-      } catch (e) {
-        console.warn('Failed to call Tts.removeEventListener:', e);
-      }
+    if (finishHandlerRef.current) {
+      MultiLanguageTTSService.removeEventListener(
+        'tts-finish',
+        finishHandlerRef.current,
+      );
     }
 
-    if (errorSubscriptionRef.current && typeof errorSubscriptionRef.current.remove === 'function') {
-      errorSubscriptionRef.current.remove();
-    } else if (
-      errorHandlerRef.current &&
-      typeof Tts.removeEventListener === 'function'
-    ) {
-      try {
-        Tts.removeEventListener('tts-error', errorHandlerRef.current as any);
-      } catch (e) {
-        console.warn('Failed to call Tts.removeEventListener:', e);
-      }
+    if (errorHandlerRef.current) {
+      MultiLanguageTTSService.removeEventListener(
+        'tts-error',
+        errorHandlerRef.current,
+      );
     }
 
-    finishSubscriptionRef.current = null;
-    errorSubscriptionRef.current = null;
     finishHandlerRef.current = null;
     errorHandlerRef.current = null;
   }, []);
@@ -261,7 +241,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   // via a safe cast through the ref for imperative scroll restoration.
   const scrollViewRef = useRef<Animated.ScrollView>(null);
   // Tracks whether we have already restored the saved position for the
-  // current article. Prevents the initial layout scroll events from
+  // current article. Prevents the initial mount scroll events from
   // immediately overwriting the stored value before restoration runs.
   const scrollRestoredRef = useRef(false);
   const socket = useSocket();
@@ -442,7 +422,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setPlayerVisible(false);
       setListenProgress(0);
       setTotalWordsCount(0);
-      Tts.stop();
+      void MultiLanguageTTSService.stop();
       clearArticleTtsSubscriptions();
     };
   }, [
@@ -836,20 +816,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       text: `Checking if language ${lang} is installed.`,
       duration: Snackbar.LENGTH_SHORT,
     });
-    const voices = await Tts.voices();
 
-    const voice = voices.find(v => v.language === lang && !v.notInstalled);
-
-    if (voice) {
-      await Tts.setDefaultVoice(voice.id);
-      return true;
-    }
-
-    if (Platform.OS === 'android') {
-      Tts.requestInstallData();
-    }
-
-    return false;
+    return MultiLanguageTTSService.ensureLanguage(lang);
   };
 
   const handleTtsError = useCallback((event: unknown) => {
@@ -863,8 +831,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const speakNextChunk = useCallback(() => {
     const words = wordsRef.current;
     const chunkIndex = chunkIndexRef.current;
+
     if (chunkIndex >= words.length) {
-      // All chunks spoken — hide the floating player and reset state
+      // All chunks spoken — hide the floating player and reset state.
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
@@ -872,22 +841,29 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       clearArticleTtsSubscriptions();
       return;
     }
-    const currentRatio = words.length > 0 ? Math.min(1, chunkIndex / words.length) : 0;
+
+    const currentRatio =
+      words.length > 0 ? Math.min(1, chunkIndex / words.length) : 0;
     setListenProgress(currentRatio);
+
     const chunk = words.slice(chunkIndex, chunkIndex + CHUNK_SIZE).join(' ');
     chunkIndexRef.current = chunkIndex + CHUNK_SIZE;
-    Tts.speak(chunk);
+
+    // Speak the next chunk without resetting the language or stopping playback.
+    void MultiLanguageTTSService.speakChunk(chunk);
   }, [clearArticleTtsSubscriptions]);
 
   const attachArticleTtsSubscriptions = useCallback(() => {
     clearArticleTtsSubscriptions();
+
     finishHandlerRef.current = speakNextChunk;
     errorHandlerRef.current = handleTtsError;
-    Tts.addEventListener(
+
+    MultiLanguageTTSService.addEventListener(
       'tts-finish',
       speakNextChunk,
     );
-    Tts.addEventListener(
+    MultiLanguageTTSService.addEventListener(
       'tts-error',
       handleTtsError,
     );
@@ -899,15 +875,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const speakSection = async (_language = 'en-IN', content: string) => {
     try {
-      await Tts.stop();
+      await MultiLanguageTTSService.stop();
       clearArticleTtsSubscriptions();
 
       const ready = await ensureLanguageInstalled(_language);
       if (!ready) return;
 
-      await Tts.setDefaultLanguage(_language);
-      Tts.setDefaultPitch(0.92); // Softer, natural human warmth without metallic shrill
-      Tts.setDefaultRate(speechRate);
+      await MultiLanguageTTSService.setDefaultPitch(0.92);
+      await MultiLanguageTTSService.setDefaultRate(speechRate);
 
       const plainText = await convertHtmlToPlainText(content);
       if (!plainText) return;
@@ -915,21 +890,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       const words = plainText.trim().split(/\s+/);
       wordsRef.current = words;
       chunkIndexRef.current = 0;
+
       setTotalWordsCount(words.length);
       setListenProgress(0);
 
-      Tts.addEventListener('tts-finish', speakNextChunk);
-      Tts.addEventListener('tts-error', e => {
-        debugLog('TTS Error:', e);
-        setIsPlaying(false);
-        setIsPaused(false);
-        setPlayerVisible(false);
-      });
       attachArticleTtsSubscriptions();
-      attachArticleTtsSubscriptions();
+
       setIsPlaying(true);
       setIsPaused(false);
       setPlayerVisible(true);
+
       speakNextChunk();
     } catch (error) {
       debugLog('TTS Error:', error);
@@ -949,75 +919,72 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const handleTtsPause = async () => {
     try {
       if (isPaused) {
-        // Resume
+        // Resume from the beginning of the interrupted chunk.
         setIsPlaying(true);
         setIsPaused(false);
-        // Step back one chunk to resume from the interrupted chunk
-        chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
+
+        chunkIndexRef.current = Math.max(
+          0,
+          chunkIndexRef.current - CHUNK_SIZE,
+        );
+
         if (wordsRef.current.length > 0) {
-          setListenProgress(Math.min(1, chunkIndexRef.current / wordsRef.current.length));
+          setListenProgress(
+            Math.min(1, chunkIndexRef.current / wordsRef.current.length),
+          );
         }
 
-        // Re-attach listeners
-        Tts.addEventListener('tts-finish', speakNextChunk);
-        Tts.addEventListener('tts-error', e => {
-          debugLog('TTS Error:', e);
-          setIsPlaying(false);
-          setIsPaused(false);
-          setPlayerVisible(false);
-        });
-        attachArticleTtsSubscriptions();
         attachArticleTtsSubscriptions();
         speakNextChunk();
       } else {
-        // Pause
+        // Pause.
         clearArticleTtsSubscriptions();
-        await Tts.stop();
+        await MultiLanguageTTSService.stop();
+
         setIsPlaying(false);
         setIsPaused(true);
       }
-    } catch (e) {
-      debugLog('TTS Pause/Resume Error:', e);
+    } catch (error) {
+      debugLog('TTS Pause/Resume Error:', error);
     }
   };
 
   const handleTtsStop = async () => {
     try {
-      await Tts.stop();
+      await MultiLanguageTTSService.stop();
       clearArticleTtsSubscriptions();
+
       wordsRef.current = [];
       chunkIndexRef.current = 0;
+
       setTotalWordsCount(0);
       setListenProgress(0);
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
-    } catch (e) {
-      debugLog('TTS Stop Error:', e);
+    } catch (error) {
+      debugLog('TTS Stop Error:', error);
     }
   };
 
-  const handleSpeedSelect = (selectedSpeed: number) => {
+  const handleSpeedSelect = async (selectedSpeed: number) => {
     setSpeechRate(selectedSpeed);
-    Tts.setDefaultRate(selectedSpeed);
-    // Restart current position with new speed if currently playing
+    await MultiLanguageTTSService.setDefaultRate(selectedSpeed);
+
+    // Restart the current position with the selected speed.
     if (isPlaying && !isPaused) {
       clearArticleTtsSubscriptions();
-      // Step back one chunk so we replay current chunk at new speed
-      // Note: Rewind is approximate and might read earlier parts of a smaller previous chunk.
-      chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
-      Tts.stop().then(() => {
-        Tts.addEventListener('tts-finish', speakNextChunk);
-        Tts.addEventListener('tts-error', e => {
-          debugLog('TTS Error:', e);
-          setIsPlaying(false);
-          setIsPaused(false);
-          setPlayerVisible(false);
-        });
-        attachArticleTtsSubscriptions();
-        attachArticleTtsSubscriptions();
-        speakNextChunk();
-      });
+
+      // Rewind one chunk to replay it at the new speed.
+      // This remains approximate for chunks shorter than CHUNK_SIZE.
+      chunkIndexRef.current = Math.max(
+        0,
+        chunkIndexRef.current - CHUNK_SIZE,
+      );
+
+      await MultiLanguageTTSService.stop();
+      attachArticleTtsSubscriptions();
+      speakNextChunk();
     }
   };
 
@@ -2701,4 +2668,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   }
 });
-

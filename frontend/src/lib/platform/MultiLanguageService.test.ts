@@ -4,11 +4,13 @@ import MultiLanguageTTSService from "./MultiLanguageService";
 
 describe("MultiLanguageTTSService", () => {
   const resetInitialization = () => {
-    (
-      MultiLanguageTTSService as unknown as {
-        _isTtsInitialized: boolean;
-      }
-    )._isTtsInitialized = false;
+    const service = MultiLanguageTTSService as unknown as {
+      _isTtsInitialized: boolean;
+      initializationPromise: Promise<boolean> | null;
+    };
+
+    service._isTtsInitialized = false;
+    service.initializationPromise = null;
   };
 
   const validVoice = {
@@ -25,6 +27,39 @@ describe("MultiLanguageTTSService", () => {
     jest.clearAllMocks();
     resetInitialization();
 
+    // Reset mocks to prevent test implementations leaking between tests.
+    (Tts.getInitStatus as jest.Mock)
+      .mockReset()
+      .mockResolvedValue("success");
+
+    (Tts.setDefaultRate as jest.Mock)
+      .mockReset()
+      .mockResolvedValue("success");
+
+    (Tts.setDefaultPitch as jest.Mock)
+      .mockReset()
+      .mockResolvedValue("success");
+
+    (Tts.setDefaultVoice as jest.Mock)
+      .mockReset()
+      .mockResolvedValue("success");
+
+    (Tts.requestInstallData as jest.Mock)
+      .mockReset()
+      .mockResolvedValue("success");
+
+    (Tts.stop as jest.Mock)
+      .mockReset()
+      .mockResolvedValue(true);
+
+    (Tts.voices as jest.Mock)
+      .mockReset()
+      .mockResolvedValue([]);
+
+    (Tts.speak as jest.Mock)
+      .mockReset()
+      .mockReturnValue("mock-utterance-id");
+
     jest.spyOn(console, "warn").mockImplementation(() => {});
   });
 
@@ -35,7 +70,7 @@ describe("MultiLanguageTTSService", () => {
   it("initializes TTS successfully", async () => {
     await expect(MultiLanguageTTSService.init()).resolves.toBe(true);
 
-    expect(Tts.getInitStatus).toHaveBeenCalled();
+    expect(Tts.getInitStatus).toHaveBeenCalledTimes(1);
     expect(Tts.setDefaultRate).toHaveBeenCalledWith(0.5);
     expect(Tts.setDefaultPitch).toHaveBeenCalledWith(1.0);
   });
@@ -128,7 +163,7 @@ describe("MultiLanguageTTSService", () => {
 
     await MultiLanguageTTSService.speak("Hello", "en-IN");
 
-    expect(Tts.getInitStatus).toHaveBeenCalled();
+    expect(Tts.getInitStatus).toHaveBeenCalledTimes(1);
     expect(Tts.stop).toHaveBeenCalled();
     expect(Tts.setDefaultVoice).toHaveBeenCalledWith(validVoice.id);
     expect(Tts.speak).toHaveBeenCalledWith("Hello");
@@ -146,5 +181,51 @@ describe("MultiLanguageTTSService", () => {
     ).resolves.toBeUndefined();
 
     expect(console.warn).toHaveBeenCalled();
+  });
+
+  it("does not initialize TTS again on repeated speak calls", async () => {
+    (Tts.voices as jest.Mock).mockResolvedValue([validVoice]);
+
+    await MultiLanguageTTSService.speak("First message", "en-IN");
+    await MultiLanguageTTSService.speak("Second message", "en-IN");
+
+    expect(Tts.getInitStatus).toHaveBeenCalledTimes(1);
+    expect(Tts.setDefaultRate).toHaveBeenCalledTimes(1);
+    expect(Tts.setDefaultPitch).toHaveBeenCalledTimes(1);
+    expect(Tts.speak).toHaveBeenCalledTimes(2);
+  });
+
+  it("shares one initialization between concurrent speak calls", async () => {
+    let resolveInitialization!: (value: "success") => void;
+
+    (Tts.getInitStatus as jest.Mock).mockImplementationOnce(
+      () =>
+        new Promise<"success">((resolve) => {
+          resolveInitialization = resolve;
+        })
+    );
+
+    (Tts.voices as jest.Mock).mockResolvedValue([validVoice]);
+
+    const firstSpeak = MultiLanguageTTSService.speak(
+      "First message",
+      "en-IN"
+    );
+
+    const secondSpeak = MultiLanguageTTSService.speak(
+      "Second message",
+      "en-IN"
+    );
+
+    expect(Tts.getInitStatus).toHaveBeenCalledTimes(1);
+
+    resolveInitialization("success");
+
+    await Promise.all([firstSpeak, secondSpeak]);
+
+    expect(Tts.getInitStatus).toHaveBeenCalledTimes(1);
+    expect(Tts.setDefaultRate).toHaveBeenCalledTimes(1);
+    expect(Tts.setDefaultPitch).toHaveBeenCalledTimes(1);
+    expect(Tts.speak).toHaveBeenCalledTimes(2);
   });
 });
