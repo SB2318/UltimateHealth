@@ -39,7 +39,7 @@ async function fetchDynamicArticles(): Promise<{ id: string; lastModified: Date 
     const res = await safeFetch(getApiUrl("/articles/?limit=200"), { next: { revalidate: 3600 } }, 2500);
     clearTimeout(timeout);
 
-    if (res.ok) {
+    if (res && res.ok) {
       const data = await res.json();
       const items: ApiArticleItem[] = Array.isArray(data)
         ? data

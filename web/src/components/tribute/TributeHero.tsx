@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Heart, Globe2, Shield, BookOpen, ArrowDown } from "lucide-react";
 
@@ -198,7 +197,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
             boxSizing: "border-box",
           }}
         >
-          {/* Portrait */}
+          {/* Memorial Emblem */}
           <div
             style={{
               position: "relative",
@@ -208,17 +207,40 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
               overflow: "hidden",
               flexShrink: 0,
               border: "2.5px solid rgba(244, 63, 94, 0.4)",
-              boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
+              background: "linear-gradient(135deg, rgba(244, 63, 94, 0.15) 0%, rgba(13, 148, 136, 0.12) 100%)",
+              boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
             }}
+            aria-label="Memorial Emblem for Dr. Moumita Debnath"
           >
-            <Image
-              src="https://images.openai.com/static-rsc-4/ERFLGiok6oasJHEMp3Yp6o2VKqafsUj-FPQeEYQVBikv-WsOwE5pXE1bqNI-Fby_VmCS1XVDvEn5a1eEekUaerVa1EbGz6xCVfRcsQzaWS2tFSFoLV4bcUYetNcVkenLUbjb87nn3XEwl6ctIPIKzEBKwhlZu-B7ll228b_kQ_I?purpose=inline"
-              alt="Portrait of Dr. Moumita Debnath"
-              fill
-              unoptimized
-              style={{ objectFit: "cover" }}
-              sizes="110px"
-            />
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "50%",
+                background: "rgba(244, 63, 94, 0.18)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Heart size={26} style={{ color: "#e11d48", fill: "rgba(244, 63, 94, 0.35)" }} />
+            </div>
+            <span
+              style={{
+                fontSize: "0.68rem",
+                fontWeight: 800,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "#e11d48",
+              }}
+            >
+              Memorial
+            </span>
           </div>
 
           {/* Details */}

@@ -135,7 +135,7 @@ async function fetchArticle(
   // 1. Try fetching by PocketBase record ID: /api/articles/record/{pb_recordId}
   try {
     const res = await safeFetch(getApiUrl(`/articles/record/${id}`), ISR, 2000);
-    if (res.ok) {
+    if (res && res.ok) {
       const data = await res.json();
       const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
       if (detail && (detail.status && detail.status !== "published")) return null;
@@ -154,7 +154,7 @@ async function fetchArticle(
   // 2. Try direct numeric ID fetch: /api/articles/{id}
   try {
     const res = await safeFetch(getApiUrl(`/articles/${id}`), ISR, 2000);
-    if (res.ok) {
+    if (res && res.ok) {
       const data = await res.json();
       const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
       if (detail && (detail.status && detail.status !== "published")) return null;
@@ -173,7 +173,7 @@ async function fetchArticle(
   // 3. Fallback: list all articles and match by pb_recordId, _id, or slugified title
   try {
     const res = await safeFetch(getApiUrl(`/articles/?limit=100`), ISR, 2000);
-    if (res.ok) {
+    if (res && res.ok) {
       const data = await res.json();
       const list: ApiArticleDetail[] = data.articles ?? [];
       const match = list.find((a) => {
@@ -211,7 +211,7 @@ async function fetchRelatedArticles(
   if (numericId) {
     try {
       const res = await safeFetch(getApiUrl(`/articles/${numericId}/related?limit=4`), ISR, 2000);
-      if (res.ok) {
+      if (res && res.ok) {
         const json = await res.json();
         const items =
           json.data || json.articles || json.relatedArticles || (Array.isArray(json) ? json : []);
@@ -232,7 +232,7 @@ async function fetchRelatedArticles(
   // 2. Fallback: fetch articles list and select other articles
   try {
     const res = await safeFetch(getApiUrl(`/articles/?limit=10`), ISR, 2000);
-    if (res.ok) {
+    if (res && res.ok) {
       const json = await res.json();
       const list: ApiArticleDetail[] = json.articles ?? [];
       const filtered = list.filter(
@@ -256,7 +256,7 @@ async function fetchRelatedArticles(
 async function fetchHtmlContent(pbRecordId: string): Promise<string | null> {
   try {
     const res = await safeFetch(getApiUrl(`/articles/get-article-content/${pbRecordId}`), { next: { revalidate: 300 } }, 2000);
-    if (!res.ok) return null;
+    if (!res || !res.ok) return null;
     const data = await res.json();
     return (data.htmlContent as string) ?? null;
   } catch {

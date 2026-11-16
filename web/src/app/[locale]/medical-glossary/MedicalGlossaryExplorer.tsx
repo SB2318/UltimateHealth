@@ -485,7 +485,7 @@ export default function MedicalGlossaryExplorer({
             gap: "12px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
             <span
               style={{
                 fontSize: "0.82rem",
@@ -500,6 +500,35 @@ export default function MedicalGlossaryExplorer({
             >
               {t("showingCount")} {filteredEntries.length} {t("terms")}
             </span>
+
+            <a
+              href="https://github.com/SB2318/UltimateHealth/pull/1758"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Glossary categories and terms contributed by Avrojit Dutta in PR #1758"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                fontSize: "0.78rem",
+                fontWeight: 700,
+                color: "var(--explorer-text-secondary, #64748b)",
+                textDecoration: "none",
+                padding: "3px 10px",
+                borderRadius: "50px",
+                background: "var(--explorer-surface, #f8fafc)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
+              }}
+            >
+              <img
+                src="https://github.com/avrojitdutta.png"
+                alt="Avrojit Dutta"
+                width={16}
+                height={16}
+                style={{ width: "16px", height: "16px", borderRadius: "50%" }}
+              />
+              <span>Contributed by <strong>Avrojit Dutta</strong> (#1758)</span>
+            </a>
           </div>
 
           {(searchQuery || selectedCategory !== "All" || selectedLanguage !== "all") && (
@@ -720,6 +749,111 @@ export default function MedicalGlossaryExplorer({
             })}
           </div>
         )}
+
+        {/* ── Contributor Acknowledgment Section ── */}
+        <div
+          style={{
+            marginTop: "20px",
+            padding: "24px",
+            borderRadius: "16px",
+            background: "var(--explorer-surface, #ffffff)",
+            border: "1px solid var(--explorer-border, #e2e8f0)",
+            boxShadow: "var(--explorer-card-shadow, 0 4px 16px rgba(0,0,0,0.04))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "16px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <img
+              src="https://github.com/avrojitdutta.png"
+              alt="Avrojit Dutta"
+              width={46}
+              height={46}
+              style={{
+                width: "46px",
+                height: "46px",
+                borderRadius: "50%",
+                border: "2px solid #0d9488",
+              }}
+            />
+            <div>
+              <div
+                style={{
+                  fontSize: "0.95rem",
+                  fontWeight: 800,
+                  color: "var(--explorer-text-primary, #0f172a)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <span>Medical Glossary Curation & Terminology</span>
+                <span
+                  style={{
+                    fontSize: "0.72rem",
+                    padding: "2px 8px",
+                    borderRadius: "6px",
+                    background: "rgba(13, 148, 136, 0.12)",
+                    color: "#0d9488",
+                    fontWeight: 800,
+                  }}
+                >
+                  Contributor
+                </span>
+              </div>
+              <div
+                style={{
+                  fontSize: "0.84rem",
+                  color: "var(--explorer-text-secondary, #64748b)",
+                  marginTop: "4px",
+                  lineHeight: 1.5,
+                }}
+              >
+                Comprehensive clinical categories & entries contributed by{" "}
+                <a
+                  href="https://github.com/avrojitdutta"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#0d9488", fontWeight: 700, textDecoration: "none" }}
+                >
+                  Avrojit Dutta (@avrojitdutta)
+                </a>{" "}
+                via{" "}
+                <a
+                  href="https://github.com/SB2318/UltimateHealth/pull/1758"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#0d9488", fontWeight: 700, textDecoration: "underline" }}
+                >
+                  PR #1758
+                </a>
+                .
+              </div>
+            </div>
+          </div>
+
+          <a
+            href="/our-contributors"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "10px 20px",
+              borderRadius: "50px",
+              background: "rgba(13, 148, 136, 0.10)",
+              border: "1px solid rgba(13, 148, 136, 0.25)",
+              color: "#0d9488",
+              fontWeight: 800,
+              fontSize: "0.85rem",
+              textDecoration: "none",
+            }}
+          >
+            <span>❤️ Meet All Contributors</span>
+          </a>
+        </div>
       </div>
     </div>
   );

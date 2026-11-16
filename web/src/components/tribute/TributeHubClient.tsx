@@ -12,7 +12,11 @@ import EditorialCharter from "./EditorialCharter";
 
 export type TributeTab = "remember" | "listen" | "recognise" | "learn" | "charter";
 
-export default function TributeHubClient() {
+interface TributeHubClientProps {
+  initialProfileSlug?: string;
+}
+
+export default function TributeHubClient({ initialProfileSlug }: TributeHubClientProps) {
   const t = useTranslations("tribute");
   const [activeTab, setActiveTab] = useState<TributeTab>("remember");
 
@@ -162,7 +166,9 @@ export default function TributeHubClient() {
             aria-labelledby={`tab-${activeTab}`}
             style={{ width: "100%", paddingBottom: "70px", boxSizing: "border-box" }}
           >
-            {activeTab === "remember" && <TributeExplorer initialCategory="all" />}
+            {activeTab === "remember" && (
+              <TributeExplorer initialCategory="all" initialProfileSlug={initialProfileSlug} />
+            )}
             {activeTab === "listen" && <SurvivorVoicesSection />}
             {activeTab === "recognise" && <ChangemakersSection />}
             {activeTab === "learn" && <SocietalLessonsMatrix />}

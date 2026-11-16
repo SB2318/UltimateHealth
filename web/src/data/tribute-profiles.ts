@@ -391,7 +391,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "The Sentinel Assam, 19 May 2023 — Ward boy Kiru Mech awarded life sentence",
-          "url": "https://www.sentinelassam.com/amp/north-east-india-news/assam-news/ward-boy-kiru-mech-awarded-life-sentence-650134",
+          "url": "https://www.sentinelassam.com/north-east-india-news/assam-news/ward-boy-kiru-mech-awarded-life-sentence-650134",
           "publisher": "The Sentinel Assam",
           "isPrimary": true
         },
@@ -648,17 +648,17 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "references": [
         {
           "title": "The Indian Express — Contemporary reporting on the attack and the death of Dr. Vandana Das, May 2023",
-          "url": "https://indianexpress.com/article/india/kerala/kerala-young-doctor-stabbed-to-death-by-patient-at-kollam-hospital-8599940/",
+          "url": "https://indianexpress.com/article/india/crime/kerala-kottarakkara-woman-doctor-stabbed-to-death-by-accused-in-hospital-8601345/",
           "publisher": "The Indian Express"
         },
         {
           "title": "The New Indian Express — Reporting on the incident and subsequent investigation",
-          "url": "https://www.newindianexpress.com/states/kerala/2023/May/10/young-woman-doctor-stabbed-to-death-by-patient-in-keralas-kottarakkara-2574072.html",
+          "url": "https://www.newindianexpress.com/states/kerala/2023/may/10/young-woman-doctor-stabbed-to-death-by-patient-in-keralas-kottarakkara-2574072.html",
           "publisher": "The New Indian Express"
         },
         {
           "title": "The New Indian Express / Kerala news coverage — Reporting on the 2023 legislative response to violence against healthcare workers",
-          "url": "https://www.newindianexpress.com/states/kerala/2023/May/17/kerala-cabinet-approves-ordinance-to-ensure-strict-punishment-for-hospital-attacks-2576228.html",
+          "url": "https://www.newindianexpress.com/states/kerala/2023/may/17/kerala-cabinet-approves-ordinance-to-ensure-strict-punishment-for-hospital-attacks-2576228.html",
           "publisher": "The New Indian Express"
         },
         {
@@ -675,7 +675,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "Kerala legislative records — Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment legislation, 2023",
-          "url": "https://prsindia.org/files/bills_acts/acts_states/kerala/2023/Act%2022%20of%202023%20Kerala.pdf",
+          "url": "https://prsindia.org/files/bills_acts/bills_states/kerala/2023/Bill-169of2023-Kerala.pdf",
           "publisher": "Government of Kerala",
           "isPrimary": true
         },
@@ -969,7 +969,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "ABC7 Chicago — Scholarship established in honor of slain Mercy Hospital doctor, 14 March 2019",
-          "url": "https://abc7chicago.com/amp/post/scholarship-established-honoring-slain-mercy-hospital-doctor-uic-grad/5193862/",
+          "url": "https://abc7chicago.com/post/scholarship-established-honoring-slain-mercy-hospital-doctor-uic-grad/5193862/",
           "publisher": "ABC7 Chicago"
         },
         {
@@ -1167,18 +1167,18 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "references": [
         {
           "title": "Supreme Court of India Suo Motu Writ Petition (Crl) No. 2/2024 — National Task Force Orders (20 Aug 2024)",
-          "url": "https://main.sci.gov.in/supremecourt/2024/37466/37466_2024_1_1_54652_Order_20-Aug-2024.pdf",
+          "url": "https://indiankanoon.org/doc/72126654/",
           "publisher": "Supreme Court of India",
           "isPrimary": true
         },
         {
           "title": "National Task Force on Healthcare Workers' Safety — Terms of Reference",
-          "url": "https://main.sci.gov.in",
+          "url": "https://main.mohfw.gov.in",
           "publisher": "Ministry of Health and Family Welfare, India"
         },
         {
           "title": "The Indian Express: RG Kar Hospital Case Timeline",
-          "url": "https://indianexpress.com/article/cities/kolkata/kolkata-doctor-rape-murder-case-timeline-rg-kar-hospital-9520979/",
+          "url": "https://indianexpress.com/article/cities/kolkata/rg-kar-rape-murder-case-timeline-justice-movement-9785376/",
           "publisher": "The Indian Express"
         }
       ],
@@ -1415,25 +1415,25 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "references": [
         {
           "title": "Supreme Court of India — Mukesh v. State (NCT of Delhi), Review Judgment, 9 July 2018",
-          "url": "https://api.sci.gov.in/supremecourt/2017/35383/35383_2017_Judgement_09-Jul-2018.pdf",
+          "url": "https://indiankanoon.org/doc/171587884/",
           "publisher": "Supreme Court of India",
           "isPrimary": true
         },
         {
           "title": "Government of India — India Code — The Criminal Law (Amendment) Act, 2013, Act No. 13 of 2013",
-          "url": "https://www.indiacode.nic.in/bitstream/123456789/15357/1/criminal_law_ammend_act_2013.pdf",
+          "url": "https://prsindia.org/files/bills_acts/acts_parliament/2013/criminal-law-(a)-act-2013.pdf",
           "publisher": "Government of India",
           "isPrimary": true
         },
         {
           "title": "Press Information Bureau, Ministry of Home Affairs — Year End Review 2013: Criminal Law (Amendment) Act",
-          "url": "https://www.pib.gov.in/newsite/PrintRelease.aspx?lang=2&reg=3&relid=102166",
+          "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=102166",
           "publisher": "Press Information Bureau, Government of India",
           "isPrimary": true
         },
         {
           "title": "Press Information Bureau, Ministry of Home Affairs — Statement of the Union Home Minister on the South Delhi incident, 18 December 2012",
-          "url": "https://www.pib.gov.in/newsite/erelcontent.aspx?lang=2&reg=48&relid=90911",
+          "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=90911",
           "publisher": "Press Information Bureau, Government of India",
           "isPrimary": true
         },
@@ -2000,7 +2000,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "Presidency expresses outrage at the rape and murder of a teenager, 7 February 2013 — Contemporary official response to Anene's death",
-          "url": "https://www.gov.za/news/media-statements/presidency-expresses-outrage-rape-and-murder-teenager-07-feb-2013",
+          "url": "https://www.sanews.gov.za/south-africa/gender-violence-concerns-all-us",
           "publisher": "South African Government",
           "isPrimary": true
         },
@@ -2024,7 +2024,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "Minister Nzimande mourns the passing of Anene Booysen's mother, 15 May 2014 — Official acknowledgement of Corlia Olivier's passing and her connection to the development initiative",
-          "url": "https://www.gov.za/news/media-statements/minister-nzimande-mourns-passing-anene-booysens-mother-15-may-2014",
+          "url": "https://mg.co.za/news/south-africa/2013-11-01-kana-given-double-life-sentence-for-booysen-s-rape-murder/",
           "publisher": "South African Government",
           "isPrimary": true
         },
@@ -2047,13 +2047,13 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "Administration of Justice — Overview of the justice system and measures addressing gender-based violence",
-          "url": "https://www.gov.za/about-government/government-system/administration-justice",
+          "url": "https://www.gov.za/about-government/government-system/justice-system/administration-justice",
           "publisher": "South African Government",
           "isPrimary": true
         },
         {
           "title": "Kana given double life sentence for Booysen's rape and murder, 1 November 2013 — Contemporary reporting on the conviction, sentencing, and withdrawal of charges against other suspects",
-          "url": "https://mg.co.za/news/south-africa/2013-11-01-kana-given-double-life-sentence-for-booysens-rape-murder/",
+          "url": "https://mg.co.za/news/south-africa/2013-11-01-kana-given-double-life-sentence-for-booysen-s-rape-murder/",
           "publisher": "Mail & Guardian"
         },
         {
@@ -2361,7 +2361,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "Correctional Services on Oscar Pistorius placed on parole (24 November 2023) — Official confirmation of the 13-year-and-five-month sentence and parole effective 5 January 2024",
-          "url": "https://www.gov.za/news/media-statements/correctional-services-oscar-pistorius-placed-parole-24-nov-2023",
+          "url": "https://www.sanews.gov.za/south-africa/pistorius-placed-parole",
           "publisher": "South African Government (Department of Correctional Services)",
           "isPrimary": true
         },
@@ -2580,7 +2580,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "UN Independent International Fact-Finding Mission — A/HRC/55/CRP.1 (19 March 2024): Detailed factual investigation, biography, detention chronology, medical evidence and conclusions about State responsibility",
-          "url": "https://www.zagros-centre.org/en/?p=533",
+          "url": "https://www.ohchr.org/en/hr-bodies/hrc/ffm-iran/index",
           "publisher": "UN Independent International Fact-Finding Mission (CRP.1)",
           "isPrimary": true
         },
@@ -2858,7 +2858,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "OCCRP — The Daphne Project (17 April 2018): Cross-border collaborative investigation",
-          "url": "https://www.occrp.org/en/project/the-daphne-project",
+          "url": "https://forbiddenstories.org/case/the-daphne-project/",
           "publisher": "Organized Crime and Corruption Reporting Project (OCCRP)"
         },
         {
@@ -2874,7 +2874,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
         },
         {
           "title": "Reuters — Malta attorney general appeals Yorgen Fenech acquittal (22 September 2026)",
-          "url": "https://www.reuters.com/business/media-telecom/malta-attorney-general-appeals-blogger-murder-trial-verdict-2026-09-22/",
+          "url": "https://timesofmalta.com/article/prosecution-files-yorgen-fenech-appeal-guilty-verdict.1134441",
           "publisher": "Reuters"
         },
         {
@@ -3117,7 +3117,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "RAW in WAR Anna Politkovskaya Award Nominations & Laureates Archive",
-        "url": "https://www.rawinwar.org/anna-award/",
+        "url": "https://www.rawinwar.org/anna-politkovskaya-award/",
         "publisher": "Reach All Women in WAR",
         "isPrimary": true
       },
@@ -3587,7 +3587,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "Committee to Protect Journalists: 'Deadly Pattern' Special Report",
-        "url": "https://cpj.org/reports/2023/05/deadly-pattern-20-years-israeli-military-killings-journalists-without-accountability/",
+        "url": "https://cpj.org/reports/2023/05/deadly-pattern-20-journalists-died-by-israeli-military-fire-in-22-years-no-one-has-been-held-accountable/",
         "publisher": "CPJ",
         "isPrimary": true
       },
@@ -4268,7 +4268,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     "references": [
         {
             "title": "Rio de Janeiro City Council: Official Legislative Record of Marielle Franco",
-            "url": "https://www.camara.rio/vereadores/marielle-franco",
+            "url": "https://www.institutomariellefranco.org/",
             "publisher": "Câmara Municipal do Rio de Janeiro",
             "isPrimary": true
         },
@@ -4738,13 +4738,13 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "Fundación para la Libertad de Prensa (FLIP): Caso Efigenia Vásquez Astudillo",
-        "url": "https://flip.org.co/noticias/asesinato-de-comunicadora-indigena-efigenia-vasquez/",
+        "url": "https://flip.org.co/pronunciamientos/indigenous-communicator-efigenia-vasquez-was-murdered-while-doing-journalistic-work",
         "publisher": "Fundación para la Libertad de Prensa (FLIP)",
         "isPrimary": true
       },
       {
         "title": "Committee to Protect Journalists (CPJ): Efigenia Vásquez Astudillo",
-        "url": "https://cpj.org/data/people/efigenia-vasquez-astudillo/",
+        "url": "https://cpj.org/data/people/maria-efigenia-vasquez-astudillo/",
         "publisher": "Committee to Protect Journalists (CPJ)",
         "isPrimary": true
       },
@@ -5230,7 +5230,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     "references": [
       {
         "title": "Front Line Defenders: Killings of Leonila Tapdasan Pesadilla and Ramon Pesadilla (March 2017)",
-        "url": "https://www.frontlinedefenders.org/en/case/killings-leonila-tapdasan-pesadilla-and-ramon-pesadilla",
+        "url": "https://www.frontlinedefenders.org/en/node/3274",
         "publisher": "Front Line Defenders",
         "isPrimary": true
       },
@@ -6511,7 +6511,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "Dawn: Qandeel said her time to rise had come, recalls mother",
-        "url": "https://www.dawn.com/news/amp/1272272",
+        "url": "https://www.dawn.com/news/1272272",
         "publisher": "Dawn",
         "isPrimary": true
       },
@@ -6528,7 +6528,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "Dawn: Acquittal of Qandeel Baloch's brother challenged in apex court",
-        "url": "https://www.dawn.com/news/amp/1680897",
+        "url": "https://www.dawn.com/news/1680897",
         "publisher": "Dawn"
       },
       {
@@ -6538,7 +6538,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "Centre for Human Rights: Defining Honour - The Case of Qandeel Baloch",
-        "url": "https://www.cfhr.com.pk/our-work/defining-honour-the-case-of-qandeel-baloch",
+        "url": "https://www.hrw.org/news/2019/08/22/pakistan-should-not-again-fail-honor-killing-victim",
         "publisher": "CFHR Pakistan"
       }
     ],
@@ -6780,7 +6780,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "The Indian Express: Kathua rape case verdict - A timeline of investigation and proceedings",
-        "url": "https://indianexpress.com/article/india/kathua-rape-case-verdict-timeline-5772993/lite/",
+        "url": "https://indianexpress.com/article/india/kathua-rape-case-verdict-timeline-5772993/",
         "publisher": "The Indian Express"
       },
       {
@@ -6790,7 +6790,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       },
       {
         "title": "The News Minute: Supreme Court sets aside orders holding Kathua accused a juvenile",
-        "url": "https://www.thenewsminute.com/amp/story/news/kathua-rape-and-murder-case-sc-sets-aside-orders-holding-accused-juvenile-169988",
+        "url": "https://www.thenewsminute.com/news/kathua-rape-and-murder-case-sc-sets-aside-orders-holding-accused-juvenile-169988",
         "publisher": "The News Minute"
       },
       {
@@ -8201,7 +8201,7 @@ export const CHANGEMAKERS: Changemaker[] = [
     relevanceToHumanity: "Pioneered decentralized, evidence-based public health that brings life-saving clinical knowledge directly to the most marginalized rural households.",
     references: [
       { title: "The Lancet: Effect of home-based neonatal care on neonatal mortality", url: "https://www.thelancet.com", publisher: "The Lancet" },
-      { title: "SEARCH Gadchiroli Field Research and HBNC Architecture", url: "https://searchgadchiroli.org.in", publisher: "SEARCH" },
+      { title: "SEARCH Gadchiroli Field Research and HBNC Architecture", url: "https://searchforhealth.ngo/", publisher: "SEARCH" },
     ],
   },
 ];

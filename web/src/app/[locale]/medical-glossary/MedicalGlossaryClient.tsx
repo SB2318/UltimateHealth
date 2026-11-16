@@ -99,6 +99,70 @@ export default function MedicalGlossaryClient({
             >
               {t('description')}
             </p>
+
+            {/* ── Contributor Attribution Badge ── */}
+            <div
+              style={{
+                marginTop: '22px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '6px 16px',
+                borderRadius: '9999px',
+                background: 'var(--explorer-surface, #ffffff)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                fontSize: '0.82rem',
+                color: 'var(--explorer-text-secondary, #475569)',
+              }}
+            >
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '0.95rem' }}>🩺</span>
+                <span>Clinical categories & terms contributed by</span>
+              </span>
+              <a
+                href="https://github.com/SB2318/UltimateHealth/pull/1758"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="View PR #1758: Add Comprehensive Medical Glossary Categories and Entries by Avrojit Dutta"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontWeight: 700,
+                  color: '#0d9488',
+                  textDecoration: 'none',
+                }}
+              >
+                <img
+                  src="https://github.com/avrojitdutta.png"
+                  alt="Avrojit Dutta"
+                  width={20}
+                  height={20}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    border: '1px solid #0d9488',
+                  }}
+                />
+                <span>AVROJIT DUTTA</span>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    padding: '2px 6px',
+                    borderRadius: '6px',
+                    background: 'rgba(13, 148, 136, 0.12)',
+                    color: '#0d9488',
+                    fontWeight: 800,
+                  }}
+                >
+                  PR #1758
+                </span>
+              </a>
+            </div>
           </div>
         </section>
 

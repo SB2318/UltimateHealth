@@ -217,7 +217,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -589,7 +589,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -961,7 +961,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -1333,7 +1333,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -1705,7 +1705,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -2077,7 +2077,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -2449,7 +2449,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -2821,7 +2821,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]
@@ -3193,7 +3193,7 @@ export const PILLARS_LOCALIZED_DATA: Record<
           },
           {
             "title": "SEARCH Gadchiroli Field Research and HBNC Architecture",
-            "url": "https://searchgadchiroli.org.in",
+            "url": "https://searchforhealth.ngo/",
             "publisher": "SEARCH"
           }
         ]

@@ -1,3 +1,6 @@
+import { getApiUrl } from "@/lib/api";
+import { safeFetch } from "@/lib/safe-fetch";
+
 export interface LocalizedGlossaryEntry {
   _id?: string;
   term: string;
@@ -90,7 +93,7 @@ export async function fetchGlossaryTerms(): Promise<LocalizedGlossaryEntry[]> {
   try {
     const res = await safeFetch(getApiUrl("/glossary?limit=500"), { next: { revalidate: 3600 } }, 2500);
 
-    if (res.ok) {
+    if (res && res.ok) {
       const json: ApiGlossaryResponse = await res.json();
       const items = Array.isArray(json.data) ? json.data : Array.isArray(json) ? json : [];
       if (items.length > 0) {

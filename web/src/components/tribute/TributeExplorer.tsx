@@ -12,15 +12,25 @@ const ITEMS_PER_PAGE = 6;
 
 interface TributeExplorerProps {
   initialCategory?: TributeCategory;
+  initialProfileSlug?: string;
 }
 
-export default function TributeExplorer({ initialCategory = "all" }: TributeExplorerProps) {
+export default function TributeExplorer({ initialCategory = "all", initialProfileSlug }: TributeExplorerProps) {
   const t = useTranslations("tribute");
   const locale = useLocale();
   const [activeCategory, setActiveCategory] = useState<TributeCategory>(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProfile, setSelectedProfile] = useState<TributeProfile | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (initialProfileSlug) {
+      const match = TRIBUTE_PROFILES.find((p) => p.slug === initialProfileSlug);
+      if (match) {
+        setSelectedProfile(match);
+      }
+    }
+  }, [initialProfileSlug]);
 
   // Localize profiles according to current language
   const localizedAllProfiles = useMemo(() => {

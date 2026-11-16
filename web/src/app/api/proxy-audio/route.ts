@@ -14,13 +14,15 @@ export async function GET(request: NextRequest) {
     return new NextResponse("Missing audio URL", { status: 400 });
   }
 
-  // Security: only allow ultimatehealth.blog and official domains for audio files
+  // Security: only allow ultimatehealth.blog and official/verified sample audio domains
   try {
     const parsed = new URL(url);
     if (
       parsed.hostname !== "ultimatehealth.blog" &&
       parsed.hostname !== "uhsocial.in" &&
-      parsed.hostname !== "localhost"
+      parsed.hostname !== "localhost" &&
+      parsed.hostname !== "www.soundhelix.com" &&
+      parsed.hostname !== "soundhelix.com"
     ) {
       return new NextResponse("Host not allowed", { status: 403 });
     }

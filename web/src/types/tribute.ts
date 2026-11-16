@@ -54,6 +54,7 @@ export interface TributeProfile {
   factualContext: string;        // Documented sensitively, non-graphic, objective legal/historical record
   societalImpact: string;        // Reforms, movements, and discussions triggered
   actionableLesson: string;      // Concrete societal lesson (Duty room security, press freedom, etc.)
+  actionableTakeaways?: string[]; // Specific actionable community and policy takeaways
   coreMessage: string;           // UltimateHealth Editorial Reflection (What society must learn and build)
   verifiedQuote?: {              // Only populated when verified primary-source quotation is documented
     quote: string;
@@ -85,9 +86,15 @@ export interface TributeProfile {
 
 export interface TributeProfileTranslation {
   name?: string;
+  country?: string;
   roleAndField?: string;
   categoryLabel?: string;
   coreMessage?: string;
+  verifiedQuote?: string | {
+    quote: string;
+    source: string;
+    context?: string;
+  };
   whoWasThisPerson?: string;
   contributions?: string;
   factualContext?: string;

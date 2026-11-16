@@ -4,6 +4,7 @@ import { Footer } from "@/components/ui/footer";
 import TributeHubClient from "@/components/tribute/TributeHubClient";
 import {
   BRAND_NAME,
+  FULL_SITE_URL,
   getCanonicalUrl,
   getHreflangAlternates,
   buildBreadcrumbJsonLd,
@@ -38,9 +39,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
       images: [
         {
-          url: "https://images.openai.com/static-rsc-4/ERFLGiok6oasJHEMp3Yp6o2VKqafsUj-FPQeEYQVBikv-WsOwE5pXE1bqNI-Fby_VmCS1XVDvEn5a1eEekUaerVa1EbGz6xCVfRcsQzaWS2tFSFoLV4bcUYetNcVkenLUbjb87nn3XEwl6ctIPIKzEBKwhlZu-B7ll228b_kQ_I?purpose=inline",
-          width: 1200,
-          height: 630,
+          url: `${FULL_SITE_URL}/icon1.png`,
+          width: 512,
+          height: 512,
           alt: "Lives Beyond the Headlines - UltimateHealth Tribute",
         },
       ],
@@ -50,15 +51,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `Lives Beyond the Headlines | ${BRAND_NAME} Tribute`,
       description:
         "Remembering 30 lives for their contributions, courage, and lost possibilities. What society must learn and build.",
-      images: [
-        "https://images.openai.com/static-rsc-4/ERFLGiok6oasJHEMp3Yp6o2VKqafsUj-FPQeEYQVBikv-WsOwE5pXE1bqNI-Fby_VmCS1XVDvEn5a1eEekUaerVa1EbGz6xCVfRcsQzaWS2tFSFoLV4bcUYetNcVkenLUbjb87nn3XEwl6ctIPIKzEBKwhlZu-B7ll228b_kQ_I?purpose=inline",
-      ],
+      images: [`${FULL_SITE_URL}/icon1.png`],
     },
   };
 }
 
-export default async function TributePage({ params }: PageProps) {
+export default async function TributePage({ params, searchParams }: PageProps) {
   const { locale } = await params;
+  const sParams = searchParams ? await searchParams : {};
+  const initialProfileSlug = typeof sParams.profile === "string" ? sParams.profile : undefined;
 
   const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", url: getCanonicalUrl(locale) },
@@ -119,7 +120,7 @@ export default async function TributePage({ params }: PageProps) {
             boxSizing: "border-box",
           }}
         >
-          <TributeHubClient />
+          <TributeHubClient initialProfileSlug={initialProfileSlug} />
         </main>
         <Footer />
       </div>

@@ -15,7 +15,7 @@ import { safeFetch } from "@/lib/safe-fetch";
 async function fetchLatestArticles(): Promise<ApiArticle[]> {
   try {
     const res = await safeFetch(getApiUrl("/articles/?page=1&limit=6"), { next: { revalidate: 300 } }, 2500);
-    if (!res.ok) return [];
+    if (!res || !res.ok) return [];
     const data = await res.json();
     const articles: ApiArticle[] = data.articles ?? (Array.isArray(data) ? data : []);
     return articles

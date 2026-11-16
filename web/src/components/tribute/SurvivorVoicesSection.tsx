@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import Link from "next/link";
-import { HeartHandshake, Shield, ExternalLink, CheckCircle, Lock } from "lucide-react";
+import { HeartHandshake, Shield, ExternalLink, CheckCircle, Lock, ArrowRight } from "lucide-react";
 import {
   getLocalizedSurvivorVoices,
   getLocalizedConsentFramework,
 } from "@/data/tribute-pillars-i18n";
+import { TRIBUTE_PROFILES } from "@/data/tribute-profiles";
+import type { TributeProfile } from "@/types/tribute";
+import ProfileDetailModal from "./ProfileDetailModal";
 
 export default function SurvivorVoicesSection() {
   const t = useTranslations("tribute");
@@ -14,6 +17,14 @@ export default function SurvivorVoicesSection() {
 
   const survivorVoices = getLocalizedSurvivorVoices(locale);
   const consentFramework = getLocalizedConsentFramework(locale);
+  const [selectedProfile, setSelectedProfile] = useState<TributeProfile | null>(null);
+
+  const handleOpenProfile = (slug: string) => {
+    const profile = TRIBUTE_PROFILES.find((p) => p.slug === slug);
+    if (profile) {
+      setSelectedProfile(profile);
+    }
+  };
 
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
@@ -248,10 +259,11 @@ export default function SurvivorVoicesSection() {
                 </p>
               </div>
 
-              {/* Link to Full Profile */}
+              {/* Link to Full Profile Modal */}
               <div style={{ marginBottom: "16px" }}>
-                <Link
-                  href={`/${locale}/tribute/${survivor.slug}`}
+                <button
+                  type="button"
+                  onClick={() => handleOpenProfile(survivor.slug)}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -259,11 +271,22 @@ export default function SurvivorVoicesSection() {
                     fontSize: "0.82rem",
                     fontWeight: 700,
                     color: "#0d9488",
+                    background: "transparent",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer",
                     textDecoration: "none",
                   }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.textDecoration = "underline";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.textDecoration = "none";
+                  }}
                 >
-                  {t("readFullTributeBio")}
-                </Link>
+                  <span>{t("readFullTributeBio")}</span>
+                  <ArrowRight size={14} />
+                </button>
               </div>
             </div>
 
@@ -461,6 +484,13 @@ export default function SurvivorVoicesSection() {
           </ul>
         </div>
       </div>
+
+      {/* Detail Modal */}
+      <ProfileDetailModal
+        profile={selectedProfile}
+        isOpen={!!selectedProfile}
+        onClose={() => setSelectedProfile(null)}
+      />
     </div>
   );
 }

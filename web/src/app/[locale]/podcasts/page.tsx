@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import PodcastsClient from './PodcastsClient';
+import { fetchPublishedPodcasts, fetchPodcastEpisodes } from '@/lib/podcast-api';
 import {
   BRAND_NAME,
   FULL_SITE_URL,
@@ -56,6 +57,12 @@ export default async function PodcastsPage({ params }: PageProps) {
   const { locale } = await params;
   const nonce = (await headers()).get('x-nonce') ?? undefined;
 
+  // Public unauthenticated data fetch as specified by user
+  const [{ podcasts, totalPages, total }, episodes] = await Promise.all([
+    fetchPublishedPodcasts(1, 12),
+    fetchPodcastEpisodes(),
+  ]);
+
   const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
     { name: 'Home', url: getCanonicalUrl(locale) },
     { name: 'Podcasts', url: getCanonicalUrl(locale, '/podcasts') },
@@ -91,7 +98,13 @@ export default async function PodcastsPage({ params }: PageProps) {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(podcastSeriesJsonLd) }}
       />
-      <PodcastsClient />
+      <PodcastsClient
+        initialPodcasts={podcasts}
+        initialEpisodes={episodes}
+        initialTotalPages={totalPages}
+        initialTotal={total}
+        locale={locale}
+      />
     </>
   );
 }
