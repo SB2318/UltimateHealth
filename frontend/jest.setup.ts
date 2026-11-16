@@ -1,5 +1,4 @@
 
-
 jest.mock('react-native-worklets', () => {
   return {
     makeShareableCloneRecursive: jest.fn(),
@@ -158,15 +157,16 @@ jest.mock('tamagui', () => {
   };
 });
 
-
+// Updated react-native-tts mock
 jest.mock('react-native-tts', () => ({
-  getInitStatus: jest.fn(() => Promise.resolve()),
-  setDefaultLanguage: jest.fn(() => Promise.resolve()),
-  setDefaultRate: jest.fn(),
-  setDefaultPitch: jest.fn(),
-  speak: jest.fn(() => Promise.resolve()),
-  stop: jest.fn(() => Promise.resolve()),
-  // voices() is called in ChatbotScreen, PodcastPlayer, ArticleScreen, MultiLanguageService
+  getInitStatus: jest.fn(() => Promise.resolve("success")),
+  requestInstallData: jest.fn(() => Promise.resolve("success")),
+  setDefaultLanguage: jest.fn(() => Promise.resolve("success")),
+  setDefaultVoice: jest.fn(() => Promise.resolve("success")),
+  setDefaultRate: jest.fn(() => Promise.resolve("success")),
+  setDefaultPitch: jest.fn(() => Promise.resolve("success")),
+  speak: jest.fn(() => "mock-utterance-id"),
+  stop: jest.fn(() => Promise.resolve(true)),
   voices: jest.fn(() => Promise.resolve([])),
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
