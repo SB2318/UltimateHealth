@@ -14,6 +14,7 @@ import {
   formatPodcastDuration, formatPodcastDate,
   resolvePodcastAudioUrl, getPodcastAuthorInfo,
 } from "@/lib/podcast-api";
+import { withBasePath } from "@/lib/basePath";
 import PodcastCard from "./PodcastCard";
 import EpisodeNotesTranscript from "./EpisodeNotesTranscript";
 
@@ -30,9 +31,9 @@ const FALLBACK_IMAGE = "https://raw.githubusercontent.com/SB2318/UltimateHealth-
 function getSafeImageUrl(url?: string | null): string {
   if (!url || typeof url !== "string" || !url.trim()) return FALLBACK_IMAGE;
   const trimmed = url.trim();
-  if (trimmed.startsWith("/api/proxy-image")) return trimmed;
+  if (trimmed.startsWith("/api/proxy-image")) return withBasePath(trimmed);
   if (trimmed.includes("ultimatehealth.blog") || trimmed.includes("uhsocial.in")) {
-    return `/api/proxy-image?url=${encodeURIComponent(trimmed)}`;
+    return withBasePath(`/api/proxy-image?url=${encodeURIComponent(trimmed)}`);
   }
   return trimmed;
 }
@@ -242,7 +243,7 @@ export default function PodcastDetailClient({
                   onError={(e) => {
                     e.currentTarget.onerror = null;
                     if (podcast.cover_image && !e.currentTarget.src.includes("/api/proxy-image")) {
-                      e.currentTarget.src = `/api/proxy-image?url=${encodeURIComponent(podcast.cover_image)}`;
+                      e.currentTarget.src = withBasePath(`/api/proxy-image?url=${encodeURIComponent(podcast.cover_image)}`);
                     } else {
                       e.currentTarget.src = FALLBACK_IMAGE;
                     }
@@ -323,7 +324,7 @@ export default function PodcastDetailClient({
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       if (author.avatar && !e.currentTarget.src.includes("/api/proxy-image")) {
-                        e.currentTarget.src = `/api/proxy-image?url=${encodeURIComponent(author.avatar)}`;
+                        e.currentTarget.src = withBasePath(`/api/proxy-image?url=${encodeURIComponent(author.avatar)}`);
                       } else {
                         e.currentTarget.src = FALLBACK_IMAGE;
                       }

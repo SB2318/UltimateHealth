@@ -1,4 +1,28 @@
 // Verified fallback cover artwork
+
+// Helper: detect basePath from env or browser location (mirrors basePath.ts logic)
+function getBasePath() {
+  // In Node.js (SSR) or build, read from env
+  if (typeof process !== "undefined" && process.env && process.env.NEXT_PUBLIC_BASE_PATH) {
+    return process.env.NEXT_PUBLIC_BASE_PATH;
+  }
+  // In the browser, auto-detect /web prefix
+  if (typeof window !== "undefined" &&
+    (window.location.pathname.startsWith("/web/") || window.location.pathname === "/web")) {
+    return "/web";
+  }
+  return "";
+}
+
+function withBasePathMjs(path) {
+  if (!path) return path;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  const bp = getBasePath();
+  if (!bp) return path;
+  if (path.startsWith(bp)) return path;
+  return `${bp}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 export const PODCAST_FALLBACK_IMAGES = {
   wellness: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80",
   cardiology: "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?auto=format&fit=crop&w=800&q=80",
@@ -264,19 +288,19 @@ export function resolvePodcastAudioUrl(audioUrl) {
   const trimmed = audioUrl.trim();
 
   if (trimmed.startsWith("/api/proxy-audio")) {
-    return trimmed;
+    return withBasePathMjs(trimmed);
   }
 
   try {
     const parsed = new URL(trimmed);
     if (parsed.hostname === "ultimatehealth.blog" || parsed.hostname === "uhsocial.in") {
-      return `/api/proxy-audio?url=${encodeURIComponent(trimmed)}`;
+      return withBasePathMjs(`/api/proxy-audio?url=${encodeURIComponent(trimmed)}`);
     }
     return trimmed;
   } catch {
     if (/\.(mp3|wav|ogg|m4a|aac)$/i.test(trimmed)) {
       const fullUrl = `https://ultimatehealth.blog/api/getFile/${trimmed}`;
-      return `/api/proxy-audio?url=${encodeURIComponent(fullUrl)}`;
+      return withBasePathMjs(`/api/proxy-audio?url=${encodeURIComponent(fullUrl)}`);
     }
     return SAMPLE_AUDIO_FALLBACKS[0];
   }

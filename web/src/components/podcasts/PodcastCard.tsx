@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Play, Pause, Clock, Eye, Share2, Layers } from "lucide-react";
 import type { PodcastData } from "@/types/podcast";
 import { formatPodcastDuration } from "@/lib/podcast-api";
+import { withBasePath } from "@/lib/basePath";
 
 interface PodcastCardProps {
   podcast: PodcastData;
@@ -19,9 +20,13 @@ const FALLBACK_IMAGE = "https://raw.githubusercontent.com/SB2318/UltimateHealth-
 function getSafeImageUrl(url?: string | null): string {
   if (!url || typeof url !== "string" || !url.trim()) return FALLBACK_IMAGE;
   const trimmed = url.trim();
-  if (trimmed.startsWith("/api/proxy-image")) return trimmed;
+  // Already a proxy URL — just ensure basePath prefix
+  if (trimmed.startsWith("/api/proxy-image")) {
+    return withBasePath(trimmed);
+  }
+  // Backend URLs that need proxying
   if (trimmed.includes("ultimatehealth.blog") || trimmed.includes("uhsocial.in")) {
-    return `/api/proxy-image?url=${encodeURIComponent(trimmed)}`;
+    return withBasePath(`/api/proxy-image?url=${encodeURIComponent(trimmed)}`);
   }
   return trimmed;
 }
@@ -77,7 +82,7 @@ export default function PodcastCard({
           onError={(e) => {
             e.currentTarget.onerror = null;
             if (podcast.cover_image && !e.currentTarget.src.includes("/api/proxy-image")) {
-              e.currentTarget.src = `/api/proxy-image?url=${encodeURIComponent(podcast.cover_image)}`;
+              e.currentTarget.src = withBasePath(`/api/proxy-image?url=${encodeURIComponent(podcast.cover_image)}`);
             } else {
               e.currentTarget.src = FALLBACK_IMAGE;
             }
@@ -232,7 +237,7 @@ export default function PodcastCard({
               onError={(e) => {
                 e.currentTarget.onerror = null;
                 if (podcast.authorAvatar && !e.currentTarget.src.includes("/api/proxy-image")) {
-                  e.currentTarget.src = `/api/proxy-image?url=${encodeURIComponent(podcast.authorAvatar)}`;
+                  e.currentTarget.src = withBasePath(`/api/proxy-image?url=${encodeURIComponent(podcast.authorAvatar)}`);
                 } else {
                   e.currentTarget.src = FALLBACK_IMAGE;
                 }
