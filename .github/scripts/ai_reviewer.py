@@ -44,8 +44,8 @@ def main():
     if len(final_diff) > 200000:
         final_diff = final_diff[:200000] + "\n... [Diff truncated for size limit] ..."
 
-    # 3. Call Gemini 2.5 Flash API via raw HTTP request
-    gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_api_key}"
+    # 3. Call Gemini 2.5 Flash API via raw HTTP request (pass API key via header to avoid query parameter exposure)
+    gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     prompt = (
         "You are an AI code reviewer. Write a helpful, highly precise, and constructive review of the following pull request diff.\n"
         "Keep your response concise and structured.\n"
@@ -68,7 +68,10 @@ def main():
     req_gemini = urllib.request.Request(
         gemini_url,
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"}
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": gemini_api_key,
+        }
     )
 
     try:

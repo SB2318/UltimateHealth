@@ -156,6 +156,30 @@ function buildNotesFromSegments(segments: TranscriptSegment[], overallText: stri
   return notes;
 }
 
+const MAX_AUDIO_FILE_SIZE = 25 * 1024 * 1024; // 25 MB max for Whisper API
+
+const ALLOWED_AUDIO_HOSTS = new Set([
+  "ultimatehealth.blog",
+  "uhsocial.in",
+  "soundhelix.com",
+  "www.soundhelix.com",
+]);
+
+function isAllowedAudioUrl(rawUrl: string): boolean {
+  try {
+    const parsed = new URL(rawUrl);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
+    const lower = parsed.hostname.toLowerCase();
+    if (ALLOWED_AUDIO_HOSTS.has(lower)) return true;
+    if (process.env.NODE_ENV === "development" && (lower === "localhost" || lower === "127.0.0.1")) {
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
@@ -176,13 +200,35 @@ export async function POST(request: NextRequest) {
         resolvedAudio = `https://ultimatehealth.blog/api/getFile/${resolvedAudio}`;
       }
 
-      // Download audio binary
-      const audioRes = await fetch(resolvedAudio);
+      // Security: Validate target host to prevent SSRF and relay abuse
+      if (!isAllowedAudioUrl(resolvedAudio)) {
+        return NextResponse.json(
+          { success: false, error: "Audio host is not permitted" },
+          { status: 403 }
+        );
+      }
+
+      // Download audio binary with size validation
+      const audioRes = await fetch(resolvedAudio, { redirect: "error" });
       if (!audioRes.ok) {
         throw new Error(`Failed to download audio file: ${audioRes.statusText}`);
       }
 
+      const contentLength = parseInt(audioRes.headers.get("content-length") || "0", 10);
+      if (contentLength > MAX_AUDIO_FILE_SIZE) {
+        return NextResponse.json(
+          { success: false, error: "Audio file exceeds maximum 25MB limit" },
+          { status: 413 }
+        );
+      }
+
       const audioBuffer = await audioRes.arrayBuffer();
+      if (audioBuffer.byteLength > MAX_AUDIO_FILE_SIZE) {
+        return NextResponse.json(
+          { success: false, error: "Audio file exceeds maximum 25MB limit" },
+          { status: 413 }
+        );
+      }
       const audioBlob = new Blob([audioBuffer], { type: "audio/mpeg" });
 
       const formData = new FormData();

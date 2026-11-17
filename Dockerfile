@@ -35,10 +35,12 @@ ENV HOSTNAME="0.0.0.0"
 ENV NEXT_PUBLIC_BASE_PATH=/web
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/messages ./messages
+COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/messages ./messages
+
+USER node
 
 EXPOSE 5000
 

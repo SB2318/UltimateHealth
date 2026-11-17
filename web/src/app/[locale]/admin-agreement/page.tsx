@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageWrapper, Section } from "@/components/layout";
 import { withBasePath } from "@/lib/basePath";
+import { safeRedirectPath } from "@/lib/auth/auth-helpers.js";
 import { canvasPixelsHaveInk } from "./signatureValidation";
 
 import type { AgreementMessage } from "./types";
@@ -111,7 +112,10 @@ function AdminAgreementContent() {
       const data = JSON.parse(raw);
       if (data.accepted && data.version === "2.0.0") {
         setAlreadyAccepted(true);
-        const redirectUrl = searchParams.get("redirect") || "/admin/dashboard";
+        const rawRedirect = searchParams.get("redirect");
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const redirectUrl =
+          (origin && rawRedirect ? safeRedirectPath(rawRedirect, origin) : null) || "/admin/dashboard";
         setTimeout(() => { window.location.href = redirectUrl; }, 3000);
       }
     } catch { /* ignore */ }

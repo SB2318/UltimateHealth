@@ -21,6 +21,7 @@ import { useArticleSpeech } from "@/hooks/use-article-speech";
 import ListenTriggerButton from "./listen/ListenTriggerButton";
 import ArticleAudioPlayer from "./listen/ArticleAudioPlayer";
 import { ModeToggle } from "@/components/mode-toggle";
+import DOMPurify from "isomorphic-dompurify";
 
 const FONT_SIZE_MAP: Record<FontSize, { size: number; lineHeight: number; title: string }> = {
   sm: { size: 15, lineHeight: 1.7, title: "Small text (15px)" },
@@ -115,7 +116,24 @@ function cleanArticleHtml(rawHtml?: string): string | undefined {
     cleaned += "</div>".repeat(openDivCount - closeDivCount);
   }
 
-  return cleaned.trim();
+  // Security: Final pass through DOMPurify to strip XSS vectors (event handlers, javascript: URIs, etc.)
+  const sanitized = DOMPurify.sanitize(cleaned.trim(), {
+    USE_PROFILES: { html: true },
+    ALLOWED_TAGS: [
+      "p", "b", "i", "em", "strong", "a", "h2", "h3", "h4", "h5", "h6",
+      "ul", "ol", "li", "blockquote", "code", "pre", "hr", "br",
+      "img", "figure", "figcaption", "table", "tbody", "thead", "tfoot", "tr", "td", "th",
+      "div", "span", "sub", "sup", "mark", "del", "ins", "section"
+    ],
+    ALLOWED_ATTR: [
+      "href", "src", "alt", "title", "class", "target", "rel", "width", "height", "loading"
+    ],
+    FORBID_TAGS: ["script", "iframe", "object", "embed", "style", "form", "input", "textarea", "button", "select"],
+    FORBID_ATTR: ["onerror", "onload", "onclick", "onmouseover", "onfocus", "onblur", "style"],
+    ALLOW_DATA_ATTR: false,
+  });
+
+  return sanitized as string;
 }
 
 interface ArticlePageClientProps {

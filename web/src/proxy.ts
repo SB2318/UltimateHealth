@@ -31,6 +31,10 @@ export default function proxy(request: NextRequest) {
 
   const nonce = crypto.randomUUID().replace(/-/g, "");
 
+  const effectiveBasePath =
+    process.env.NEXT_PUBLIC_BASE_PATH || (hasWebSegment || pathname.startsWith('/web') ? "/web" : "");
+  const cspReportUri = `${effectiveBasePath}/api/csp-report`;
+
   const cspDirectives = [
     "default-src 'self'",
     isDev
@@ -44,7 +48,7 @@ export default function proxy(request: NextRequest) {
     "object-src 'none'",
     "base-uri 'self'",
     "frame-ancestors 'none'",
-    "report-uri /api/csp-report",
+    `report-uri ${cspReportUri}`,
   ];
 
   if (!isDev) {

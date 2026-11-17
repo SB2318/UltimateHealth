@@ -5,7 +5,17 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const isValidEmail = (email: string) =>
   EMAIL_PATTERN.test(email.trim()) && !/[\r\n]/.test(email);
 
+// In-memory cache capped at 5000 items to prevent memory exhaustion
+const MAX_SUBSCRIBERS_CACHE = 5000;
 const subscribers = new Set<string>();
+
+function addSubscriberToCache(email: string) {
+  if (subscribers.size >= MAX_SUBSCRIBERS_CACHE) {
+    const firstItem = subscribers.values().next().value;
+    if (firstItem) subscribers.delete(firstItem);
+  }
+  subscribers.add(email);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,12 +40,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Prevent duplicate subscriptions from in-memory cache
+    // Generic success response to avoid subscriber enumeration
+    const genericSuccess = {
+      success: true,
+      message: "Thank you for subscribing! You will receive our health updates.",
+    };
+
     if (subscribers.has(trimmedEmail)) {
-      return NextResponse.json(
-        { error: "Already subscribed" },
-        { status: 409 }
-      );
+      return NextResponse.json(genericSuccess, { status: 200 });
     }
 
     try {
@@ -54,48 +66,16 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({ email: trimmedEmail }),
       });
 
-      if (res.status === 409) {
-        subscribers.add(trimmedEmail);
-        return NextResponse.json(
-          { error: "Already subscribed" },
-          { status: 409 }
-        );
-      }
+      addSubscriberToCache(trimmedEmail);
 
-      if (res.ok) {
-        subscribers.add(trimmedEmail);
-        return NextResponse.json(
-          {
-            success: true,
-            message: "Successfully subscribed!",
-          },
-          { status: 200 }
-        );
-      }
+      return NextResponse.json(genericSuccess, { status: 200 });
     } catch (backendError) {
       console.warn("Backend newsletter forward warning:", backendError);
-      // Fallback: save to memory so user experience is not disrupted
-      subscribers.add(trimmedEmail);
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Successfully subscribed!",
-        },
-        { status: 200 }
-      );
+      addSubscriberToCache(trimmedEmail);
+      return NextResponse.json(genericSuccess, { status: 200 });
     }
-
-    subscribers.add(trimmedEmail);
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Successfully subscribed!",
-      },
-      { status: 200 }
-    );
   } catch (error) {
     console.error("Newsletter subscription error:", error);
-
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

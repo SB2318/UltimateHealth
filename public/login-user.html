@@ -127,7 +127,7 @@
     e.preventDefault();
 
     const msg = document.getElementById("msg");
-    msg.innerHTML = "Processing...";
+    msg.textContent = "Processing...";
 
     try {
       const res = await fetch("https://uhsocial.in/api/user/login", {
@@ -145,7 +145,7 @@
 
       if (res.ok) {
         msg.style.color = "green";
-        msg.innerHTML = "Login successful. Redirecting...";
+        msg.textContent = "Login successful. Redirecting...";
 
       
         if (data.accessToken) {
@@ -162,12 +162,12 @@
 
       } else {
         msg.style.color = "red";
-        msg.innerHTML = data.error || "Login failed";
+        msg.textContent = data.error || "Login failed";
       }
 
     } catch (err) {
       msg.style.color = "red";
-      msg.innerHTML = "Server error: " + err.message;
+      msg.textContent = "Server error: " + err.message;
     }
   });
 </script>
