@@ -123,10 +123,10 @@ export default function MedicalGlossaryClient({
                 <span>Clinical categories & terms contributed by</span>
               </span>
               <a
-                href="https://github.com/SB2318/UltimateHealth/pull/1758"
+                href="https://github.com/avrojitduttaj"
                 target="_blank"
                 rel="noopener noreferrer"
-                title="View PR #1758: Add Comprehensive Medical Glossary Categories and Entries by Avrojit Dutta"
+                title="View Contributor Profile: Avrojit Dutta (@avrojitduttaj)"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -137,10 +137,13 @@ export default function MedicalGlossaryClient({
                 }}
               >
                 <img
-                  src="https://github.com/avrojitdutta.png"
+                  src="https://avatars.githubusercontent.com/u/239520617?v=4"
                   alt="Avrojit Dutta"
                   width={20}
                   height={20}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = 'https://github.com/avrojitduttaj.png';
+                  }}
                   style={{
                     width: '20px',
                     height: '20px',

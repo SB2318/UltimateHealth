@@ -85,7 +85,7 @@ export default async function MedicalGlossaryPage({ params }: PageProps) {
       {
         '@type': 'Person',
         name: 'Avrojit Dutta',
-        url: 'https://github.com/avrojitdutta',
+        url: 'https://github.com/avrojitduttaj',
       },
     ],
     citation: MEDICAL_DISCLAIMER_TEXT,

@@ -696,6 +696,14 @@ html.dark .nav-item-icon {
   box-shadow: var(--shadow-md);
 }
 
+.mobile-header-tools {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  margin-right: 12px;
+}
+
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -2233,6 +2241,10 @@ span.rounded-md:not([class*="w-"]):not([class*="h-"]),
 @media (max-width: 1023px) {
   .nav-links {
     display: none !important;
+  }
+
+  .mobile-header-tools {
+    display: flex !important;
   }
 
   .mobile-menu-toggle {

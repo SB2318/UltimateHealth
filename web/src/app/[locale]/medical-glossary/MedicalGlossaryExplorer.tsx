@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Search, X, Globe, Filter } from "lucide-react";
 import {
@@ -111,6 +113,12 @@ export default function MedicalGlossaryExplorer({
 }: {
   initialEntries?: LocalizedGlossaryEntry[];
 } = {}) {
+  const pathname = usePathname() || "";
+  const segments = pathname.split("/").filter(Boolean);
+  const knownLocales = ["en", "hi", "bn", "ta", "or", "de", "es", "fr", "hr"];
+  const currentLocale = segments.find((s) => knownLocales.includes(s)) || "en";
+  const contributorsUrl = `/${currentLocale}/our-contributors`;
+
   const t = useTranslations("glossary");
   const tArticles = useTranslations("articles");
 
@@ -521,10 +529,13 @@ export default function MedicalGlossaryExplorer({
               }}
             >
               <img
-                src="https://github.com/avrojitdutta.png"
+                src="https://avatars.githubusercontent.com/u/239520617?v=4"
                 alt="Avrojit Dutta"
                 width={16}
                 height={16}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "https://github.com/avrojitduttaj.png";
+                }}
                 style={{ width: "16px", height: "16px", borderRadius: "50%" }}
               />
               <span>Contributed by <strong>Avrojit Dutta</strong> (#1758)</span>
@@ -768,10 +779,13 @@ export default function MedicalGlossaryExplorer({
         >
           <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             <img
-              src="https://github.com/avrojitdutta.png"
+              src="https://avatars.githubusercontent.com/u/239520617?v=4"
               alt="Avrojit Dutta"
               width={46}
               height={46}
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "https://github.com/avrojitduttaj.png";
+              }}
               style={{
                 width: "46px",
                 height: "46px",
@@ -814,12 +828,12 @@ export default function MedicalGlossaryExplorer({
               >
                 Comprehensive clinical categories & entries contributed by{" "}
                 <a
-                  href="https://github.com/avrojitdutta"
+                  href="https://github.com/avrojitduttaj"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: "#0d9488", fontWeight: 700, textDecoration: "none" }}
                 >
-                  Avrojit Dutta (@avrojitdutta)
+                  Avrojit Dutta (@avrojitduttaj)
                 </a>{" "}
                 via{" "}
                 <a
@@ -835,8 +849,8 @@ export default function MedicalGlossaryExplorer({
             </div>
           </div>
 
-          <a
-            href="/our-contributors"
+          <Link
+            href={contributorsUrl}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -852,7 +866,7 @@ export default function MedicalGlossaryExplorer({
             }}
           >
             <span>❤️ Meet All Contributors</span>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

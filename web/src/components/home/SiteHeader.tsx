@@ -206,6 +206,11 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
         </ul>
 
+        {/* Mobile Header Tools */}
+        <div className="mobile-header-tools">
+          <ModeToggle />
+        </div>
+
         {/* Mobile Hamburger Button */}
         <button
           className="mobile-menu-toggle"

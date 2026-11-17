@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/mode-toggle";
 import {
   Card,
   CardContent,
@@ -121,8 +122,11 @@ export default function AccountDeletionPage({
   return (
     <Section
       as="main"
-      className="flex min-h-screen items-center bg-slate-50 px-4 py-10"
+      className="relative flex min-h-screen items-center bg-slate-50 px-4 py-10 dark:bg-[#0b1120]"
     >
+      <div className="absolute top-4 right-4 z-50">
+        <ModeToggle />
+      </div>
       <PageWrapper className="flex max-w-md justify-center px-0">
         <Card className="w-full rounded-lg shadow-sm">
           <CardHeader className="items-center text-center">

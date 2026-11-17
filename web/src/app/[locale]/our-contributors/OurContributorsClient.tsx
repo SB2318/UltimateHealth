@@ -7,6 +7,386 @@ import { ALL_CONTRIBUTORS, PROJECT_ADMIN } from './contributors-data'
 import type { DynamicContributor } from '@/lib/github/types'
 import { withBasePath } from '@/lib/basePath'
 
+interface DistinguishedContributorTribute {
+  handle: string;
+  name: string;
+  avatar: string;
+  githubUrl: string;
+  pillar: 'clinical' | 'core' | 'content' | 'mobile';
+  pillarLabel: string;
+  honoraryTitle: string;
+  themeColor: string;
+  impactQuote: string;
+  commits: number;
+  linesOfCode: string;
+  keyContributions: string[];
+}
+
+const DISTINGUISHED_TRIBUTES: DistinguishedContributorTribute[] = [
+  {
+    "handle": "@SB2318",
+    "name": "SUSMITA N.M. BHATTACHARYA",
+    "avatar": "https://avatars.githubusercontent.com/u/87614560?v=4",
+    "githubUrl": "https://github.com/SB2318",
+    "pillar": "core",
+    "pillarLabel": "Founder & Ecosystem Architecture",
+    "honoraryTitle": "Visionary Founder & Chief Ecosystem Architect",
+    "themeColor": "#f59e0b",
+    "impactQuote": "Conceptualized, architected, and built the complete UltimateHealth platform from ground zero — Mobile (React Native/Tamagui), Backend APIs (668+ commits), Next.js Web with 13-language i18n, Admin apps, and mentored 300+ open-source developers across 2,500+ merged PRs.",
+    "commits": 1500,
+    "linesOfCode": "+275,000 / -105,000",
+    "keyContributions": [
+      "Complete Ecosystem Founder (Mobile, Backend, Web, Admin)",
+      "668+ Backend Commits (Auth, APIs, Mongoose, HIPAA)",
+      "13 Indian Languages Localization & Audio Streaming",
+      "Led 300+ Contributors & Merged 2,500+ PRs Worldwide"
+    ]
+  },
+  {
+    "handle": "@soham0005",
+    "name": "Soham Adhyapak",
+    "avatar": "https://avatars.githubusercontent.com/u/83421425?v=4",
+    "githubUrl": "https://github.com/soham0005",
+    "pillar": "mobile",
+    "pillarLabel": "Mobile & Experience",
+    "honoraryTitle": "Foundational Mobile Engineer",
+    "themeColor": "#ea580c",
+    "impactQuote": "Architected the early core mobile development foundation (PR #53, #54) and bottom tab navigation and authentication flow in the platform develop launch.",
+    "commits": 3,
+    "linesOfCode": "+450 / -48",
+    "keyContributions": [
+      "Core Navigation & Auth Setup",
+      "Early Architecture PR #53 & #54",
+      "Mobile Component Modularity"
+    ]
+  },
+  {
+    "handle": "@Damini2004",
+    "name": "Damini Chachane",
+    "avatar": "https://avatars.githubusercontent.com/u/119414762?v=4",
+    "githubUrl": "https://github.com/Damini2004",
+    "pillar": "content",
+    "pillarLabel": "Clinical Documentation & Deep Tech",
+    "honoraryTitle": "Neuroscience & Drug Discovery Author",
+    "themeColor": "#9333ea",
+    "impactQuote": "Authored pioneering research at the intersection of medical science and cutting-edge computation: Quantum Computing in Drug Discovery (#515), Autism Spectrum Disorder Updates (#519), and Mental Health Neuroscience (#527).",
+    "commits": 3,
+    "linesOfCode": "+1,850 / -95",
+    "keyContributions": [
+      "Quantum Computing in Drug Discovery (#515)",
+      "Mental Health & Neuroscience (#527)",
+      "Autism Spectrum Clinical Updates (#519)"
+    ]
+  },
+  {
+    "handle": "@rushiii3",
+    "name": "Hrushikesh Shinde",
+    "avatar": "https://avatars.githubusercontent.com/u/105168088?v=4",
+    "githubUrl": "https://github.com/rushiii3",
+    "pillar": "core",
+    "pillarLabel": "Core Backend & Mobile TTS",
+    "honoraryTitle": "Speech Engine & Backend Architect",
+    "themeColor": "#2563eb",
+    "impactQuote": "Architected offline React Native TTS voice synthesis engine (PR #534), contributed to core backend APIs, and delivered 22,000+ lines in foundational platform architecture.",
+    "commits": 15,
+    "linesOfCode": "+22,130 / -22,144",
+    "keyContributions": [
+      "PR #534 (React Native TTS Engine)",
+      "6 Backend API Commits",
+      "22,000+ Lines in Foundational Architecture"
+    ]
+  },
+  {
+    "handle": "@Pujan-sarkar",
+    "name": "Pujan Sarkar",
+    "avatar": "https://avatars.githubusercontent.com/u/144250917?v=4",
+    "githubUrl": "https://github.com/Pujan-sarkar",
+    "pillar": "content",
+    "pillarLabel": "Clinical Documentation & Research",
+    "honoraryTitle": "Specialized Pathology & Disorders Author",
+    "themeColor": "#e11d48",
+    "impactQuote": "Authored four deep clinical research papers across complex neurological and gastrointestinal conditions: Autism Spectrum Disorder (#485), Multiple Sclerosis (#526), Crohn’s Disease (#523), and Dialysis/Creatinine (#521).",
+    "commits": 4,
+    "linesOfCode": "+2,400 / -120",
+    "keyContributions": [
+      "Autism Spectrum Disorder Guide (#485)",
+      "Multiple Sclerosis Clinical Study (#526)",
+      "Crohn’s Disease Chronicles (#523)",
+      "Creatinine & Dialysis Treatment Guide (#521)"
+    ]
+  },
+  {
+    "handle": "@nishant0708",
+    "name": "Nishant Kaushal",
+    "avatar": "https://avatars.githubusercontent.com/u/101548649?v=4",
+    "githubUrl": "https://github.com/nishant0708",
+    "pillar": "content",
+    "pillarLabel": "Article API & Clinical Documentation",
+    "honoraryTitle": "Article Ecosystem & Medical Author",
+    "themeColor": "#059669",
+    "impactQuote": "Architected the foundational Article API (#160 & #156) powering the entire content ecosystem, and authored seminal clinical articles on Alzheimer’s disease care and Music in mental health.",
+    "commits": 5,
+    "linesOfCode": "+1,240 / -180",
+    "keyContributions": [
+      "PR #160 (Article API Creation)",
+      "Alzheimer’s Disease Clinical Research",
+      "Music & Mental Health Impact Study"
+    ]
+  },
+  {
+    "handle": "@adityachaube",
+    "name": "Aditya Chaube",
+    "avatar": "https://github.com/adityachaube.png",
+    "githubUrl": "https://github.com/adityachaube",
+    "pillar": "core",
+    "pillarLabel": "Backend API Engineering",
+    "honoraryTitle": "Backend Systems Engineer",
+    "themeColor": "#0891b2",
+    "impactQuote": "Contributed 5 core commits to the UltimateHealth backend architecture, engineering Mongoose database schemas, security validations, and API documentation.",
+    "commits": 8,
+    "linesOfCode": "+850 / -232",
+    "keyContributions": [
+      "5 Backend Repository Commits",
+      "Mongoose Schema Architecture",
+      "API Validation & Security"
+    ]
+  },
+  {
+    "handle": "@aeriellaaa",
+    "name": "aeriellaaa",
+    "avatar": "https://github.com/aeriellaaa.png",
+    "githubUrl": "https://github.com/aeriellaaa",
+    "pillar": "mobile",
+    "pillarLabel": "Mobile & Experience",
+    "honoraryTitle": "Media & Design Systems Specialist",
+    "themeColor": "#8b5cf6",
+    "impactQuote": "Engineered responsive relative time formats, media components, and high-impact visual design tokens across 17 commits.",
+    "commits": 17,
+    "linesOfCode": "+18,711 / -1,834",
+    "keyContributions": [
+      "17 Commits",
+      "Relative Timestamp Formatter",
+      "Media Player Tokens"
+    ]
+  },
+  {
+    "handle": "@Yuvraj-Sarathe",
+    "name": "Yuvraj Sarathe",
+    "avatar": "https://avatars.githubusercontent.com/u/216678101?v=4",
+    "githubUrl": "https://github.com/Yuvraj-Sarathe",
+    "pillar": "mobile",
+    "pillarLabel": "Mobile & Experience",
+    "honoraryTitle": "Wellness Telemetry & Dashboard Engineer",
+    "themeColor": "#10b981",
+    "impactQuote": "Integrated comprehensive Wellness Dashboard APIs with mobile frontend, metrics telemetry, and dashboard edge cases.",
+    "commits": 11,
+    "linesOfCode": "+1,145 / -309",
+    "keyContributions": [
+      "11 Commits",
+      "Wellness Dashboard APIs",
+      "Telemetry & Graph Pipelines"
+    ]
+  },
+  {
+    "handle": "@Harshit-Maurya838",
+    "name": "Harshit Maurya",
+    "avatar": "https://avatars.githubusercontent.com/u/151759530?v=4",
+    "githubUrl": "https://github.com/Harshit-Maurya838",
+    "pillar": "mobile",
+    "pillarLabel": "Mobile & Experience",
+    "honoraryTitle": "Mobile UI Systems Engineer",
+    "themeColor": "#0284c7",
+    "impactQuote": "Crafted responsive mobile navigation sheets, touch feedback surfaces, and native layout parity across 19 commits.",
+    "commits": 19,
+    "linesOfCode": "+3,840 / -1,620",
+    "keyContributions": [
+      "19 Commits",
+      "Mobile Navigation Sheets",
+      "Touch Feedback Systems"
+    ]
+  },
+  {
+    "handle": "@namann5",
+    "name": "Naman Singh",
+    "avatar": "https://avatars.githubusercontent.com/u/211621538?v=4",
+    "githubUrl": "https://github.com/namann5",
+    "pillar": "mobile",
+    "pillarLabel": "Mobile & Experience",
+    "honoraryTitle": "State Integrity & Audio Engineer",
+    "themeColor": "#059669",
+    "impactQuote": "Resolved critical reading history corruption, state synchronization, and accessible podcast audio playback across 18 commits.",
+    "commits": 18,
+    "linesOfCode": "+1,530 / -504",
+    "keyContributions": [
+      "18 Commits",
+      "Reading History State Hardening",
+      "Accessible Audio Controls"
+    ]
+  },
+  {
+    "handle": "@Aditijainnn",
+    "name": "Aditi",
+    "avatar": "https://avatars.githubusercontent.com/u/144632601?v=4",
+    "githubUrl": "https://github.com/Aditijainnn",
+    "pillar": "content",
+    "pillarLabel": "Clinical Documentation & Research",
+    "honoraryTitle": "Mental Health Clinical Author",
+    "themeColor": "#9333ea",
+    "impactQuote": "Authored the comprehensive Obsessive-Compulsive Disorder (OCD) clinical awareness handbook and psychiatric wellness guides.",
+    "commits": 10,
+    "linesOfCode": "+2,747 / -65",
+    "keyContributions": [
+      "10 Commits",
+      "Obsessive-Compulsive Disorder Guide",
+      "Mental Wellness Architecture"
+    ]
+  },
+  {
+    "handle": "@arunimaChintu",
+    "name": "Arunima Dutta",
+    "avatar": "https://avatars.githubusercontent.com/u/99474881?v=4",
+    "githubUrl": "https://github.com/arunimaChintu",
+    "pillar": "content",
+    "pillarLabel": "Clinical Documentation & Research",
+    "honoraryTitle": "Cardiovascular & Wellness Specialist",
+    "themeColor": "#db2777",
+    "impactQuote": "Researched and created landmark cardiovascular guides including Arrhythmia Insights and clinical nutritional care frameworks.",
+    "commits": 16,
+    "linesOfCode": "+2,568 / -40",
+    "keyContributions": [
+      "16 Commits",
+      "Arrhythmia Clinical Insights",
+      "Nutritional Care Frameworks"
+    ]
+  },
+  {
+    "handle": "@sreevidya-16",
+    "name": "Sree Vidya",
+    "avatar": "https://avatars.githubusercontent.com/u/148083816?v=4",
+    "githubUrl": "https://github.com/sreevidya-16",
+    "pillar": "content",
+    "pillarLabel": "Clinical Documentation & Research",
+    "honoraryTitle": "Clinical Literature & Care Lead",
+    "themeColor": "#ea580c",
+    "impactQuote": "Developed extensive clinical articles addressing chronic diseases, patient management, and preventive protocols with 18 commits.",
+    "commits": 18,
+    "linesOfCode": "+4,820 / -145",
+    "keyContributions": [
+      "18 Commits",
+      "Chronic Disease Guides",
+      "Patient-Centric Health Literature"
+    ]
+  },
+  {
+    "handle": "@suhanipaliwal",
+    "name": "Suhani Singh Paliwal",
+    "avatar": "https://avatars.githubusercontent.com/u/161575955?v=4",
+    "githubUrl": "https://github.com/suhanipaliwal",
+    "pillar": "content",
+    "pillarLabel": "Clinical Documentation & Research",
+    "honoraryTitle": "Healthcare Research Champion",
+    "themeColor": "#e11d48",
+    "impactQuote": "Researched and authored seminal medical articles, preventive health education, and maternal healthcare documentation with 22 commits.",
+    "commits": 22,
+    "linesOfCode": "+4,912 / -210",
+    "keyContributions": [
+      "22 Commits",
+      "Comprehensive Medical Guides",
+      "Preventive Health Research"
+    ]
+  },
+  {
+    "handle": "@saurabhhhcodes",
+    "name": "Saurabh Kumar Bajpai",
+    "avatar": "https://avatars.githubusercontent.com/u/159683157?v=4",
+    "githubUrl": "https://github.com/saurabhhhcodes",
+    "pillar": "core",
+    "pillarLabel": "Core System Engineering",
+    "honoraryTitle": "Full-Stack Systems Engineer",
+    "themeColor": "#4f46e5",
+    "impactQuote": "Engineered core health workflows, lifecycle safeguards, and high-reliability data fetching across 28 commits.",
+    "commits": 28,
+    "linesOfCode": "+2,745 / -1,210",
+    "keyContributions": [
+      "28 Commits",
+      "Health Workflow State Machines",
+      "Runtime Error Resilience"
+    ]
+  },
+  {
+    "handle": "@Tomeshwari-02",
+    "name": "Tomeshwari Sahu",
+    "avatar": "https://avatars.githubusercontent.com/u/179694969?v=4",
+    "githubUrl": "https://github.com/Tomeshwari-02",
+    "pillar": "core",
+    "pillarLabel": "Core System Engineering",
+    "honoraryTitle": "Interaction & UX Stalwart",
+    "themeColor": "#0891b2",
+    "impactQuote": "Engineered fluid touch interactions, gestures, double-tap handlers, and responsive layout polish across 31 commits.",
+    "commits": 31,
+    "linesOfCode": "+1,286 / -779",
+    "keyContributions": [
+      "31 Commits",
+      "Gesture Handlers & Interactions",
+      "Mobile Layout Parity"
+    ]
+  },
+  {
+    "handle": "@Krishnx21",
+    "name": "Krishna Kumar",
+    "avatar": "https://avatars.githubusercontent.com/u/150860523?v=4",
+    "githubUrl": "https://github.com/Krishnx21",
+    "pillar": "core",
+    "pillarLabel": "Core System Engineering",
+    "honoraryTitle": "Full-Stack Platform Titan",
+    "themeColor": "#2563eb",
+    "impactQuote": "Drove extensive backend stability, database interfaces, and high-performance server integrations with 44 commits.",
+    "commits": 44,
+    "linesOfCode": "+4,312 / -1,840",
+    "keyContributions": [
+      "44 Commits",
+      "Database Interfaces",
+      "Cross-Service API Hardening"
+    ]
+  },
+  {
+    "handle": "@pisum-sativum",
+    "name": "Ankita Jha",
+    "avatar": "https://avatars.githubusercontent.com/u/220623325?v=4",
+    "githubUrl": "https://github.com/pisum-sativum",
+    "pillar": "core",
+    "pillarLabel": "Core System Engineering",
+    "honoraryTitle": "Frontend Architecture Pioneer",
+    "themeColor": "#7c3aed",
+    "impactQuote": "Pioneered UI component modularity, state containers, and frontend resilience across the platform with 50 commits.",
+    "commits": 50,
+    "linesOfCode": "+2,738 / -1,105",
+    "keyContributions": [
+      "50 Commits",
+      "Core Component Foundations",
+      "UI System Stability"
+    ]
+  },
+  {
+    "handle": "@avrojitduttaj",
+    "name": "AVROJIT DUTTA",
+    "avatar": "https://avatars.githubusercontent.com/u/239520617?v=4",
+    "githubUrl": "https://github.com/avrojitduttaj",
+    "pillar": "clinical",
+    "pillarLabel": "Clinical Medical Taxonomy",
+    "honoraryTitle": "Clinical Knowledge Architect",
+    "themeColor": "#0d9488",
+    "impactQuote": "Architected the comprehensive clinical medical glossary taxonomy (PR #1758) across 18 medical disciplines with 2,000+ verified definitions.",
+    "commits": 2,
+    "linesOfCode": "+2,037 / -363",
+    "keyContributions": [
+      "PR #1758 (2,037 additions)",
+      "18 Clinical Medical Categories",
+      "Bilingual Terminology Mapping"
+    ]
+  }
+];
+
 export default function OurContributorsClient() {
   const [contributors, setContributors] = useState<DynamicContributor[]>(ALL_CONTRIBUTORS)
   const [admin, setAdmin] = useState<DynamicContributor>(PROJECT_ADMIN)
@@ -16,9 +396,25 @@ export default function OurContributorsClient() {
   const [search, setSearch] = useState('')
   const [yearFilter, setYearFilter] = useState<'all' | 2024 | 2026>('all')
   const [areaFilter, setAreaFilter] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<'commits' | 'changes' | 'name'>('commits')
+  const [sortBy, setSortBy] = useState<'commits' | 'changes' | 'name' | 'name-desc'>('commits')
   const [currentPage, setCurrentPage] = useState(1)
   const ITEMS_PER_PAGE = 36
+
+  const [tributeFilter, setTributeFilter] = useState<'all' | 'clinical' | 'core' | 'content' | 'mobile'>('all')
+
+  const spotlightInGrid = (handle: string) => {
+    setSearch(handle)
+    setCurrentPage(1)
+    const el = document.getElementById('contributors-grid')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  const filteredTributes = useMemo(() => {
+    if (tributeFilter === 'all') return DISTINGUISHED_TRIBUTES
+    return DISTINGUISHED_TRIBUTES.filter((t) => t.pillar === tributeFilter)
+  }, [tributeFilter])
 
   // Fetch live contributors dynamically from GitHub API
   useEffect(() => {
@@ -69,7 +465,7 @@ export default function OurContributorsClient() {
     setCurrentPage(1)
   }
 
-  const handleSortChange = (s: 'commits' | 'changes' | 'name') => {
+  const handleSortChange = (s: 'commits' | 'changes' | 'name' | 'name-desc') => {
     setSortBy(s)
     setCurrentPage(1)
   }
@@ -98,6 +494,9 @@ export default function OurContributorsClient() {
         const totalA = a.additions + a.deletions
         const totalB = b.additions + b.deletions
         return totalB - totalA || b.commits - a.commits
+      }
+      if (sortBy === 'name-desc') {
+        return b.name.localeCompare(a.name)
       }
       return a.name.localeCompare(b.name)
     })
@@ -521,7 +920,263 @@ export default function OurContributorsClient() {
           font-weight: 500;
         }
 
+        /* ── Distinguished Contributor Tributes & Impact Analysis ── */
+        .tribute-section {
+          max-width: 1200px;
+          margin: 40px auto 20px;
+          padding: 0 24px;
+        }
+        .tribute-box {
+          background: #ffffff;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 24px;
+          padding: 36px 32px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+          position: relative;
+          overflow: hidden;
+        }
+        .tribute-box::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, #0d9488, #7c3aed, #2563eb, #e11d48);
+        }
+        .tribute-header {
+          margin-bottom: 28px;
+        }
+        .tribute-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          padding: 3px 12px;
+          border-radius: 50px;
+          background: rgba(124, 58, 237, 0.08);
+          color: #7c3aed;
+          border: 1px solid rgba(124, 58, 237, 0.2);
+          margin-bottom: 10px;
+        }
+        .tribute-title {
+          font-size: 1.85rem;
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: -0.02em;
+          margin: 0 0 8px;
+        }
+        .tribute-subtitle {
+          font-size: 0.95rem;
+          color: #64748b;
+          max-width: 760px;
+          line-height: 1.55;
+          margin: 0;
+        }
+        .tribute-impact-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 14px;
+          margin-bottom: 30px;
+        }
+        .tribute-impact-card {
+          background: #f8fafc;
+          border: 1px solid #f1f5f9;
+          border-radius: 16px;
+          padding: 16px 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          transition: all 0.2s;
+        }
+        .tribute-impact-card:hover {
+          border-color: #cbd5e1;
+          transform: translateY(-2px);
+        }
+        .tribute-impact-icon {
+          font-size: 1.35rem;
+          margin-bottom: 4px;
+        }
+        .tribute-impact-title {
+          font-size: 0.82rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: #475569;
+        }
+        .tribute-impact-value {
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: -0.01em;
+        }
+        .tribute-impact-desc {
+          font-size: 0.78rem;
+          color: #64748b;
+          line-height: 1.4;
+        }
+        .tribute-tabs {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-bottom: 24px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+        .tribute-tab {
+          padding: 7px 16px;
+          border-radius: 50px;
+          border: 1px solid #e2e8f0;
+          background: #f8fafc;
+          color: #475569;
+          font-size: 0.82rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .tribute-tab:hover {
+          border-color: #7c3aed;
+          color: #7c3aed;
+        }
+        .tribute-tab.active {
+          background: #7c3aed;
+          color: #ffffff;
+          border-color: #7c3aed;
+          box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+        }
+        .tribute-cards-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+          gap: 20px;
+        }
+        .tribute-card {
+          background: #ffffff;
+          border: 1.5px solid #f1f5f9;
+          border-radius: 18px;
+          padding: 22px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          transition: all 0.25s ease;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+        }
+        .tribute-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 16px 36px rgba(0,0,0,0.06);
+          border-color: #cbd5e1;
+        }
+        .tribute-card-top {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          margin-bottom: 14px;
+        }
+        .tribute-avatar {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+        }
+        .tribute-card-titles {
+          flex: 1;
+          min-width: 0;
+        }
+        .tribute-honorary-badge {
+          display: inline-block;
+          font-size: 10px;
+          font-weight: 800;
+          padding: 2px 8px;
+          border-radius: 50px;
+          margin-bottom: 4px;
+        }
+        .tribute-name {
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #0f172a;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .tribute-handle {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #64748b;
+        }
+        .tribute-quote {
+          font-size: 0.85rem;
+          color: #475569;
+          line-height: 1.5;
+          margin: 0 0 14px;
+          flex: 1;
+        }
+        .tribute-pills-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 14px;
+        }
+        .tribute-pill {
+          font-size: 10.5px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 6px;
+          background: #f1f5f9;
+          color: #334155;
+          border: 1px solid #e2e8f0;
+        }
+        .tribute-actions-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          padding-top: 12px;
+          border-top: 1px solid #f1f5f9;
+        }
+        .tribute-spotlight-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11.5px;
+          font-weight: 700;
+          color: #7c3aed;
+          background: rgba(124, 58, 237, 0.08);
+          border: 1px solid rgba(124, 58, 237, 0.2);
+          padding: 5px 12px;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .tribute-spotlight-btn:hover {
+          background: #7c3aed;
+          color: #ffffff;
+          border-color: #7c3aed;
+        }
+        .tribute-gh-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 11.5px;
+          font-weight: 700;
+          color: #475569;
+          text-decoration: none;
+          padding: 5px 12px;
+          border-radius: 50px;
+          border: 1px solid #e2e8f0;
+          background: #f8fafc;
+          transition: all 0.2s;
+        }
+        .tribute-gh-link:hover {
+          border-color: #475569;
+          color: #0f172a;
+        }
+
         @media (max-width: 768px) {
+          .tribute-box { padding: 24px 18px; }
+          .tribute-title { font-size: 1.45rem; }
+          .tribute-cards-grid { grid-template-columns: 1fr; }
           .admin-card { flex-direction: column; text-align: center; }
           .admin-header-row { justify-content: center; }
           .admin-metrics { justify-content: center; }
@@ -652,6 +1307,81 @@ export default function OurContributorsClient() {
         }
         html.dark .contrib-page-dots { color: #64748b; }
         html.dark .contrib-pagination-info { color: #94a3b8; }
+
+        /* Dark mode overrides for tribute */
+        html.dark .tribute-box {
+          background: #13131f;
+          border-color: #252538;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        html.dark .tribute-title { color: #f1f5f9; }
+        html.dark .tribute-subtitle { color: #94a3b8; }
+        html.dark .tribute-eyebrow {
+          background: rgba(124, 58, 237, 0.15);
+          border-color: rgba(124, 58, 237, 0.35);
+          color: #a78bfa;
+        }
+        html.dark .tribute-impact-card {
+          background: #181828;
+          border-color: #252538;
+        }
+        html.dark .tribute-impact-card:hover {
+          border-color: #3f3f5c;
+        }
+        html.dark .tribute-impact-title { color: #94a3b8; }
+        html.dark .tribute-impact-value { color: #f1f5f9; }
+        html.dark .tribute-impact-desc { color: #64748b; }
+        html.dark .tribute-tabs { border-bottom-color: #252538; }
+        html.dark .tribute-tab {
+          background: #181828;
+          border-color: #252538;
+          color: #94a3b8;
+        }
+        html.dark .tribute-tab:hover {
+          border-color: #7c3aed;
+          color: #a78bfa;
+        }
+        html.dark .tribute-tab.active {
+          background: #7c3aed;
+          color: #ffffff;
+          border-color: #7c3aed;
+        }
+        html.dark .tribute-card {
+          background: #181828;
+          border-color: #252538;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        }
+        html.dark .tribute-card:hover {
+          border-color: #7c3aed;
+          box-shadow: 0 16px 36px rgba(124,58,237,0.18);
+        }
+        html.dark .tribute-name { color: #f1f5f9; }
+        html.dark .tribute-handle { color: #a78bfa; }
+        html.dark .tribute-quote { color: #cbd5e1; }
+        html.dark .tribute-pill {
+          background: #13131f;
+          border-color: #252538;
+          color: #cbd5e1;
+        }
+        html.dark .tribute-actions-row { border-top-color: #252538; }
+        html.dark .tribute-spotlight-btn {
+          background: rgba(124, 58, 237, 0.2);
+          border-color: rgba(124, 58, 237, 0.4);
+          color: #c4b5fd;
+        }
+        html.dark .tribute-spotlight-btn:hover {
+          background: #7c3aed;
+          color: #ffffff;
+        }
+        html.dark .tribute-gh-link {
+          background: #13131f;
+          border-color: #252538;
+          color: #94a3b8;
+        }
+        html.dark .tribute-gh-link:hover {
+          border-color: #94a3b8;
+          color: #f1f5f9;
+        }
       `}</style>
 
       <div className="contrib-wall-page">
@@ -741,6 +1471,172 @@ export default function OurContributorsClient() {
           </div>
         </div>
 
+        {/* ── Distinguished Contributor Tributes & Impact Analysis ── */}
+        <div className="tribute-section">
+          <div className="tribute-box">
+            <div className="tribute-header">
+              <div className="tribute-eyebrow">🏆 Pillars of UltimateHealth</div>
+              <h2 className="tribute-title">Distinguished Contributor Tributes & Impact Analysis</h2>
+              <p className="tribute-subtitle">
+                A deep-dive tribute to our most impactful contributors — the individuals whose code, clinical curation,
+                and healthcare research have become the backbone of UltimateHealth's platform, mission, and community.
+              </p>
+            </div>
+
+            {/* Aggregate Impact Stats */}
+            <div className="tribute-impact-grid" style={{ marginBottom: '24px' }}>
+              <div className="tribute-impact-card">
+                <div className="tribute-impact-icon">🏗️</div>
+                <div className="tribute-impact-title">Platform Architects</div>
+                <div className="tribute-impact-value">20</div>
+                <div className="tribute-impact-desc">Distinguished contributors profiled across 4 impact domains</div>
+              </div>
+              <div className="tribute-impact-card">
+                <div className="tribute-impact-icon">📦</div>
+                <div className="tribute-impact-title">Combined Commits</div>
+                <div className="tribute-impact-value">1,785+</div>
+                <div className="tribute-impact-desc">Commits by highlighted distinguished contributors</div>
+              </div>
+              <div className="tribute-impact-card">
+                <div className="tribute-impact-icon">⚕️</div>
+                <div className="tribute-impact-title">Medical Definitions</div>
+                <div className="tribute-impact-value">2,000+</div>
+                <div className="tribute-impact-desc">Clinical glossary entries curated across 18 disciplines</div>
+              </div>
+              <div className="tribute-impact-card">
+                <div className="tribute-impact-icon">📄</div>
+                <div className="tribute-impact-title">Clinical Articles & APIs</div>
+                <div className="tribute-impact-value">70+</div>
+                <div className="tribute-impact-desc">Healthcare guides, research papers, and content APIs</div>
+              </div>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="tribute-tabs">
+              {([
+                { key: 'all', label: '✦ All Pillars' },
+                { key: 'clinical', label: '⚕️ Clinical Taxonomy' },
+                { key: 'core', label: '🏗️ Core Engineering' },
+                { key: 'content', label: '📄 Clinical Documentation' },
+                { key: 'mobile', label: '📱 Mobile & Experience' },
+              ] as const).map(tab => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  className={`tribute-tab${tributeFilter === tab.key ? ' active' : ''}`}
+                  onClick={() => setTributeFilter(tab.key)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Tribute Cards Grid */}
+            <div className="tribute-cards-grid">
+              {filteredTributes.map(tribute => (
+                <div key={tribute.handle} className="tribute-card">
+                  <div className="tribute-card-top">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={tribute.avatar}
+                      alt={tribute.name}
+                      width={52}
+                      height={52}
+                      className="tribute-avatar"
+                      style={{ border: `2.5px solid ${tribute.themeColor}` }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = `https://github.com/${tribute.handle.replace('@', '')}.png`;
+                      }}
+                    />
+                    <div className="tribute-card-titles">
+                      <div
+                        className="tribute-honorary-badge"
+                        style={{
+                          background: `${tribute.themeColor}18`,
+                          color: tribute.themeColor,
+                          border: `1px solid ${tribute.themeColor}30`,
+                        }}
+                      >
+                        {tribute.pillarLabel}
+                      </div>
+                      <div className="tribute-name">{tribute.name}</div>
+                      <div className="tribute-handle">{tribute.handle}</div>
+                    </div>
+                  </div>
+
+                  {/* Honorable Title */}
+                  <div style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    marginBottom: '10px',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    color: tribute.themeColor,
+                  }}>
+                    ⭐ {tribute.honoraryTitle}
+                  </div>
+
+                  <p className="tribute-quote">{tribute.impactQuote}</p>
+
+                  {/* Key Contributions */}
+                  <div className="tribute-pills-row">
+                    {tribute.keyContributions.map((kc) => (
+                      <span key={kc} className="tribute-pill">
+                        {kc}
+                      </span>
+                    ))}
+                    <span className="tribute-pill" style={{ color: '#16a34a', background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.2)' }}>
+                      {tribute.linesOfCode}
+                    </span>
+                  </div>
+
+                  <div className="tribute-actions-row">
+                    <button
+                      type="button"
+                      className="tribute-spotlight-btn"
+                      onClick={() => spotlightInGrid(tribute.handle)}
+                      title={`Spotlight ${tribute.name} in the contributor grid below`}
+                    >
+                      🔍 Spotlight in Grid
+                    </button>
+                    <a
+                      href={tribute.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="tribute-gh-link"
+                      title={`View ${tribute.name}'s GitHub profile`}
+                    >
+                      <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.38.6.11.82-.26.82-.57v-2.01c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.005 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.21.69.83.57C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
+                      </svg>
+                      GitHub
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── All Contributors Directory & Filters Notice ── */}
+        <div style={{ marginBottom: '18px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: '14px 20px', borderRadius: '16px', background: 'rgba(13, 148, 136, 0.06)', border: '1px solid rgba(13, 148, 136, 0.2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '1.25rem' }}>✨</span>
+            <div>
+              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-dark, #0f172a)' }}>
+                Complete Contributors Directory ({contributors.length} Total Contributors)
+              </div>
+              <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '2px' }}>
+                All {contributors.length} global contributors across Mobile, Backend, Web & Documentation are indexed in the filters below. Search by name, handle, or filter by work domain.
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '9999px', background: 'white', border: '1px solid rgba(13, 148, 136, 0.3)', fontSize: '0.75rem', fontWeight: 700, color: '#0d9488' }}>
+            <span>✓ 100% Contributors Indexed</span>
+          </div>
+        </div>
+
         {/* ── Controls ── */}
         <div className="contrib-controls">
           <div className="contrib-search-wrap">
@@ -784,6 +1680,7 @@ export default function OurContributorsClient() {
               <option value="commits">Sort by Most Commits</option>
               <option value="changes">Sort by Most Code Changes</option>
               <option value="name">Sort by Name (A-Z)</option>
+              <option value="name-desc">Sort by Name (Z-A / Reverse)</option>
             </select>
 
             {/* Year tabs */}

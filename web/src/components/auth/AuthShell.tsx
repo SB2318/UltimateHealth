@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+import { ModeToggle } from "@/components/mode-toggle";
 
 
 /**
@@ -32,6 +35,9 @@ export default function AuthShell({
 }: AuthShellProps) {
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 px-4! py-12! transition-colors duration-300 dark:bg-[#0b1120]">
+      <div className="absolute top-4 right-4 z-50">
+        <ModeToggle />
+      </div>
       {/* Brand backdrop. Decorative only, so it is hidden from assistive tech
           and skipped entirely when the visitor prefers reduced motion. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">

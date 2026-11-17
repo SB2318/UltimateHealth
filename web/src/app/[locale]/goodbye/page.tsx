@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageWrapper, Section } from "@/components/layout";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export const metadata: Metadata = {
   title: "Goodbye • Your Account Has Been Deleted | UltimateHealth",
@@ -9,11 +10,14 @@ export const metadata: Metadata = {
 
 export default function GoodbyePage() {
   return (
-    <Section as="div" style={styles.body}>
-      <PageWrapper as="div" style={styles.card}>
+    <Section as="div" className="relative flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10 transition-colors duration-300 dark:bg-[#0b1120]">
+      <div className="absolute top-4 right-4 z-50">
+        <ModeToggle />
+      </div>
+      <PageWrapper as="div" className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-lg transition-colors duration-300 dark:border-white/10 dark:bg-slate-900">
         <div style={styles.smiley}>👋</div>
-        <h2 style={styles.heading}>Your Account Has Been Deleted</h2>
-        <p style={styles.text}>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Your Account Has Been Deleted</h2>
+        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-6">
           We&apos;re sorry to see you go. Thank you for being a part of our journey.
           If you ever decide to return, we&apos;ll be here to welcome you back.
         </p>
