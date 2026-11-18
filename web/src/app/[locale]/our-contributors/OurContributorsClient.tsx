@@ -135,7 +135,7 @@ const DISTINGUISHED_TRIBUTES: DistinguishedContributorTribute[] = [
   },
   {
     "handle": "@adityachaube",
-    "name": "Aditya Chaube",
+    "name": "Aditya C.",
     "avatar": "https://github.com/adityachaube.png",
     "githubUrl": "https://github.com/adityachaube",
     "pillar": "core",
