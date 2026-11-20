@@ -1256,6 +1256,10 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/PremSahith"><img src="https://avatars.githubusercontent.com/u/219233938?v=4" width="120px;" alt=""/><br/><sub><b>Prem Sahith Jangam</b></sub></a></td>
      <td align="center"><a href="https://github.com/Mayank-Kumar-2006"><img src="https://avatars.githubusercontent.com/u/273373004?v=4" width="120px;" alt=""/><br/><sub><b>Mayank-Kumar-2006</b></sub></a></td>
  </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/PedroFlores199"><img src="https://avatars.githubusercontent.com/u/98963275?v=4" width="120px;" alt=""/><br/><sub><b>Pedro Flores</b></sub></a></td>
+   </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
