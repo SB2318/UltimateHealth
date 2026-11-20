@@ -210,8 +210,7 @@ def fetch_pr_diff_from_files(repo, pr_number, github_token):
                 continue
             patch = f.get("patch", "")
             if patch:
-                header = f"diff --git a/{filename} b/{filename}
-"
+                header = f"diff --git a/{filename} b/{filename}\n"
                 diff_parts.append(header + patch)
                 total_chars += len(patch)
                 if total_chars > MAX_DIFF_SIZE * 2:
@@ -219,9 +218,7 @@ def fetch_pr_diff_from_files(repo, pr_number, github_token):
         if len(files) < 100 or total_chars > MAX_DIFF_SIZE * 2:
             break
         page += 1
-    return "
-
-".join(diff_parts)
+    return "\n\n".join(diff_parts)
 
 def filter_diff(diff_text):
     filtered_lines = []
