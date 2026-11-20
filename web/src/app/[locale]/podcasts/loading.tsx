@@ -1,303 +1,97 @@
 export default function PodcastsLoading() {
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--explorer-bg, #f8fafc)",
-        color: "var(--explorer-text-primary, #0f172a)",
-      }}
-    >
-      {/* ── Hero skeleton (matches real hero: paddingTop 130px) ── */}
-      <section
-        style={{
-          paddingTop: "130px",
-          paddingBottom: "80px",
-          textAlign: "center",
-          borderBottom: "1px solid var(--explorer-border, #e2e8f0)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "840px",
-            margin: "0 auto",
-            padding: "0 24px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "0",
-          }}
-        >
-          {/* Badge pill */}
-          <div
-            style={{
-              width: "200px",
-              height: "28px",
-              borderRadius: "50px",
-              background: "var(--explorer-border, #e2e8f0)",
-              marginBottom: "20px",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
+  // Shimmer block shorthand
+  const S = ({ className }: { className: string }) => (
+    <div className={`animate-pulse rounded-lg bg-slate-200 dark:bg-slate-700 ${className}`} />
+  );
 
-          {/* H1 */}
-          <div
-            style={{
-              width: "72%",
-              height: "54px",
-              borderRadius: "12px",
-              background: "var(--explorer-border, #e2e8f0)",
-              marginBottom: "16px",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+
+      {/* ── Hero skeleton — matches real: paddingTop 130px ── */}
+      <section className="border-b border-slate-200 dark:border-slate-800 pb-20"
+        style={{ paddingTop: "130px" }}>
+        <div className="max-w-[840px] mx-auto px-6 flex flex-col items-center">
+
+          {/* Badge pill */}
+          <S className="h-7 w-48 rounded-full mb-5" />
+
+          {/* H1 two lines */}
+          <S className="h-12 w-3/4 mb-3" />
+          <S className="h-12 w-1/2 mb-6" />
 
           {/* Subtitle */}
-          <div
-            style={{
-              width: "90%",
-              height: "20px",
-              borderRadius: "8px",
-              background: "var(--explorer-border, #e2e8f0)",
-              marginBottom: "8px",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
-          <div
-            style={{
-              width: "65%",
-              height: "20px",
-              borderRadius: "8px",
-              background: "var(--explorer-border, #e2e8f0)",
-              marginBottom: "36px",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
+          <S className="h-5 w-full max-w-[520px] mb-2" />
+          <S className="h-5 w-4/5 max-w-[420px] mb-9" />
 
-          {/* Trust pills row */}
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              justifyContent: "center",
-              marginBottom: "36px",
-              flexWrap: "wrap",
-            }}
-          >
-            {[100, 140, 120].map((w, i) => (
-              <div
-                key={i}
-                style={{
-                  width: `${w}px`,
-                  height: "32px",
-                  borderRadius: "50px",
-                  background: "var(--explorer-border, #e2e8f0)",
-                  animation: "pulse 1.5s ease-in-out infinite",
-                }}
+          {/* Trust pills */}
+          <div className="flex flex-wrap justify-center gap-2 mb-9">
+            {[100, 140, 118].map((w, i) => (
+              <div key={i}
+                className="animate-pulse rounded-full bg-slate-200 dark:bg-slate-700 h-8"
+                style={{ width: `${w}px` }}
               />
             ))}
           </div>
 
           {/* Search bar */}
-          <div
-            style={{
-              maxWidth: "640px",
-              width: "100%",
-              height: "52px",
-              borderRadius: "50px",
-              background: "var(--explorer-border, #e2e8f0)",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
+          <div className="animate-pulse rounded-full bg-slate-200 dark:bg-slate-700 h-13 w-full max-w-[640px]"
+            style={{ height: "52px" }} />
         </div>
       </section>
 
-      {/* ── Main content skeleton ── */}
-      <section style={{ padding: "48px 24px 80px", maxWidth: "1280px", margin: "0 auto" }}>
+      {/* ── Main content ── */}
+      <section className="max-w-[1280px] mx-auto px-6 pt-12 pb-20">
 
         {/* Tabs + Sort row */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "32px",
-            gap: "16px",
-            flexWrap: "wrap",
-          }}
-        >
-          <div
-            style={{
-              width: "240px",
-              height: "46px",
-              borderRadius: "14px",
-              background: "var(--explorer-border, #e2e8f0)",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
-          <div
-            style={{
-              width: "160px",
-              height: "38px",
-              borderRadius: "10px",
-              background: "var(--explorer-border, #e2e8f0)",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+          <S className="h-11 w-60 rounded-2xl" />
+          <S className="h-10 w-40 rounded-xl" />
         </div>
 
-        {/* Filter bar skeleton */}
-        <div
-          style={{
-            background: "var(--explorer-surface, #ffffff)",
-            border: "1px solid var(--explorer-border, #e2e8f0)",
-            borderRadius: "16px",
-            padding: "20px 24px",
-            marginBottom: "28px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "14px",
-          }}
-        >
-          {/* Category pills row */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            {[80, 110, 90, 130, 100, 110, 85, 120, 100].map((w, i) => (
-              <div
-                key={i}
-                style={{
-                  width: `${w}px`,
-                  height: "30px",
-                  borderRadius: "50px",
-                  background: "var(--explorer-border, #e2e8f0)",
-                  animation: "pulse 1.5s ease-in-out infinite",
-                }}
+        {/* Filter bar */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 mb-7 flex flex-col gap-3">
+          {/* Category pills */}
+          <div className="flex flex-wrap gap-2">
+            {[80, 110, 90, 130, 100, 110, 85, 120].map((w, i) => (
+              <div key={i}
+                className="animate-pulse rounded-full bg-slate-200 dark:bg-slate-700 h-8"
+                style={{ width: `${w}px` }}
               />
             ))}
           </div>
-          {/* Language pills row */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          {/* Language pills */}
+          <div className="flex flex-wrap gap-2">
             {[110, 80, 75, 70, 70].map((w, i) => (
-              <div
-                key={i}
-                style={{
-                  width: `${w}px`,
-                  height: "30px",
-                  borderRadius: "50px",
-                  background: "var(--explorer-border, #e2e8f0)",
-                  animation: "pulse 1.5s ease-in-out infinite",
-                }}
+              <div key={i}
+                className="animate-pulse rounded-full bg-slate-200 dark:bg-slate-700 h-8"
+                style={{ width: `${w}px` }}
               />
             ))}
           </div>
         </div>
 
         {/* Results header */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-          <div
-            style={{
-              width: "280px",
-              height: "32px",
-              borderRadius: "8px",
-              background: "var(--explorer-border, #e2e8f0)",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
-          <div
-            style={{
-              width: "80px",
-              height: "24px",
-              borderRadius: "50px",
-              background: "var(--explorer-border, #e2e8f0)",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
+        <div className="flex items-center gap-3 mb-6">
+          <S className="h-8 w-72" />
+          <S className="h-6 w-20 rounded-full" />
         </div>
 
         {/* Podcast card grid — matches real: auto-fill minmax(320px, 1fr) */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-            gap: "24px",
-          }}
-        >
+        <div className="grid gap-6"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))" }}>
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              style={{
-                background: "var(--explorer-surface, #ffffff)",
-                border: "1px solid var(--explorer-border, #e2e8f0)",
-                borderRadius: "16px",
-                overflow: "hidden",
-              }}
-            >
+            <div key={i}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
               {/* Cover 16/9 */}
-              <div
-                style={{
-                  aspectRatio: "16/9",
-                  background: "var(--explorer-border, #e2e8f0)",
-                  animation: "pulse 1.5s ease-in-out infinite",
-                }}
-              />
-              <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                {/* Category tag */}
-                <div
-                  style={{
-                    width: "60%",
-                    height: "14px",
-                    borderRadius: "8px",
-                    background: "var(--explorer-border, #e2e8f0)",
-                    animation: "pulse 1.5s ease-in-out infinite",
-                  }}
-                />
-                {/* Title */}
-                <div
-                  style={{
-                    width: "80%",
-                    height: "18px",
-                    borderRadius: "8px",
-                    background: "var(--explorer-border, #e2e8f0)",
-                    animation: "pulse 1.5s ease-in-out infinite",
-                  }}
-                />
-                {/* Description */}
-                <div
-                  style={{
-                    width: "100%",
-                    height: "14px",
-                    borderRadius: "8px",
-                    background: "var(--explorer-border, #e2e8f0)",
-                    animation: "pulse 1.5s ease-in-out infinite",
-                  }}
-                />
-                <div
-                  style={{
-                    width: "75%",
-                    height: "14px",
-                    borderRadius: "8px",
-                    background: "var(--explorer-border, #e2e8f0)",
-                    animation: "pulse 1.5s ease-in-out infinite",
-                  }}
-                />
-                {/* Meta row */}
-                <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
-                  <div
-                    style={{
-                      width: "70px",
-                      height: "22px",
-                      borderRadius: "50px",
-                      background: "var(--explorer-border, #e2e8f0)",
-                      animation: "pulse 1.5s ease-in-out infinite",
-                    }}
-                  />
-                  <div
-                    style={{
-                      width: "80px",
-                      height: "22px",
-                      borderRadius: "50px",
-                      background: "var(--explorer-border, #e2e8f0)",
-                      animation: "pulse 1.5s ease-in-out infinite",
-                    }}
-                  />
+              <div className="animate-pulse bg-slate-200 dark:bg-slate-700" style={{ aspectRatio: "16/9" }} />
+              <div className="p-5 flex flex-col gap-2.5">
+                <S className="h-3.5 w-3/5" />
+                <S className="h-5 w-4/5" />
+                <S className="h-3.5 w-full" />
+                <S className="h-3.5 w-3/4" />
+                <div className="flex gap-2 mt-1">
+                  <S className="h-6 w-20 rounded-full" />
+                  <S className="h-6 w-24 rounded-full" />
                 </div>
               </div>
             </div>

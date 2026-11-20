@@ -133,24 +133,24 @@ const DISTINGUISHED_TRIBUTES: DistinguishedContributorTribute[] = [
       "Music & Mental Health Impact Study"
     ]
   },
-  {
-    "handle": "@adityachaube",
-    "name": "Aditya C.",
-    "avatar": "https://github.com/adityachaube.png",
-    "githubUrl": "https://github.com/adityachaube",
-    "pillar": "core",
-    "pillarLabel": "Backend API Engineering",
-    "honoraryTitle": "Backend Systems Engineer",
-    "themeColor": "#0891b2",
-    "impactQuote": "Contributed 5 core commits to the UltimateHealth backend architecture, engineering Mongoose database schemas, security validations, and API documentation.",
-    "commits": 8,
-    "linesOfCode": "+850 / -232",
-    "keyContributions": [
-      "5 Backend Repository Commits",
-      "Mongoose Schema Architecture",
-      "API Validation & Security"
-    ]
-  },
+  // {
+  //   "handle": "@adityachaube",
+  //   "name": "Aditya C.",
+  //   "avatar": "https://github.com/adityachaube.png",
+  //   "githubUrl": "https://github.com/adityachaube",
+  //   "pillar": "core",
+  //   "pillarLabel": "Backend API Engineering",
+  //   "honoraryTitle": "Backend Systems Engineer",
+  //   "themeColor": "#0891b2",
+  //   "impactQuote": "Contributed 5 core commits to the UltimateHealth backend architecture, engineering Mongoose database schemas, security validations, and API documentation.",
+  //   "commits": 8,
+  //   "linesOfCode": "+850 / -232",
+  //   "keyContributions": [
+  //     "5 Backend Repository Commits",
+  //     "Mongoose Schema Architecture",
+  //     "API Validation & Security"
+  //   ]
+  // },
   {
     "handle": "@aeriellaaa",
     "name": "aeriellaaa",
