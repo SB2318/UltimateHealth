@@ -703,13 +703,6 @@
   resolved "https://registry.yarnpkg.com/@date-fns/tz/-/tz-1.5.0.tgz#e9e79b7583f0b1322c53db884a0112551095e3f3"
   integrity sha512-lwYN/vDPeNRULcepoE/LO2Pgx+7/RV+S9ARfbc9lr2DtGkOD7pAiruHvbR1RX3Qyf6ja47EWJDMsNK5vK08DJg==
 
-"@egjs/hammerjs@^2.0.17":
-  version "2.0.17"
-  resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
-  integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
-  dependencies:
-    "@types/hammerjs" "^2.0.36"
-
 "@emnapi/core@1.11.2":
   version "1.11.2"
   resolved "https://registry.yarnpkg.com/@emnapi/core/-/core-1.11.2.tgz#fab0a0f3c492d11f5a9ac9065d0d73955ee1c1c9"
@@ -4070,11 +4063,6 @@
   integrity sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==
   dependencies:
     "@types/node" "*"
-
-"@types/hammerjs@^2.0.36":
-  version "2.0.46"
-  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.46.tgz#381daaca1360ff8a7c8dff63f32e69745b9fb1e1"
-  integrity sha512-ynRvcq6wvqexJ9brDMS4BnBLzmr0e14d6ZJTEShTBWKymQiHwlAyGu0ZPEFI2Fh1U53F7tN9ufClWM5KvqkKOw==
 
 "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.7"
@@ -9868,14 +9856,12 @@ react-native-fs@^2.20.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-gesture-handler@~2.32.0:
-  version "2.32.0"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.32.0.tgz#59b8658a4e1586ce6fb0ca0053ac80f6acf7f882"
-  integrity sha512-uYIMOKlKENORq2SABE+jIjbPU+h5I/sQKcq2v16zRq848nwEp1fWRVwML4QWqijc8UcXJC25o54S8GQd4Mf2OA==
+react-native-gesture-handler@~3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-3.5.0.tgz#beb7751c94bac424c45f444b009e1034b16e987d"
+  integrity sha512-bm8yepwMBUhEOSeU7WQbNNrstD0Hbv6i+XsApARBJSlb+WlRvyaQsobi+tZ5Uyr5kDVgXzg6kPb+CWY9zvyfEw==
   dependencies:
-    "@egjs/hammerjs" "^2.0.17"
     "@types/react-test-renderer" "^19.1.0"
-    hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
 
 react-native-gifted-charts@^1.4.77:
