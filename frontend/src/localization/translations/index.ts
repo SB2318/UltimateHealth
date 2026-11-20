@@ -11,6 +11,7 @@ import { pa } from './pa';
 import { or } from './or';
 import { as } from './as';
 import { ur } from './ur';
+import { es } from './es';
 
 export const translations: Record<string, TranslationKeys> = {
   en,
@@ -39,6 +40,8 @@ export const translations: Record<string, TranslationKeys> = {
   'as-IN': as,
   ur,
   'ur-IN': ur,
+  es,
+  'es-ES': es,
 };
 
 export const SUPPORTED_LANGUAGES = [
@@ -55,6 +58,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'or', bcp47: 'or-IN', name: 'Odia', nativeName: 'ଓଡ଼ିଆ' },
   { code: 'as', bcp47: 'as-IN', name: 'Assamese', nativeName: 'অসমীয়া' },
   { code: 'ur', bcp47: 'ur-IN', name: 'Urdu', nativeName: 'اردو' },
+  { code: 'es', bcp47: 'es-ES', name: 'Spanish', nativeName: 'Español' },
 ] as const;
 
 export type SupportedLanguageCode = (typeof SUPPORTED_LANGUAGES)[number]['code'];
