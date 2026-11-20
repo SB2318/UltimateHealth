@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -68,4 +68,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Resolve PR number from either trigger source
           PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: python .github/scripts/ai_reviewer.py
