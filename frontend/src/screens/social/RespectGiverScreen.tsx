@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -11,16 +10,20 @@ import {
   TouchableOpacity,
   Easing,
   useColorScheme,
+  ActivityIndicator,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { WebView } from 'react-native-webview';
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
 const pdmImage = require('../../../assets/images/p_d_m.jpg');
+const TRIBUTE_WEB_URL = 'https://ultimatehealth.blog/web/en/tribute';
 
 // ─── Particle dot component ───────────────────────────────────────────────────
 const FloatingDot = ({
@@ -191,9 +194,24 @@ const InsightPill = ({
 };
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
-const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
+interface RespectGiverScreenProps {
+  navigation: any;
+  route?: {
+    params?: {
+      initialTab?: 'web' | 'dedication';
+    };
+  };
+}
+
+const RespectGiverScreen = ({ navigation, route }: RespectGiverScreenProps) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+
+  const [activeTab, setActiveTab] = useState<'web' | 'dedication'>(
+    route?.params?.initialTab || 'web'
+  );
+  const [webError, setWebError] = useState(false);
+  const webViewRef = useRef<WebView>(null);
 
   const heroFade = useRef(new Animated.Value(0)).current;
   const heroScale = useRef(new Animated.Value(0.85)).current;
@@ -291,184 +309,383 @@ const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
           accessibilityHint="Returns to the previous screen">
           <MaterialIcons name="arrow-back-ios" size={18} color={isDark ? '#C084FC' : '#4C1D95'} />
         </TouchableOpacity>
+
         <Text style={[styles.navTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
           Respect Giver
         </Text>
-        <View style={{ width: 36 }} />
+
+        <View style={styles.headerRightActions}>
+          {activeTab === 'web' ? (
+            <>
+              <TouchableOpacity
+                onPress={() => {
+                  setWebError(false);
+                  webViewRef.current?.reload();
+                }}
+                style={[
+                  styles.headerIconBtn,
+                  {
+                    backgroundColor: isDark ? 'rgba(192, 132, 252, 0.15)' : 'rgba(139, 92, 246, 0.1)',
+                  },
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel="Refresh page">
+                <MaterialIcons name="refresh" size={18} color={isDark ? '#C084FC' : '#4C1D95'} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => Linking.openURL(TRIBUTE_WEB_URL)}
+                style={[
+                  styles.headerIconBtn,
+                  {
+                    backgroundColor: isDark ? 'rgba(192, 132, 252, 0.15)' : 'rgba(139, 92, 246, 0.1)',
+                  },
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel="Open in browser">
+                <MaterialCommunityIcon name="open-in-new" size={18} color={isDark ? '#C084FC' : '#4C1D95'} />
+              </TouchableOpacity>
+            </>
+          ) : (
+            <View style={{ width: 36 }} />
+          )}
+        </View>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scroll}>
-        {/* ── HERO SECTION ──────────────────────────────────────────────── */}
-        <View
-          style={[
-            styles.heroSection,
-            {
-              backgroundColor: isDark ? '#1E1235' : '#F3E8FF',
-            },
-          ]}>
-          {dots.map((d, i) => (
-            <FloatingDot key={i} {...d} />
-          ))}
-
-          <Animated.View style={[styles.glowBg, { opacity: glowPulse }]} />
-
-          <Animated.View
-            style={[styles.spinRing, { transform: [{ rotate: ringRotate }] }]}
-          />
-          <Animated.View
+      {/* Segmented Tab Switcher */}
+      <View style={[styles.tabBarContainer, { backgroundColor: isDark ? '#0F172A' : '#FFFFFF' }]}>
+        <View style={[styles.tabBar, { backgroundColor: isDark ? '#1E293B' : '#EDE9FE' }]}>
+          <TouchableOpacity
             style={[
-              styles.spinRingInner,
-              { transform: [{ rotate: ringRotate }] },
+              styles.tabItem,
+              activeTab === 'web' && [
+                styles.activeTabItem,
+                { backgroundColor: isDark ? '#0B0F19' : '#FFFFFF' },
+              ],
             ]}
-          />
-
-          <Animated.View
-            style={[
-              styles.imageWrapper,
-              { opacity: heroFade, transform: [{ scale: heroScale }] },
-            ]}>
-            <Image source={pdmImage} style={styles.heroImage} />
-            <LinearGradient
-              colors={['transparent', isDark ? 'rgba(15, 23, 42, 0.4)' : 'rgba(124, 58, 237, 0.2)']}
-              style={styles.imageOverlay}
+            onPress={() => setActiveTab('web')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'web' }}>
+            <MaterialCommunityIcon
+              name="web"
+              size={17}
+              color={activeTab === 'web' ? '#7C3AED' : isDark ? '#94A3B8' : '#64748B'}
             />
-          </Animated.View>
-
-          <Animated.View
-            style={[
-              styles.respectBadge,
-              { opacity: badgeFade, transform: [{ scale: badgeFade }] },
-            ]}>
-            <MaterialCommunityIcon name="shield-star" size={13} color="#fff" />
-            <Text style={styles.badgeText}>RESPECT GIVER</Text>
-          </Animated.View>
-
-          <Animated.View style={[styles.heroMeta, { opacity: heroFade }]}>
-            <Text style={[styles.heroName, { color: isDark ? '#F8FAFC' : '#1E1B4B' }]}>
-              Dr. Moumita Debnath
+            <Text
+              style={[
+                styles.tabText,
+                {
+                  color:
+                    activeTab === 'web'
+                      ? isDark
+                        ? '#F1F5F9'
+                        : '#7C3AED'
+                      : isDark
+                      ? '#94A3B8'
+                      : '#64748B',
+                  fontWeight: activeTab === 'web' ? '700' : '500',
+                },
+              ]}>
+              Living Memorial
             </Text>
-            <Text style={[styles.heroTagline, { color: isDark ? '#C084FC' : '#6B21A8' }]}>
-              Honoring dedication, compassion, and the healers who care for us all.
-            </Text>
-          </Animated.View>
-        </View>
+          </TouchableOpacity>
 
-        {/* ── PILLS ─────────────────────────────────────────────────────── */}
-        <View style={styles.pillRow}>
-          <InsightPill icon="hand-heart" label="Empathy" delay={200} isDark={isDark} />
-          <InsightPill icon="heart-pulse" label="Healing" delay={400} isDark={isDark} />
-          <InsightPill icon="lightbulb-on" label="Hope" delay={600} isDark={isDark} />
-          <InsightPill icon="account-heart" label="Care" delay={800} isDark={isDark} />
-        </View>
-
-        {/* ── CIRCLE OF CARE ────────────────────────────────────────────── */}
-        <View
-          style={[
-            styles.section,
-            { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
-          ]}>
-          <Text style={[styles.sectionTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
-            A Circle of Care
-          </Text>
-          <Text style={[styles.sectionBody, { color: isDark ? '#CBD5E1' : '#334155' }]}>
-            Compassion and care move quietly through our daily lives.{'\n\n'}
-            Healthcare workers dedicate their days and nights to easing the pain
-            of others. When caregivers are supported, respected, and kept safe,
-            they bring that same warmth and healing to every patient they touch.
-            {'\n\n'}
-            Every thoughtful gesture creates a gentle ripple of reassurance across
-            our communities.{'\n\n'}
-            Let us build a culture where those who heal are always treated with
-            gratitude and care.
-          </Text>
-        </View>
-
-        {/* ── QUOTES ────────────────────────────────────────────────────── */}
-        <View style={styles.quotesSection}>
-          <QuoteCard
-            text="When we care for each other with genuine kindness, we bring comfort and hope to everyday lives."
-            delay={100}
-            isDark={isDark}
-          />
-          <QuoteCard
-            text="Every healthcare giver deserves to feel safe, valued, and deeply appreciated."
-            delay={250}
-            isDark={isDark}
-          />
-          <QuoteCard
-            text="Gentle care and mutual understanding have the quiet power to bring healing to everyone."
-            delay={400}
-            isDark={isDark}
-          />
-        </View>
-
-        {/* ── RESPECT POINT OF VIEW ─────────────────────────────────────── */}
-        <View
-          style={[
-            styles.section,
-            { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
-          ]}>
-          <Text style={[styles.sectionTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
-            Honoring Those Who Care
-          </Text>
-
-          <LinearGradient
-            colors={
-              isDark
-                ? ['rgba(139, 92, 246, 0.18)', 'rgba(236, 72, 153, 0.08)']
-                : ['rgba(139, 92, 246, 0.08)', 'rgba(236, 72, 153, 0.04)']
-            }
+          <TouchableOpacity
             style={[
-              styles.highlightBox,
+              styles.tabItem,
+              activeTab === 'dedication' && [
+                styles.activeTabItem,
+                { backgroundColor: isDark ? '#0B0F19' : '#FFFFFF' },
+              ],
+            ]}
+            onPress={() => setActiveTab('dedication')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'dedication' }}>
+            <MaterialCommunityIcon
+              name="shield-star"
+              size={17}
+              color={activeTab === 'dedication' ? '#7C3AED' : isDark ? '#94A3B8' : '#64748B'}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                {
+                  color:
+                    activeTab === 'dedication'
+                      ? isDark
+                        ? '#F1F5F9'
+                        : '#7C3AED'
+                      : isDark
+                      ? '#94A3B8'
+                      : '#64748B',
+                  fontWeight: activeTab === 'dedication' ? '700' : '500',
+                },
+              ]}>
+              Dr. Moumita Tribute
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Main Content Area */}
+      {activeTab === 'web' ? (
+        <View style={styles.webContainer}>
+          <WebView
+            ref={webViewRef}
+            source={{ uri: TRIBUTE_WEB_URL }}
+            style={[styles.webView, { backgroundColor: isDark ? '#0B0F19' : '#FFFFFF' }]}
+            onLoadStart={() => {
+              setWebError(false);
+            }}
+            onError={() => {
+              setWebError(true);
+            }}
+            startInLoadingState={true}
+            renderLoading={() => (
+              <View style={[styles.loadingOverlay, { backgroundColor: isDark ? '#0B0F19' : '#FAFAFE' }]}>
+                <ActivityIndicator size="large" color="#7C3AED" />
+                <Text style={[styles.loadingText, { color: isDark ? '#E9D5FF' : '#6B21A8' }]}>
+                  Loading Living Memorial Tribute...
+                </Text>
+              </View>
+            )}
+          />
+
+          {webError && (
+            <View style={[styles.errorOverlay, { backgroundColor: isDark ? '#0B0F19' : '#FAFAFE' }]}>
+              <MaterialCommunityIcon name="wifi-off" size={48} color={isDark ? '#F87171' : '#DC2626'} />
+              <Text style={[styles.errorTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+                Unable to load Tribute Page
+              </Text>
+              <Text style={[styles.errorSubtitle, { color: isDark ? '#94A3B8' : '#64748B' }]}>
+                Please check your network connection and try again.
+              </Text>
+              <TouchableOpacity
+                style={styles.retryBtn}
+                onPress={() => {
+                  setWebError(false);
+                  webViewRef.current?.reload();
+                }}>
+                <Text style={styles.retryBtnText}>Retry</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.openBrowserBtn, { borderColor: isDark ? '#C084FC' : '#7C3AED' }]}
+                onPress={() => Linking.openURL(TRIBUTE_WEB_URL)}>
+                <Text style={[styles.openBrowserText, { color: isDark ? '#C084FC' : '#7C3AED' }]}>
+                  Open in External Browser
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scroll}>
+          {/* ── HERO SECTION ──────────────────────────────────────────────── */}
+          <View
+            style={[
+              styles.heroSection,
               {
-                borderColor: isDark ? 'rgba(192, 132, 252, 0.3)' : 'rgba(124, 58, 237, 0.2)',
+                backgroundColor: isDark ? '#1E1235' : '#F3E8FF',
               },
             ]}>
-            <MaterialCommunityIcon
-              name="heart-outline"
-              size={20}
-              color={isDark ? '#C084FC' : '#7C3AED'}
-              style={{ marginBottom: 8 }}
+            {dots.map((d, i) => (
+              <FloatingDot key={i} {...d} />
+            ))}
+
+            <Animated.View style={[styles.glowBg, { opacity: glowPulse }]} />
+
+            <Animated.View
+              style={[styles.spinRing, { transform: [{ rotate: ringRotate }] }]}
             />
-            <Text style={[styles.highlightText, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
-              Healthcare is built on empathy, dedication, and service to others:{' '}
-              <Text style={styles.highlightEmphasis}>
-                every caregiver deserves our respect and safe keeping.
+            <Animated.View
+              style={[
+                styles.spinRingInner,
+                { transform: [{ rotate: ringRotate }] },
+              ]}
+            />
+
+            <Animated.View
+              style={[
+                styles.imageWrapper,
+                { opacity: heroFade, transform: [{ scale: heroScale }] },
+              ]}>
+              <Image source={pdmImage} style={styles.heroImage} />
+              <LinearGradient
+                colors={['transparent', isDark ? 'rgba(15, 23, 42, 0.4)' : 'rgba(124, 58, 237, 0.2)']}
+                style={styles.imageOverlay}
+              />
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.respectBadge,
+                { opacity: badgeFade, transform: [{ scale: badgeFade }] },
+              ]}>
+              <MaterialCommunityIcon name="shield-star" size={13} color="#fff" />
+              <Text style={styles.badgeText}>RESPECT GIVER</Text>
+            </Animated.View>
+
+            <Animated.View style={[styles.heroMeta, { opacity: heroFade }]}>
+              <Text style={[styles.heroName, { color: isDark ? '#F8FAFC' : '#1E1B4B' }]}>
+                Dr. Moumita Debnath
               </Text>
+              <Text style={[styles.heroTagline, { color: isDark ? '#C084FC' : '#6B21A8' }]}>
+                Honoring dedication, compassion, and the healers who care for us all.
+              </Text>
+            </Animated.View>
+          </View>
+
+          {/* ── WEB MEMORIAL CTA BANNER ───────────────────────────────────── */}
+          <View style={styles.bannerWrapper}>
+            <TouchableOpacity
+              style={[
+                styles.webBannerCard,
+                {
+                  backgroundColor: isDark ? 'rgba(124, 58, 237, 0.16)' : '#F5F3FF',
+                  borderColor: isDark ? 'rgba(192, 132, 252, 0.35)' : 'rgba(124, 58, 237, 0.25)',
+                },
+              ]}
+              onPress={() => setActiveTab('web')}
+              activeOpacity={0.75}>
+              <View
+                style={[
+                  styles.webBannerIconBox,
+                  { backgroundColor: isDark ? 'rgba(192, 132, 252, 0.2)' : 'rgba(124, 58, 237, 0.12)' },
+                ]}>
+                <MaterialCommunityIcon
+                  name="newspaper-variant-outline"
+                  size={24}
+                  color={isDark ? '#C084FC' : '#7C3AED'}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.webBannerTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+                  Living Memorial Series
+                </Text>
+                <Text style={[styles.webBannerSub, { color: isDark ? '#CBD5E1' : '#581C87' }]}>
+                  30 Human Stories Tribute celebrating contributions and courage — starting with Dr. Moumita Debnath.
+                </Text>
+              </View>
+              <MaterialIcons name="chevron-right" size={24} color={isDark ? '#C084FC' : '#7C3AED'} />
+            </TouchableOpacity>
+          </View>
+
+          {/* ── PILLS ─────────────────────────────────────────────────────── */}
+          <View style={styles.pillRow}>
+            <InsightPill icon="hand-heart" label="Empathy" delay={200} isDark={isDark} />
+            <InsightPill icon="heart-pulse" label="Healing" delay={400} isDark={isDark} />
+            <InsightPill icon="lightbulb-on" label="Hope" delay={600} isDark={isDark} />
+            <InsightPill icon="account-heart" label="Care" delay={800} isDark={isDark} />
+          </View>
+
+          {/* ── CIRCLE OF CARE ────────────────────────────────────────────── */}
+          <View
+            style={[
+              styles.section,
+              { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
+            ]}>
+            <Text style={[styles.sectionTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+              A Circle of Care
             </Text>
-          </LinearGradient>
+            <Text style={[styles.sectionBody, { color: isDark ? '#CBD5E1' : '#334155' }]}>
+              Compassion and care move quietly through our daily lives.{'\n\n'}
+              Healthcare workers dedicate their days and nights to easing the pain
+              of others. When caregivers are supported, respected, and kept safe,
+              they bring that same warmth and healing to every patient they touch.
+              {'\n\n'}
+              Every thoughtful gesture creates a gentle ripple of reassurance across
+              our communities.{'\n\n'}
+              Let us build a culture where those who heal are always treated with
+              gratitude and care.
+            </Text>
+          </View>
 
-          <Text style={[styles.sectionBody, { color: isDark ? '#CBD5E1' : '#334155' }]}>
-            Doctors, nurses, and medical staff work selflessly so that others can
-            recover and thrive.{'\n\n'}
-            Honoring their dedication means creating safe environments, listening
-            with open hearts, and valuing their commitment to healing.{'\n\n'}
-            When we uplift the people who care for our health, we build a
-            healthier and more supportive world for all of us.
-          </Text>
-        </View>
+          {/* ── QUOTES ────────────────────────────────────────────────────── */}
+          <View style={styles.quotesSection}>
+            <QuoteCard
+              text="When we care for each other with genuine kindness, we bring comfort and hope to everyday lives."
+              delay={100}
+              isDark={isDark}
+            />
+            <QuoteCard
+              text="Every healthcare giver deserves to feel safe, valued, and deeply appreciated."
+              delay={250}
+              isDark={isDark}
+            />
+            <QuoteCard
+              text="Gentle care and mutual understanding have the quiet power to bring healing to everyone."
+              delay={400}
+              isDark={isDark}
+            />
+          </View>
 
-        {/* ── CLOSING ───────────────────────────────────────────────────── */}
-        <View
-          style={[
-            styles.closingSection,
-            { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
-          ]}>
-          <MaterialCommunityIcon
-            name="hand-heart-outline"
-            size={32}
-            color={isDark ? '#C084FC' : '#7C3AED'}
-          />
-          <Text style={[styles.closingText, { color: isDark ? '#D8B4FE' : '#581C87' }]}>
-            UltimateHealth is dedicated to healthy bodies, calm minds, and mutual care.
-          </Text>
-          <Text style={[styles.closingSubText, { color: isDark ? '#94A3B8' : '#64748B' }]}>
-            Because true healing begins when we value and protect every caregiver.
-          </Text>
-        </View>
-      </ScrollView>
+          {/* ── RESPECT POINT OF VIEW ─────────────────────────────────────── */}
+          <View
+            style={[
+              styles.section,
+              { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
+            ]}>
+            <Text style={[styles.sectionTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+              Honoring Those Who Care
+            </Text>
+
+            <LinearGradient
+              colors={
+                isDark
+                  ? ['rgba(139, 92, 246, 0.18)', 'rgba(236, 72, 153, 0.08)']
+                  : ['rgba(139, 92, 246, 0.08)', 'rgba(236, 72, 153, 0.04)']
+              }
+              style={[
+                styles.highlightBox,
+                {
+                  borderColor: isDark ? 'rgba(192, 132, 252, 0.3)' : 'rgba(124, 58, 237, 0.2)',
+                },
+              ]}>
+              <MaterialCommunityIcon
+                name="heart-outline"
+                size={20}
+                color={isDark ? '#C084FC' : '#7C3AED'}
+                style={{ marginBottom: 8 }}
+              />
+              <Text style={[styles.highlightText, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+                Healthcare is built on empathy, dedication, and service to others:{' '}
+                <Text style={styles.highlightEmphasis}>
+                  every caregiver deserves our respect and safe keeping.
+                </Text>
+              </Text>
+            </LinearGradient>
+
+            <Text style={[styles.sectionBody, { color: isDark ? '#CBD5E1' : '#334155' }]}>
+              Doctors, nurses, and medical staff work selflessly so that others can
+              recover and thrive.{'\n\n'}
+              Honoring their dedication means creating safe environments, listening
+              with open hearts, and valuing their commitment to healing.{'\n\n'}
+              When we uplift the people who care for our health, we build a
+              healthier and more supportive world for all of us.
+            </Text>
+          </View>
+
+          {/* ── CLOSING ───────────────────────────────────────────────────── */}
+          <View
+            style={[
+              styles.closingSection,
+              { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
+            ]}>
+            <MaterialCommunityIcon
+              name="hand-heart-outline"
+              size={32}
+              color={isDark ? '#C084FC' : '#7C3AED'}
+            />
+            <Text style={[styles.closingText, { color: isDark ? '#D8B4FE' : '#581C87' }]}>
+              UltimateHealth is dedicated to healthy bodies, calm minds, and mutual care.
+            </Text>
+            <Text style={[styles.closingSubText, { color: isDark ? '#94A3B8' : '#64748B' }]}>
+              Because true healing begins when we value and protect every caregiver.
+            </Text>
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -503,6 +720,114 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
     letterSpacing: 0.3,
+  },
+  headerRightActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerIconBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabBarContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#FFFFFF',
+  },
+  tabBar: {
+    flexDirection: 'row',
+    borderRadius: 24,
+    padding: 3,
+    backgroundColor: '#EDE9FE',
+  },
+  tabItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 6,
+  },
+  activeTabItem: {
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  tabText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  webContainer: {
+    flex: 1,
+    position: 'relative',
+  },
+  webView: {
+    flex: 1,
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FAFAFE',
+    gap: 12,
+    zIndex: 10,
+  },
+  loadingText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  errorOverlay: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FAFAFE',
+    padding: 24,
+    zIndex: 11,
+  },
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginTop: 12,
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  errorSubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+  retryBtn: {
+    backgroundColor: '#7C3AED',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 24,
+    minWidth: 140,
+    alignItems: 'center',
+  },
+  retryBtnText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  openBrowserBtn: {
+    marginTop: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 24,
+    borderWidth: 1,
+  },
+  openBrowserText: {
+    fontSize: 13,
+    fontWeight: '600',
   },
   scroll: {
     paddingBottom: 60,
@@ -609,13 +934,42 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 18,
   },
+  bannerWrapper: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 4,
+  },
+  webBannerCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    gap: 12,
+  },
+  webBannerIconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  webBannerTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  webBannerSub: {
+    fontSize: 12,
+    lineHeight: 17,
+  },
   pillRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
     gap: 8,
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 16,
     paddingBottom: 8,
   },
   pill: {
@@ -653,11 +1007,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 25,
     fontWeight: '400',
-  },
-  bodyEmphasis: {
-    color: '#7C3AED',
-    fontWeight: '700',
-    fontStyle: 'italic',
   },
   highlightBox: {
     borderRadius: 14,
