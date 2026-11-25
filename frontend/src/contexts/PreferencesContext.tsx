@@ -14,6 +14,11 @@ import {
   SECURE_KEYS,
 } from '../lib/storage/SecureStorageUtils';
 import { LanguageCode, isValidLanguageCode } from '../constants/languages';
+import {
+  ThemePreference,
+  DEFAULT_THEME_PREFERENCE,
+  isValidThemePreference,
+} from '../lib/ui/themePreference';
 
 type LanguagesUpdater = LanguageCode[] | ((prev: LanguageCode[]) => LanguageCode[]);
 
@@ -22,6 +27,8 @@ interface PreferencesContextType {
   setPreferredLanguages: (languages: LanguagesUpdater) => Promise<void>;
   addLanguagePreference: (language: LanguageCode) => Promise<void>;
   removeLanguagePreference: (language: LanguageCode) => Promise<void>;
+  themePreference: ThemePreference;
+  setThemePreference: (preference: ThemePreference) => Promise<void>;
   isLoading: boolean;
   hasLanguagePreferences: boolean;
 }
@@ -42,6 +49,8 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
   const [preferredLanguages, setInternalPreferredLanguages] = useState<
     LanguageCode[]
   >([]);
+  const [themePreference, setInternalThemePreference] =
+    useState<ThemePreference>(DEFAULT_THEME_PREFERENCE);
   const [isLoading, setIsLoading] = useState(true);
 
   // Load preferences on mount
@@ -67,6 +76,13 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
             setInternalPreferredLanguages([]);
           }
         }
+        const storedTheme = await secureRetrieveItem(
+          SECURE_KEYS.THEME_PREFERENCE
+        );
+        if (storedTheme && isValidThemePreference(storedTheme)) {
+          setInternalThemePreference(storedTheme);
+        }
+        // An invalid stored value is ignored — the default ('system') stands.
       } catch (error) {
         console.error(
           '[PreferencesContext] Error loading preferences:',
@@ -168,11 +184,33 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
     [setPreferredLanguages]
   );
 
+  const setThemePreference = useCallback(
+    async (preference: ThemePreference): Promise<void> => {
+      if (!isValidThemePreference(preference)) {
+        console.warn(
+          `[PreferencesContext] Invalid theme preference: ${preference}`
+        );
+        return;
+      }
+      setInternalThemePreference(preference);
+      // Same serialized-write chain as languages, so a later preference
+      // can never be overwritten by an earlier, slower write.
+      const write = pendingWriteRef.current.then(async () => {
+        await secureStoreItem(SECURE_KEYS.THEME_PREFERENCE, preference);
+      });
+      pendingWriteRef.current = write;
+      await write;
+    },
+    []
+  );
+
   const value: PreferencesContextType = {
     preferredLanguages,
     setPreferredLanguages,
     addLanguagePreference,
     removeLanguagePreference,
+    themePreference,
+    setThemePreference,
     isLoading,
     hasLanguagePreferences: preferredLanguages.length > 0,
   };

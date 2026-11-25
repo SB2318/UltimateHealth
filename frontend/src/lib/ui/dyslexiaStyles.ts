@@ -5,11 +5,32 @@ export const generateArticleStyles = (
   isDyslexiaMode: boolean,
   isDarkMode: boolean,
   articleFontSize: number,
+  isHighContrast = false,
 ) => {
-  const backgroundColor = isDarkMode ? '#121212' : (isDyslexiaMode ? '#FDF4E3' : '#FFFFFF');
-  const textColor = isDarkMode ? '#F8FAFC' : '#1A1A1A';
-  const headingColor = isDarkMode ? '#FFFFFF' : '#0F172A';
-  const linkColor = isDarkMode ? '#60A5FA' : '#0F52BA';
+  // High contrast wins over dark/dyslexia backgrounds: the issue's core
+  // use case is low-vision users reading articles.
+  const backgroundColor = isHighContrast
+    ? '#000000'
+    : isDarkMode
+      ? '#121212'
+      : isDyslexiaMode
+        ? '#FDF4E3'
+        : '#FFFFFF';
+  const textColor = isHighContrast
+    ? '#FFFFFF'
+    : isDarkMode
+      ? '#F8FAFC'
+      : '#1A1A1A';
+  const headingColor = isHighContrast
+    ? '#FFFFFF'
+    : isDarkMode
+      ? '#FFFFFF'
+      : '#0F172A';
+  const linkColor = isHighContrast
+    ? '#FFD700'
+    : isDarkMode
+      ? '#60A5FA'
+      : '#0F52BA';
 
   return `
     @font-face {

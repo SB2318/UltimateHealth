@@ -18,6 +18,11 @@ import { wp, hp, fp } from '../../lib/ui/Metric';
 import { useAppSelector } from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 import { useTranslation } from '../../localization';
+import { usePreferences } from '../../contexts/PreferencesContext';
+import {
+  resolveThemeMode,
+  THEME_PREFERENCES,
+} from '../../lib/ui/themePreference';
 import HipaaComplianceModal from '../../components/common/HipaaComplianceModal';
 type SettingsScreenProps = { navigation: any };
 
@@ -113,10 +118,16 @@ const SettingsRow = ({
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
-  const isDark = useColorScheme() === 'dark';
+  const { themePreference, setThemePreference } = usePreferences();
+  // The screen's own chrome follows the resolved theme; high contrast
+  // renders with the dark branch (true pitch-black surfaces come from
+  // the provider themes and the article reader, not these rows).
+  const systemScheme = useColorScheme();
+  const isDark = resolveThemeMode(themePreference, systemScheme) !== 'light';
   const { isConnected } = useAppSelector((state: any) => state.network);
   const { currentLanguage, setLanguage, supportedLanguages, t } = useTranslation();
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [themeModalVisible, setThemeModalVisible] = useState(false);
   const [showHipaaModal, setShowHipaaModal] = useState(false);
 
   const currentLangInfo = supportedLanguages.find(
@@ -237,6 +248,21 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             label={t('settings.appLanguage')}
             sublabel={currentLangInfo ? `${currentLangInfo.nativeName} (${currentLangInfo.name})` : 'English'}
             onPress={() => setLanguageModalVisible(true)}
+            isDark={isDark}
+          />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
+          <SettingsRow
+            icon="theme-light-dark"
+            iconColor="#F59E0B"
+            label={t('settings.theme')}
+            sublabel={t(`settings.theme_${themePreference}`)}
+            onPress={() => setThemeModalVisible(true)}
             isDark={isDark}
           />
         </View>
@@ -533,6 +559,117 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
                         ]}
                       >
                         {lang.name}
+                      </Text>
+                    </View>
+                    {isSelected && (
+                      <MaterialIcons
+                        name="check-circle"
+                        size={22}
+                        color={PRIMARY_COLOR}
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={themeModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setThemeModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalSheet,
+              { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' },
+            ]}
+          >
+            <View
+              style={[
+                styles.modalHeader,
+                { borderBottomColor: isDark ? '#374151' : '#E5E7EB' },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.modalTitle,
+                  { color: isDark ? '#F9FAFB' : '#111827' },
+                ]}
+              >
+                {t('settings.selectTheme')}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setThemeModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Close theme selector"
+              >
+                <MaterialIcons
+                  name="close"
+                  size={24}
+                  color={isDark ? '#9CA3AF' : '#6B7280'}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              style={{ maxHeight: hp(50) }}
+              showsVerticalScrollIndicator={false}
+            >
+              {THEME_PREFERENCES.map(option => {
+                const isSelected = themePreference === option;
+                return (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={async () => {
+                      await setThemePreference(option);
+                      setThemeModalVisible(false);
+                      Snackbar.show({
+                        text: `Theme switched to ${t(`settings.theme_${option}`)}`,
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+                    }}
+                    style={[
+                      styles.languageItem,
+                      {
+                        backgroundColor: isSelected
+                          ? isDark
+                            ? 'rgba(59, 130, 246, 0.2)'
+                            : '#EFF6FF'
+                          : 'transparent',
+                        borderBottomColor: isDark ? '#374151' : '#F3F4F6',
+                      },
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Choose ${t(`settings.theme_${option}`)} theme`}
+                  >
+                    <View style={styles.langNameWrap}>
+                      <Text
+                        style={[
+                          styles.langNative,
+                          {
+                            color: isSelected
+                              ? PRIMARY_COLOR
+                              : isDark
+                              ? '#F9FAFB'
+                              : '#111827',
+                            fontWeight: isSelected ? '700' : '500',
+                          },
+                        ]}
+                      >
+                        {t(`settings.theme_${option}`)}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.langEn,
+                          { color: isDark ? '#9CA3AF' : '#6B7280' },
+                        ]}
+                      >
+                        {t(`settings.theme_${option}Sub`)}
                       </Text>
                     </View>
                     {isSelected && (
