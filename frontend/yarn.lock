@@ -9947,10 +9947,10 @@ react-native-pell-rich-editor@^1.10.0:
   resolved "https://registry.yarnpkg.com/react-native-pell-rich-editor/-/react-native-pell-rich-editor-1.10.0.tgz#5463f0af7bf641cd8de652efb45f2bedf8ceabde"
   integrity sha512-MRL7lokAQOIxcZ900FxHeVA0B3ZRcFlIhZ9FSQIrjHmutN2at+hax139xV0AQ1DwvJ3fYwlUuTr7Pf4hHpy/PA==
 
-react-native-reanimated@4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-4.5.1.tgz#be81ed3a96bf70baeeccdc24d3350883099b7dd3"
-  integrity sha512-RnMvtDuR+68ig864gAvZCOdZehqhC5rFmMo0kn+ARfgVSTvFeF6IFLBVgMPUu0KwihaapEyW24WRi6nEyy1kSA==
+react-native-reanimated@4.5.5:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-4.5.5.tgz#13a290facf842354344f6abbd5f6c694ca6aa6f0"
+  integrity sha512-xtJXZRZ1vkec1AIUVG02St2sbyZS5jc7227TlDu/HonqUYPeZAfiC4RI2jqL1dVMNBu1+7oBx/c9QkjF2kg6Lg==
   dependencies:
     react-native-is-edge-to-edge "^1.3.1"
     semver "^7.7.3"
