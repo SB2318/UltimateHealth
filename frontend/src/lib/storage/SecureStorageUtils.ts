@@ -7,6 +7,7 @@ export const SECURE_KEYS = {
   REFRESH_TOKEN: 'SECURE_REFRESH_TOKEN',
   EXPO_PUSH_TOKEN: 'SECURE_EXPO_PUSH_TOKEN',
   LANGUAGE_PREFERENCES: 'SECURE_LANGUAGE_PREFERENCES',
+  THEME_PREFERENCE: 'SECURE_THEME_PREFERENCE',
 } as const;
 
 export type SecureKey = (typeof SECURE_KEYS)[keyof typeof SECURE_KEYS];
@@ -16,6 +17,7 @@ export type SecureKey = (typeof SECURE_KEYS)[keyof typeof SECURE_KEYS];
 // unencrypted — if SecureStore is unavailable they fail the write instead.
 const PLAINTEXT_FALLBACK_KEYS: ReadonlySet<SecureKey> = new Set<SecureKey>([
   SECURE_KEYS.LANGUAGE_PREFERENCES,
+  SECURE_KEYS.THEME_PREFERENCE,
 ]);
 
 const isPlaintextFallbackAllowed = (key: SecureKey): boolean =>

@@ -173,6 +173,21 @@ const config = createTamagui({
       color9: '#0F52BA',
       borderColor: '#1E293B',
     },
+    // WCAG AAA tier from issue #2043: true pitch-black surfaces, white
+    // text, high-visibility yellow accent. The dark theme's blue primary
+    // (#0F52BA) is ~2.9:1 on black and fails AAA, so it is not reused here.
+    highContrast: {
+      ...defaultThemes.dark,
+      primary: '#FFD700',
+      background: '#000000',
+      backgroundLight: '#000000',
+      color: '#FFFFFF',
+      color12: '#FFFFFF',
+      color11: '#FFFFFF',
+      color10: '#E5E5E5',
+      color9: '#FFD700',
+      borderColor: '#FFFFFF',
+    },
   },
   fonts: {
     heading: {

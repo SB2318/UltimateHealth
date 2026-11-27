@@ -9,6 +9,7 @@ import {Asset} from 'expo-asset';
 import {logger} from './src/lib/services/monitoring/logger';
 
 import AppContent from './src/components/common/AppContent';
+import { PreferencesProvider } from './src/contexts/PreferencesContext';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
   // Splash screen may already be controlled by the native runtime.
@@ -84,7 +85,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContent />
+      <PreferencesProvider>
+        <AppContent />
+      </PreferencesProvider>
     </QueryClientProvider>
   );
 }

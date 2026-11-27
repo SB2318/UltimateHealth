@@ -15,7 +15,12 @@ import { FirebaseProvider } from '../../contexts/FirebaseContext';
 import { useNotificationListeners } from '../../hooks/notification/useNotificationListener';
 import { useVersionCheck } from '@/src/hooks/app/useVersionCheck';
 import { SocketProvider } from '../../contexts/SocketContext';
-import { PreferencesProvider } from '../../contexts/PreferencesContext';
+import { usePreferences } from '../../contexts/PreferencesContext';
+import {
+  resolveThemeMode,
+  HIGH_CONTRAST_COLORS,
+  type ResolvedTheme,
+} from '../../lib/ui/themePreference';
 import config from '../../../tamagui.config';
 
 import { initDeepLinking, navigateDeepLink, resolveNotificationTarget, resolveDeepLinkTarget } from '../../lib/platform/DeepLinkService';
@@ -69,13 +74,52 @@ const appLightTheme = {
   },
 };
 
+// WCAG AAA tier from issue #2043: pitch-black surfaces, white text,
+// high-visibility yellow accent (see HIGH_CONTRAST_COLORS).
+const appHighContrastTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: HIGH_CONTRAST_COLORS.background,
+    card: HIGH_CONTRAST_COLORS.card,
+    text: HIGH_CONTRAST_COLORS.text,
+    border: HIGH_CONTRAST_COLORS.border,
+    primary: HIGH_CONTRAST_COLORS.primary,
+    notification: HIGH_CONTRAST_COLORS.primary,
+  },
+};
+
+const appHighContrastPaperTheme = {
+  ...MD3DarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    background: HIGH_CONTRAST_COLORS.background,
+    surface: HIGH_CONTRAST_COLORS.surface,
+    onSurface: HIGH_CONTRAST_COLORS.text,
+    onBackground: HIGH_CONTRAST_COLORS.text,
+    primary: HIGH_CONTRAST_COLORS.primary,
+    onPrimary: HIGH_CONTRAST_COLORS.onPrimary,
+    surfaceVariant: HIGH_CONTRAST_COLORS.surface,
+    outline: HIGH_CONTRAST_COLORS.border,
+  },
+};
+
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
    
   const pendingDeepLinkRef = useRef<string | null>(null);
 
-  const isDarkMode = useColorScheme() === 'dark';
-  const paperTheme = isDarkMode ? MD3DarkTheme : MD3LightTheme;
+  // Explicit preference wins; 'system' follows the OS scheme. The default
+  // ('system') preserves the previous behaviour exactly.
+  const { themePreference } = usePreferences();
+  const themeMode = resolveThemeMode(themePreference, useColorScheme());
+  const isDarkMode = themeMode !== 'light';
+  const isHighContrast = themeMode === 'high-contrast';
+  const paperTheme = isHighContrast
+    ? appHighContrastPaperTheme
+    : isDarkMode
+      ? MD3DarkTheme
+      : MD3LightTheme;
   const { visible, storeUrl } = useVersionCheck();
   const dispatch = useAppDispatch();
 
@@ -234,29 +278,36 @@ export default function AppContent() {
     <SafeAreaProvider>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor={isDarkMode ? '#0A0F1D' : '#000A60'}
+        backgroundColor={
+          isHighContrast ? '#000000' : isDarkMode ? '#0A0F1D' : '#000A60'
+        }
       />
       <TamaguiProvider
         config={config}
-        defaultTheme={isDarkMode ? 'dark' : 'light'}>
+        defaultTheme={
+          isHighContrast ? 'highContrast' : isDarkMode ? 'dark' : 'light'
+        }>
         <PaperProvider theme={paperTheme}>
           <FirebaseProvider>
-            <PreferencesProvider>
-              <SocketProvider>
-                <View
-                  style={{
-                    flex: 1,
-                    backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
-                  }}>
-                  <NetworkBanner />
-                  <AppInner
-                    navigationRef={navigationRef}
-                    visible={visible}
-                    storeUrl={storeUrl}
-                  />
-                </View>
-              </SocketProvider>
-            </PreferencesProvider>
+            <SocketProvider>
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: isHighContrast
+                    ? '#000000'
+                    : isDarkMode
+                      ? '#0A0F1D'
+                      : '#F0F8FF',
+                }}>
+                <NetworkBanner />
+                <AppInner
+                  navigationRef={navigationRef}
+                  visible={visible}
+                  storeUrl={storeUrl}
+                  themeMode={themeMode}
+                />
+              </View>
+            </SocketProvider>
           </FirebaseProvider>
         </PaperProvider>
       </TamaguiProvider>
@@ -269,14 +320,21 @@ function AppInner({
   visible,
   storeUrl,
   initialRouteName,
+  themeMode,
 }: {
   navigationRef: React.RefObject<NavigationContainerRef<any> | null>;
   visible: boolean;
   storeUrl: string;
   initialRouteName?: keyof RootStackParamList;
+  themeMode: ResolvedTheme;
 }) {
-  const isDarkMode = useColorScheme() === 'dark';
-  const navigationTheme = isDarkMode ? appDarkTheme : appLightTheme;
+  const isDarkMode = themeMode !== 'light';
+  const isHighContrast = themeMode === 'high-contrast';
+  const navigationTheme = isHighContrast
+    ? appHighContrastTheme
+    : isDarkMode
+      ? appDarkTheme
+      : appLightTheme;
   const { user_token, isGuest } = useAppSelector((state: RootState) => state.user);
   const [onboardingDismissed, setOnboardingDismissed] = useState(false);
 
@@ -300,7 +358,11 @@ function AppInner({
     <View
       style={{
         flex: 1,
-        backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
+        backgroundColor: isHighContrast
+          ? '#000000'
+          : isDarkMode
+            ? '#0A0F1D'
+            : '#F0F8FF',
       }}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <StackNavigation />

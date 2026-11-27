@@ -179,3 +179,52 @@ describe('PreferencesContext - lost-update race condition (#1538)', () => {
     expect(capturedContext?.preferredLanguages).toEqual(['hi-IN', 'ta-IN']);
   });
 });
+
+describe('PreferencesContext - theme preference (#2043)', () => {
+  it('defaults to system (follows the OS scheme)', async () => {
+    renderHarness();
+    await waitFor(() => expect(capturedContext?.isLoading).toBe(false));
+
+    expect(capturedContext?.themePreference).toBe('system');
+  });
+
+  it('persists a high-contrast choice and exposes it in state', async () => {
+    renderHarness();
+    await waitFor(() => expect(capturedContext?.isLoading).toBe(false));
+
+    await act(async () => {
+      await capturedContext!.setThemePreference('high-contrast');
+    });
+
+    expect(capturedContext?.themePreference).toBe('high-contrast');
+    expect(mockStore['SECURE_THEME_PREFERENCE']).toBe('high-contrast');
+  });
+
+  it('loads a previously stored preference on mount', async () => {
+    mockStore['SECURE_THEME_PREFERENCE'] = 'dark';
+    renderHarness();
+    await waitFor(() => expect(capturedContext?.isLoading).toBe(false));
+
+    expect(capturedContext?.themePreference).toBe('dark');
+  });
+
+  it('falls back to system when the stored value is invalid', async () => {
+    mockStore['SECURE_THEME_PREFERENCE'] = 'sepia';
+    renderHarness();
+    await waitFor(() => expect(capturedContext?.isLoading).toBe(false));
+
+    expect(capturedContext?.themePreference).toBe('system');
+  });
+
+  it('ignores an invalid setThemePreference call', async () => {
+    renderHarness();
+    await waitFor(() => expect(capturedContext?.isLoading).toBe(false));
+
+    await act(async () => {
+      await capturedContext!.setThemePreference('sepia' as never);
+    });
+
+    expect(capturedContext?.themePreference).toBe('system');
+    expect(mockStore['SECURE_THEME_PREFERENCE']).toBeUndefined();
+  });
+});

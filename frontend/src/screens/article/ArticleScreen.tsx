@@ -68,6 +68,12 @@ import { copyArticleShareLink, generateArticleShareUrl } from '../../lib/utils/s
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/article/ReadingDifficulty';
 import { useDyslexiaMode } from '../../hooks/common/useDyslexiaMode';
+import { usePreferences } from '../../contexts/PreferencesContext';
+import {
+  resolveThemeMode,
+  HIGH_CONTRAST_COLORS,
+  HIGH_CONTRAST_ARTICLE_COLORS,
+} from '../../lib/ui/themePreference';
 import { generateArticleStyles } from '../../lib/ui/dyslexiaStyles';
 import Animated, {
   useSharedValue,
@@ -111,7 +117,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       : `${GET_STORAGE_DATA}/${profileImage}`;
   };
   const {user_id, isGuest} = useAppSelector((state: any) => state.user);
-  const isDarkMode = useColorScheme() === 'dark';
+  const { themePreference } = usePreferences();
+  const themeMode = resolveThemeMode(themePreference, useColorScheme());
+  const isDarkMode = themeMode !== 'light';
+  const isHighContrast = themeMode === 'high-contrast';
 
 
   const themeColors = {
@@ -158,6 +167,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     ttsText: isDarkMode ? '#f8fafc' : '#0f172a',
     ttsControlButtonBg: isDarkMode ? '#ffffff15' : '#00000010',
     ttsStopColor: '#e53935',
+    // High contrast overrides every reading-surface colour above with the
+    // WCAG AAA palette (pitch black, white text, yellow accents).
+    ...(isHighContrast ? HIGH_CONTRAST_ARTICLE_COLORS : {}),
   };
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontSizeOption, setFontSizeOption] = useState<FontSizeOption>('medium');
@@ -1156,7 +1168,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
+  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize, isHighContrast);
 
   const footerColors = {
     background: themeColors.footerBackground,
@@ -1164,7 +1176,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     pillBackground: themeColors.footerPillBackground,
     activePillBackground: themeColors.footerActivePillBackground,
     text: themeColors.footerText,
-    activeText: PRIMARY_COLOR,
+    activeText: isHighContrast ? HIGH_CONTRAST_COLORS.primary : PRIMARY_COLOR,
   };
 
   return (
