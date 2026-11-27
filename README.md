@@ -1259,7 +1259,8 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
    <tr>
     <td align="center"><a href="https://github.com/PedroFlores199"><img src="https://avatars.githubusercontent.com/u/98963275?v=4" width="120px;" alt=""/><br/><sub><b>Pedro Flores</b></sub></a></td>
-   </tr>
+       <td align="center"><a href="https://github.com/r1shabhsharma05"><img src="https://avatars.githubusercontent.com/u/189544159?v=4" width="120px;" alt=""/><br/><sub><b>Rishabh Sharma</b></sub></a></td>
+ </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
