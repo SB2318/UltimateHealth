@@ -13,6 +13,7 @@ import PurposeSection from "@/components/home/PurposeSection";
 import WhatWeDoSection from "@/components/home/WhatWeDoSection";
 import PortalSwitcherCTA from "@/components/home/PortalSwitcherCTA";
 import HomeArticlesPreview from "@/components/home/HomeArticlesPreview";
+import ResourcePlacement from "@/components/health-resources/ResourcePlacement";
 import {
   BRAND_NAME,
   BRAND_MOTTO,
@@ -84,6 +85,7 @@ export default async function Home({
       <main className="bg-vice-dark min-h-screen text-[var(--vice-text,#0f172a)] dark:text-white overflow-x-hidden selection:bg-vice-pink selection:text-white">
         <SiteHeader />
         <ViceHero />
+        <ResourcePlacement placement="homepage-banner" locale={locale} />
         <PurposeSection />
         <WhatWeDoSection />
         <HomeArticlesPreview />

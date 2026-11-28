@@ -20,6 +20,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { useArticleSpeech } from "@/hooks/use-article-speech";
 import ListenTriggerButton from "./listen/ListenTriggerButton";
 import ArticleAudioPlayer from "./listen/ArticleAudioPlayer";
+import ResourcePlacement from "@/components/health-resources/ResourcePlacement";
 import { ModeToggle } from "@/components/mode-toggle";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -406,6 +407,9 @@ export default function ArticlePageClient({
               </aside>
             )}
           </div>
+
+          {/* ── Public health resources (ad-slot fallback placement) ── */}
+          <ResourcePlacement placement="article-footer" locale={currentLocale} />
         </main>
 
         {/* ── Related articles ── */}

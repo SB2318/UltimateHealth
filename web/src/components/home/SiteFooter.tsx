@@ -20,6 +20,7 @@ export default function SiteFooter({ locale = "en" }: { locale?: string }) {
   const contactUrl = "#contact";
   const articlesUrl = `/${locale}/articles`;
   const glossaryUrl = `/${locale}/medical-glossary`;
+  const resourcesUrl = `/${locale}/health-resources`;
   const appsUrl = `/${locale}/apps`;
   const contributeUrl = `/${locale}/contribute`;
 
@@ -67,6 +68,7 @@ export default function SiteFooter({ locale = "en" }: { locale?: string }) {
           <a href={contactUrl}>Contact</a>
           <Link href={articlesUrl}>Health Articles</Link>
           <Link href={glossaryUrl}>Medical Glossary</Link>
+          <Link href={resourcesUrl}>Public Health Resources</Link>
           <Link href={appsUrl}>Ecosystem Apps</Link>
           <Link href={contributeUrl}>Join Us &amp; Contribute</Link>
         </div>
